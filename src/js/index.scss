@@ -1,0 +1,454 @@
+$dark:#212529;
+$darkGreen:#022601;
+$green:#36733F;
+$lightGreen:#91BF8F;
+$lighterGreen:#B4D9B6;
+$greenWhite:#E7F2D5;
+$cream:#fffffd;
+
+body {
+     // background-color: $cream;
+     -webkit-user-select: none;
+     overflow-y: hidden;
+}
+
+
+
+// Scrollbar
+
+/* width */
+::-webkit-scrollbar {
+     width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+     background: $greenWhite;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+     background: $lightGreen;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+     background: $lighterGreen;
+}
+
+#flareMusicContainer {
+     height: 100%;
+     -webkit-user-select: none;
+}
+
+.content-wrapper {
+     height: 100%;
+     background-color: black;
+     padding-top: 50px;
+     transition: background-color 1s;
+}
+
+
+// Navbar stuff
+
+.navbar-custom {
+     background-color: $green;
+}
+
+.navbar-brand {
+     padding-left: 20px;
+     padding-right: 20px;
+     border-right: 1px solid $cream;
+}
+
+.navbar-nav {
+     width: 100%;
+}
+
+.navbarIcon {
+     width: 20px;
+     height: 20px;
+     color: $cream;
+}
+
+.windowButtons > .btn-custom {
+     background-color: $lightGreen;
+     width: 40px;
+     height: 40px;
+     padding: 0;
+     margin-left: 2px;
+     box-shadow: none;
+     border: none;
+}
+
+.windowButtons > .btn-custom:hover {
+     background-color: $lighterGreen;
+}
+
+.windowButtons > .btn-custom:last-child {
+     margin-right: 8px;
+}
+
+.navbarDraggable {
+     -webkit-app-region: drag;
+     flex-grow: 500;
+}
+
+
+
+// general classes 
+.viewsContainerParent {
+     padding: 10px;
+     height: -webkit-calc(100vh - 56px);
+
+     // from https://stripesgenerator.com/
+     background-image: linear-gradient(45deg, #b4d9b6 1.39%, #ffffff 1.39%, #ffffff 29.17%, #fff 29.17%, #fff 50%, #b4d9b6 50%, #b4d9b6 51.39%, #ffffff 51.39%, #ffffff 79.17%, #fff 79.17%, #fff 100%);
+     background-size: 50.91px 50.91px;
+}
+
+.viewsContainerChild {
+     border: 1px solid $lightGreen;
+     overflow-y: auto;
+     height: 100%;
+}
+
+.componentContainer {
+     background-color: $cream;
+     min-height: 100%;
+     padding: 10px;
+}
+
+
+// Add a loan
+.loanInfoForm {
+     margin: 10px;
+     // border: 1px solid red;
+     // background-color: purple;
+}
+
+
+form button {
+     margin: 5px;
+}
+
+
+.loanInfoForm div {
+     margin-bottom: 10px;
+}
+
+.loanTypes {
+     display: none;
+}
+
+.showLoanTypes {
+     display: block;
+}
+
+.formGroupLegend {
+     position: relative;
+     font-size: xx-small;
+     top: 11px;
+     color: $green;
+     left: 10px;
+     background-color: white;
+     padding-left: 2px;
+     padding-right: 2px;
+}
+
+
+
+
+
+.formGroupDiv {
+     border: 1px solid $green;
+     padding: 20px;
+}
+
+.loanNameDiv {
+     flex-basis: 90%;
+}
+
+.formGroupRow {
+     display: flex;
+     flex-wrap: nowrap;
+     align-items: flex-start;
+     padding: 0;
+     margin: 0;
+}
+
+.formGroupRow div {
+     margin: 5px;
+}
+
+.mathSymbol {
+     padding-top: 34px;
+     flex-basis: 2.5%;
+}
+
+.mathSymbol svg {
+     width: max-content;
+     color: $green;
+}
+
+
+
+
+
+
+
+input {
+     width: 99%;
+     border-radius: 2px;
+     border: 1px solid $lightGreen;
+     height: 36px;
+     padding: 6px 12px 6px 12px;
+}
+
+
+
+.loanLinkDiv {
+     flex-basis: 100%;
+}
+
+
+
+// Dashboard
+.dashboardModules {
+     width: 100%;
+     display: flex;
+     margin-top: 15px;
+     flex-direction: row;
+     flex-wrap: wrap;
+}
+
+.moduleHeader {
+     color: $green;
+     font-size: 16px;
+     position: relative;
+     top: -13px;
+     left: 10px;
+     background-color: white;
+     border: 1px solid $green;
+     padding: 0 3px 0px 3px;
+     width: max-content;
+}
+
+.dashboardModule {
+     border: 1px solid $green;
+     margin: 1%;
+     padding: 0px 5px 20px 5px;
+}
+
+.activeLoans {
+     flex-basis: 63%;
+     background-color: $greenWhite;
+}
+
+.loanListContainer {
+     width: 100%;
+     height: 44vh;
+     overflow-y: auto;
+}
+
+.activeLoansGraphs {
+     flex-basis: 31.5%;
+     background-color: $greenWhite;
+     height: 50vh;
+}
+
+.recentTrackedPayments {
+     flex-basis: 100%;
+     background-color: $greenWhite;
+}
+
+
+// due to a common bug in recharts, this style is being applied
+// https://stackoverflow.com/questions/50891591/recharts-responsive-container-does-not-resize-correctly-in-flexbox
+.recharts-wrapper {
+     position: absolute !important;
+     overflow: auto;
+}
+
+
+
+// loan item 
+.loanItem {
+     height: 100%;
+     padding: 10px;
+     background-color: $cream;
+     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+     border-radius: 5px;
+     margin-bottom: 5px;
+}
+
+.loanItem:hover {
+     box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
+}
+
+.loanCategoryIcon svg {
+     height: 31px;
+     width: 31px;
+     margin-top: 30px;
+     margin-right: 5px;
+     
+}
+
+.loanItemTable {
+     width: 100%;
+     height: 100%;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     align-items: stretch;
+}
+
+.loanCategoryIcon {
+     height: 100%;
+     align-self: baseline;
+}
+
+
+
+.loanItemMainRow {
+     border-left: 1px solid $lightGreen;
+     padding-left: 5px;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: flex-start;
+
+}
+
+.loanItemTopRow {
+     height: 20px;
+     flex-basis: 100%;
+}
+
+.loanItemTopRow span {
+     font-size: 13px;
+     color: $darkGreen;
+}
+
+.textSeparatorbullet {
+     padding-left: 10px;
+     padding-right: 10px;
+}
+
+.loanItemBottomRow {
+     width: 100%;
+     display: flex;
+     justify-content: flex-start;
+}
+
+.loanTitle {
+     padding-right: 5px;
+}
+
+.paymentsAndButtons {
+     min-width: auto;
+     margin-left: auto;
+     display: flex;
+     flex-wrap: wrap;
+     flex-direction: row-reverse;
+}
+
+.paymentAndDate {
+     padding-left: 5px;
+     flex-basis: 100%;
+     text-align: right;
+     margin-right: 5px;
+}
+
+.paymentsAndButtons button {
+     margin-right: 1px;
+     height: 31px;
+}
+
+.btn-light {
+     border: 1px solid $darkGreen;
+}
+
+
+
+// Loan Item View
+.loanItemType {
+     display: flex;
+     align-items: baseline;
+}
+
+.loanTypeInfoDiv {
+     margin-left: 5px;
+}
+
+.loanTypeInfoDiv {
+     margin-left: 10px;
+}
+
+.loanItemType svg {
+     position: relative;
+     top: -3px;
+}
+
+.btn-overlay {
+     border: none;
+     background-color: $cream;
+     margin: 0;
+     padding: 0;
+     height: 26px;
+     width: 26px;
+     padding: 4px;
+     position: relative;
+     top: -2px;
+}
+
+.loanInfoTypeHelp {
+     height: 18px;
+     width: 18px;
+     color: $lightGreen;
+}
+
+
+.loanRemainingInfo {
+     // background-color: red;
+}
+
+.buttonsDiv button {
+     margin: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.loanItemViewGraph {
+     height: 300px;
+     width: 95%;
+     margin: 2.5%;
+     border: 1px solid $green;
+     // padding: 1%;
+}
+
+
+
+
+
+
+
+// Line chart
+
+.customLineChartTooltip {
+     background-color: white;
+     padding: 5px;
+     border: 1px solid $darkGreen;
+}
+
+.customLineChartTooltip span {
+     display: block;
+
+}
