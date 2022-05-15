@@ -1,11 +1,11 @@
 import React from "react";
 
+// import components
+import PaymentLateFeeItem from "./PaymentLateFeeItem";
 
 export default function RecentlyRecordedPayments(props) {
-     // console.log(props);
 
      function paymentHistoryData() {
-          
 
           let dataArray = [];
 
@@ -15,20 +15,29 @@ export default function RecentlyRecordedPayments(props) {
                     
                     // for each item within the payment history of each loan
                     for (let j = 0; j < props.data[i].loan.PaymentHistory.length; j++) {
-                         // dataArray.push(props.data[i].loan.PaymentHistory[j]);
-
                          dataArray.push({
                               "loanName": props.data[i].loan.LoanName,
+                              "loanGuid": props.data[i].loan.GUID,
                               "loanColor": props.data[i].loan.LoanColor,
+                              "type": "payment",
                               "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.PaymentHistory[j].amount),
                               "dateMade": props.data[i].loan.PaymentHistory[j].dateMade,
                               "dateRecorded": props.data[i].loan.PaymentHistory[j].dateRecorded
                          })
-
-                         console.log(dataArray.length);
-                         
                     }
 
+                    // for each item within the late fees of each loan
+                    for (let j = 0; j < props.data[i].loan.LateFees.length; j++) {
+                         dataArray.push({
+                              "loanName": props.data[i].loan.LoanName,
+                              "loanGuid": props.data[i].loan.GUID,
+                              "loanColor": props.data[i].loan.LoanColor,
+                              "type": "lateFee",
+                              "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.LateFees[j].amount),
+                              "dateMade": props.data[i].loan.LateFees[j].dateMade,
+                              "dateRecorded": props.data[i].loan.LateFees[j].dateRecorded
+                         })
+                    }
                }
           }
 
@@ -44,24 +53,15 @@ export default function RecentlyRecordedPayments(props) {
 
      let paymentHistoryArray = paymentHistoryData();
 
-
-     console.log(paymentHistoryArray);
-
-
-     
-
      // map for each payment history array, sorting by dateRecorded
      return(
-          <>
-          {paymentHistoryArray.map(payment => 
-               <div>
-                    <span>{payment.loanName}</span>
-               </div>
-          
-          
-          )}
-
-
-          </>
+          <div className="paymentFeeList">
+               {paymentHistoryArray.map((paymentORfee, index) => 
+                    <PaymentLateFeeItem 
+                         key={index}
+                         item={paymentORfee}
+                    />
+               )}
+          </div>
      );
 }

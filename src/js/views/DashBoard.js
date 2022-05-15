@@ -53,7 +53,7 @@ export default function DashBoard(props) {
 
                     <div className="recentTrackedPayments dashboardModule">
 
-                         <div className="moduleHeader"><span>Recent Payments</span></div>
+                         <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
                          <RecentlyRecordedPayments data={props.data?.data}/>
                     </div>
 

@@ -18,6 +18,7 @@ import { FaGraduationCap, FaUser, FaCreditCard, FaInfoCircle } from "react-icons
 import RecordAPaymentModal from "../components/RecordAPaymentModal";
 import LoansLineChart from "../components/LoansLineChart";
 import RecordALateFeeModal from "../components/RecordALateFeeModal";
+import CurrencyInput from "react-currency-input-field";
 
 
 
@@ -204,15 +205,7 @@ export default function LoanItemView() {
      }
 
 
-    
-
-     // info to add
-     // "RemainingTermLength": "70",
-     // "DisbursementDate": "2022-01-03",
-     // "TotalTermLength": "73",
-     // "LoanColor": "#007bff",
-     // "dateAdded": "2022-05-09T22:23:24.058Z",
-     // "PaymentHistory": []
+     const [rangeValueState, setRangeValueState] = useState(parseFloat(state.MonthlyPayment));
 
      return(
           <div className="componentContainer">
@@ -231,7 +224,7 @@ export default function LoanItemView() {
 
                     <span className="display-4">{"$" + new Intl.NumberFormat().format(state.CalculatedLoanAmount)} remaining</span>
 
-                    <p className="lead">Principal: {"$" + new Intl.NumberFormat().format(state.PrincipalAmount)} at <b>{state.InterestRate}% interest</b></p>
+                    <p className="lead">Original Loan: {"$" + new Intl.NumberFormat().format(state.TotalLoanAmount)} at <b>{state.InterestRate}% interest</b></p>
                </div>
 
                <div className="paymentDate">
@@ -250,8 +243,55 @@ export default function LoanItemView() {
           
                
                {/* https://react-bootstrap.github.io/forms/range/ */}
-               <Form.Label>Range</Form.Label>
-               <Form.Range />
+               {/* https://jaywilz.github.io/react-bootstrap-range-slider/ */}
+               
+
+
+               <h3>Description bitch</h3>
+               <Form.Group className="mb-3 loanItemViewRangeSlider">
+
+                    <div className="rangeSelectorFull">
+                         <h1>${rangeValueState - state.MonthlyPayment} <span className="text-muted">more per month</span></h1>
+                         
+                    </div>
+
+                    <div className="rangeSelectorSmall">
+                         <h1>${state.MonthlyPayment}</h1>
+                         <Form.Label>Minimum Montly Payment</Form.Label>
+                    </div>
+                    
+                    <div className="rangeSelectorLarge">
+                         <Form.Range
+                              min={state.MonthlyPayment}
+                              max={5 * state.MonthlyPayment}
+                              value={rangeValueState}
+                              onChange={e => setRangeValueState(e.target.value)}
+                         />
+                    </div>
+
+                    <div className="rangeSelectorSmall">
+                         <h1>${rangeValueState ==  state.MonthlyPayment ? "---" : rangeValueState}</h1>
+                         <Form.Label>New Montly Payment</Form.Label>
+                    </div>
+
+                    <div className="rangeSelectorFull">
+                         <div className="rangeSelectorInputHolder">
+                         <Form.Label>Alternatively, you may enter a desired number</Form.Label>
+                         <CurrencyInput
+                              prefix="$"
+                              name="desiredMonthlyPayment"
+                              placeholder="or, enter a value"
+                              decimalScale={2}
+                              decimalsLimit={2}
+                              value={rangeValueState}
+                              onValueChange={(value) => setRangeValueState(value)}
+                         />
+                         </div>
+                    </div>
+
+                    
+
+               </Form.Group>
 
 
                <br></br>

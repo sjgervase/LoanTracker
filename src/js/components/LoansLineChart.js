@@ -120,7 +120,7 @@ export default function LoansLineChart(props) {
 
      let lineChartData = rechartData(formattedPropsData);
 
-     console.log(lineChartData);
+     // console.log(lineChartData);
 
      // Sample data
      // NOTE: it displays the points in the order they are listed in the data array
