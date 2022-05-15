@@ -223,24 +223,13 @@ async function addFormDataToFile(formData) {
      let loanObject = {
           loan: {
                GUID: newGuid,
-               LoanCategory: formData.LoanCategory,
-               LoanName: formData.LoanName,
-               LoanType: formData.LoanType,
-               RemainingAmount: formData.RemainingAmount,
-               MonthlyPayment: formData.MonthlyPayment,
-               PaymentDate: formData.PaymentDate,
-               InterestRate: formData.InterestRate,
-               RemainingTermLength: formData.RemainingTermLength,
-               TotalLoanAmount: formData.TotalLoanAmount,
-               TotalTermLength: formData.TotalTermLength,
-               DisbursementDate: formData.DisbursementDate,
-               LoanLink: formData.LoanLink,
-               LoanColor: formData.LoanColor,
-               dateAdded: new Date(),
                PaymentHistory: [], 
                LateFees:[]
           }
      }
+
+     // add the recieved formdata to the above loan object
+     Object.assign(loanObject.loan, formData);
 
      filedata.data.push(loanObject);
 
@@ -261,11 +250,6 @@ ipcMain.handle("openLinkToPaymentURL", (event, url) => {
      // console.log(url);
      shell.openExternal(url);
 })
-
-
-
-
-
 
 
 
@@ -326,17 +310,20 @@ async function addPaymentToLoan(recordPaymentState) {
 
      // console.log(maxIndex.index);
 
+     // create empty payment object
      let paymentObject = {
-          "index": maxIndex.index + 1,
-          "amount": recordPaymentState.Payment,
-          "dateMade": recordPaymentState.Date,
-          "dateRecorded": new Date()
+          index: maxIndex.index + 1,
+          amount: recordPaymentState.Payment,
+          dateMade: recordPaymentState.Date,
+          dateRecorded: new Date()
      }
 
      paymentHistory.push(paymentObject);
 
+
      // write to file
      fs.writeFileSync(path.resolve(dataFile), JSON.stringify(filedata));
+     
 }
 
 //  New Payment Record Submission
@@ -399,10 +386,10 @@ async function addLateFeeToLoan(recordLateFeeState) {
      // console.log(maxIndex.index);
 
      let LateFeeObject = {
-          "index": maxIndex.index + 1,
-          "amount": recordLateFeeState.LateFee,
-          "dateMade": recordLateFeeState.Date,
-          "dateRecorded": new Date()
+          index: maxIndex.index + 1,
+          amount: recordLateFeeState.LateFee,
+          dateMade: recordLateFeeState.Date,
+          dateRecorded: new Date()
      }
 
      LateFees.push(LateFeeObject);

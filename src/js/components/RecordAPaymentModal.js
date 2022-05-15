@@ -18,7 +18,7 @@ export default function RecordAPaymentModal(props) {
      const [showPaymentModalState, setPaymentModalState] = useState(false);
 
      // state for capturing record a payment function
-     const [recordPaymentState, setRecordPaymentState] = useState({Payment:"", Date:""});
+     const [recordPaymentState, setRecordPaymentState] = useState({GUID: props.loan.GUID});
 
 
      // functions to show or hide the record payment modal
@@ -26,33 +26,15 @@ export default function RecordAPaymentModal(props) {
      const hidePaymentModalFunc = () => {
           // clear the state 
           setRecordPaymentState({
-               Payment:"", 
-               Date:""
+               GUID: props.loan.GUID
           });
           // hide the modal
           setPaymentModalState(false);
      }
 
-
-      // function that ensures the "record a payment" modal captures the entered value
-      function recordPaymentStateFunc(value, fieldName) {
-          // create a variable equal to the current state
-          let recordPaymentStateInstance = recordPaymentState;
-
-          
-
-          // set the variable's field equal to the recieved value
-          recordPaymentStateInstance[fieldName] = value;
-          
-          // update the state, including the GUID of the current item
-          // this will preserve previous items
-          setRecordPaymentState({
-               GUID: props.loan.GUID,
-               Payment: recordPaymentStateInstance.Payment,
-               Date: recordPaymentStateInstance.Date
-          })
-          
-          
+     // function that ensures the "record a payment" modal captures the entered value
+     const recordPaymentStateFunc = (value, name) => {
+          setRecordPaymentState({ ...recordPaymentState, [name]: value })
      }
 
 

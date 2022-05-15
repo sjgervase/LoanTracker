@@ -15,6 +15,8 @@ export default function DashBoard(props) {
 
      // console.log(loans);
 
+     // console.log(props);
+
 
 
      return(               

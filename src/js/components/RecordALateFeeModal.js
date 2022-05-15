@@ -18,7 +18,7 @@ export default function RecordALateFeeModal(props) {
      const [showLateFeeModalState, setLateFeeModalState] = useState(false);
 
      // state for capturing record a LateFee function
-     const [recordLateFeeState, setRecordLateFeeState] = useState({Amount:"", Date:""});
+     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan.GUID});
 
 
      // functions to show or hide the record LateFee modal
@@ -26,33 +26,16 @@ export default function RecordALateFeeModal(props) {
      const hideLateFeeModalFunc = () => {
           // clear the state 
           setRecordLateFeeState({
-               Amount:"",
-               Date:""
+               GUID: props.loan.GUID
           });
           // hide the modal
           setLateFeeModalState(false);
      }
 
 
-      // function that ensures the "record a late fee" modal captures the entered value
-      function recordLateFeeStateFunc(value, fieldName) {
-          // create a variable equal to the current state
-          let recordLateFeeStateInstance = recordLateFeeState;
-
-          
-
-          // set the variable's field equal to the recieved value
-          recordLateFeeStateInstance[fieldName] = value;
-          
-          // update the state, including the GUID of the current item
-          // this will preserve previous items
-          setRecordLateFeeState({
-               GUID: props.loan.GUID,
-               LateFee: recordLateFeeStateInstance.LateFee,
-               Date: recordLateFeeStateInstance.Date
-          })
-          
-          
+     // function that ensures the "record a late fee" modal captures the entered value
+     const recordLateFeeStateFunc = (value, name) => {
+          setRecordLateFeeState({ ...recordLateFeeState, [name]: value })
      }
 
 

@@ -9,28 +9,37 @@ export default function RecentlyRecordedPayments(props) {
 
           let dataArray = [];
 
-          // for each loan within all loans data
-          for (let i = 0; i < props.data?.length; i++) {
-               
-               // for each item within the payment history of each loan
-               for (let j = 0; j < props.data[i].loan.PaymentHistory.length; j++) {
-                    // dataArray.push(props.data[i].loan.PaymentHistory[j]);
+          if (props.data?.length > 0) {
+               // for each loan within all loans data
+               for (let i = 0; i < props.data?.length; i++) {
+                    
+                    // for each item within the payment history of each loan
+                    for (let j = 0; j < props.data[i].loan.PaymentHistory.length; j++) {
+                         // dataArray.push(props.data[i].loan.PaymentHistory[j]);
 
-                    dataArray.push({
-                         "loanName": props.data[i].loan.LoanName,
-                         "loanColor": props.data[i].loan.LoanColor,
-                         "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.PaymentHistory[j].amount),
-                         "dateMade": props.data[i].loan.PaymentHistory[j].dateMade,
-                         "dateRecorded": props.data[i].loan.PaymentHistory[j].dateRecorded
-                    })
+                         dataArray.push({
+                              "loanName": props.data[i].loan.LoanName,
+                              "loanColor": props.data[i].loan.LoanColor,
+                              "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.PaymentHistory[j].amount),
+                              "dateMade": props.data[i].loan.PaymentHistory[j].dateMade,
+                              "dateRecorded": props.data[i].loan.PaymentHistory[j].dateRecorded
+                         })
+
+                         console.log(dataArray.length);
+                         
+                    }
+
                }
           }
 
+          // sort so newest are first
+          dataArray.sort(function(a,b){
+               // Turn your strings into dates, and then subtract them
+               // to get a value that is either negative, positive, or zero.
+               return new Date(b.dateRecorded) - new Date(a.dateRecorded);
+          });
 
-          // set the max return to 15 items
-          dataArray.length = 15;
-
-          return dataArray;
+          return dataArray
      } 
 
      let paymentHistoryArray = paymentHistoryData();
@@ -38,8 +47,21 @@ export default function RecentlyRecordedPayments(props) {
 
      console.log(paymentHistoryArray);
 
+
+     
+
      // map for each payment history array, sorting by dateRecorded
      return(
-          <></>
+          <>
+          {paymentHistoryArray.map(payment => 
+               <div>
+                    <span>{payment.loanName}</span>
+               </div>
+          
+          
+          )}
+
+
+          </>
      );
 }

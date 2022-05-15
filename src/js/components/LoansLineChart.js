@@ -36,7 +36,7 @@ export default function LoansLineChart(props) {
           let dataArray = [];
 
           //  get principal value
-          let principal = parseFloat(props.data.PrincipalAmount);
+          let principal = parseFloat(props.data.TotalLoanAmount);
           // get disbursement date (also adding timestamp for proper conversion)
           let disbursement = new Date(props.data.DisbursementDate.concat(' 00:00'));
 
@@ -160,7 +160,7 @@ export default function LoansLineChart(props) {
      }
 
      return(
-          <ResponsiveContainer width="98%" height="98%">
+          <ResponsiveContainer width="98%" height={280}>
 
                <AreaChart
                     data={lineChartData}

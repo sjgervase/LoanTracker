@@ -23,10 +23,11 @@ export default function LoansPieChart(props) {
      // format data for pie chart
      function rechartData() {
           let dataArray = [];
+
           for (let i = 0; i < props.data?.length; i++) {
                dataArray.push({
                     "name": props.data?.[i].loan.LoanName,
-                    "value": parseFloat(props.data?.[i].loan.RemainingAmount),
+                    "value": parseFloat(props.data?.[i].loan.CalculatedLoanAmount),
                     "color": props.data?.[i].loan.LoanColor
                });
           }
@@ -46,6 +47,12 @@ export default function LoansPieChart(props) {
 
      let colors = rechartColors();
 
+
+
+
+
+     // console.log(pieData);
+
       
      // function to generate custom piechart label ----- courtesy of https://celiaongsl.medium.com/2-secret-pie-chart-hacks-to-up-your-recharts-game-hack-recharts-1-9fa62ff9416a
      const CustomLabel = ({ viewBox}) => {
@@ -56,7 +63,7 @@ export default function LoansPieChart(props) {
 
           // get all values from props and push to array
           for (let i = 0; i < props.data?.length; i++) {
-               vals.push(parseFloat(props.data?.[i].loan.RemainingAmount));
+               vals.push(parseFloat(props.data?.[i].loan.CalculatedLoanAmount));
           }
 
           // add all remaining values up and utilize javascript's number formating

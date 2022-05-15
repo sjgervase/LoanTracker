@@ -156,10 +156,6 @@ export default function LoanItem(props) {
                     <div className="loanItemMainRow">
 
                          <div className="loanItemTopRow">
-                              <span>{"$" + amountPaid(loan.RemainingAmount, loan.PrincipalAmount)}</span>
-                              <span className="text-muted"> paid of </span>
-                              <span>{"$" + new Intl.NumberFormat().format(loan.PrincipalAmount)}</span>
-                              <span className="textSeparatorbullet">•</span>
                               <span className="interestRateSpan">{loan.InterestRate}% Interest Rate</span>
                          </div>
 

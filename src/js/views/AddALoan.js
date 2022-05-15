@@ -19,51 +19,13 @@ export default function AddALoan() {
 
      const navigate = useNavigate();
 
-     const [formState, setFormState] = useState({
-          LoanCategory: "",
-          LoanType: "",
-          LoanName: "",
-          RemainingAmount: "",
-          MonthlyPayment: "",
-          PaymentDate: "",
-          InterestRate: "",
-          RemainingTermLength: "",
-          PrincipalAmount: "",
-          TotalTermLength:"",
-          LoanLink: "",
-          DisbursementDate: "",
-          LoanColor: ""
-     });
+     const [formState, setFormState] = useState({});
 
-     function handleChange(value, fieldName) {
-          // create a variable equal to the current state
-          let formStateInstance = formState;
-
-          // console.log(value);
-          // console.log(fieldName);
-
-          // set the variable's field equal to the recieved value
-          formStateInstance[fieldName] = value;
-
-          // set the state object equal to the new item
-          // this will preserve previous items
-          setFormState({
-               LoanCategory: formStateInstance.LoanCategory,
-               LoanType: loanTypeState,
-               LoanName: formStateInstance.LoanName,
-               RemainingAmount: formStateInstance.RemainingAmount,
-               MonthlyPayment: formStateInstance.MonthlyPayment,
-               PaymentDate: formStateInstance.PaymentDate,
-               InterestRate: formStateInstance.InterestRate,
-               RemainingTermLength: formStateInstance.RemainingTermLength,
-               PrincipalAmount: formStateInstance.PrincipalAmount,
-               TotalTermLength: formStateInstance.TotalTermLength,
-               DisbursementDate: formStateInstance.DisbursementDate,
-               LoanLink: formStateInstance.LoanLink,
-               LoanColor: formStateInstance.LoanColor
-          })
-          
+     // function to handle form item updates
+     const handleChange = (value, name) => {
+          setFormState({ ...formState, [name]: value })
      }
+
 
 
      // https://rangle.io/blog/simplifying-controlled-inputs-with-hooks/
@@ -76,33 +38,43 @@ export default function AddALoan() {
      function loanTypeSelecton(value) {
           switch (value) {
                case 'Student Loan':
-                    setLoanTypeState("Amortized Loan");
                     // set form state category and clear other properties of the form state, for if an end user selected one, started filling it out, then switched
-                    setFormState({LoanCategory:"Student Loan", LoanType: "", LoanName: "", RemainingAmount: "", MonthlyPayment:"", PaymentDate:"", InterestRate: "", RemainingTermLength: "", PrincipalAmount: "", TotalTermLength:"", DisbursementDate: "", LoanLink: "", LoanColor: ""})
+                    setLoanTypeState("Amortized Loan");
+                    setFormState({
+                         LoanCategory: "Student Loan"
+                    })
                break;
 
                case 'Mortgage':
                     setLoanTypeState("Amortized Loan");
-                    setFormState({LoanCategory:"Mortgage",LoanType: "", LoanName: "", RemainingAmount: "", MonthlyPayment:"", PaymentDate:"", InterestRate: "", RemainingTermLength: "", PrincipalAmount: "", TotalTermLength:"", LoanLink: "",  DisbursementDate: "", LoanColor: ""})
+                    setFormState({
+                         LoanCategory: "Mortgage"
+                    })
                break;
 
                case 'Auto Loan':
                     setLoanTypeState("Amortized Loan");
-                    setFormState({LoanCategory:"Auto Loan", LoanType: "", LoanName: "", RemainingAmount: "", MonthlyPayment:"", PaymentDate:"", InterestRate: "", RemainingTermLength: "", PrincipalAmount: "", TotalTermLength:"", LoanLink: "",  DisbursementDate: "", LoanColor: ""})
+                    setFormState({
+                         LoanCategory: "Auto Loan"
+                    })
                break;
 
                case 'Personal Loan':
                     setLoanTypeState("Amortized Loan");
-                    setFormState({LoanCategory:"Personal Loan", LoanType: "", LoanName: "", RemainingAmount: "", MonthlyPayment:"",  InterestRate: "", RemainingTermLength: "", PrincipalAmount: "", TotalTermLength:"", LoanLink: "",  DisbursementDate: "", LoanColor: ""})
+                    setFormState({
+                         LoanCategory: "Personal Loan"
+                    })
                break;
 
                case 'Credit Card':
-                    setLoanTypeState("Revolving Debt");
-                    setFormState({LoanCategory:"Credit Card", LoanType: "", LoanName: "", RemainingAmount: "", MonthlyPayment:"",  InterestRate: "", RemainingTermLength: "", PrincipalAmount: "", TotalTermLength:"", LoanLink: "", DisbursementDate: "",  LoanColor: ""})
+                    setLoanTypeState("Revolving Debt"); 
+                    setFormState({
+                         LoanCategory: "Credit Card"
+                    })
                break;
 
                default:
-                    setLoanTypeState("");
+                    setFormState({});
                break;
           }
      }
@@ -113,6 +85,11 @@ export default function AddALoan() {
      function submission() {
           // console.log(formState);
           // validate data (no negatives, etc)
+
+          // if formState.TotalLoanAmount has NOT been added to the state, then the end user used the calculated amount
+          if (formState.TotalLoanAmount == undefined) {
+               formState.TotalLoanAmount = formState.MonthlyPayment * formState.TotalTermLength;
+          }
           
           // invoke main process to write data to file       https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendererinvokechannel-args
           ipcRenderer.invoke('newLoanSubmission', (formState));
@@ -185,7 +162,7 @@ export default function AddALoan() {
                                              type="color"
                                              defaultValue="#000000"
                                              title="Choose your color"
-                                             onChange={e => handleChange(e.target.value, e.target.name)} 
+                                             onChange={e => handleChange(e.target.value, e.target.name)}
                                              />
                                              <Form.Text className="text-muted">This color is for color-coded lists and graphs</Form.Text>
                                         </Form.Group>
@@ -235,10 +212,10 @@ export default function AddALoan() {
                                              <CurrencyInput
                                                   prefix="$"
                                                   name="TotalLoanAmount"
-                                                  placeholder="ex $10,000"
+                                                  placeholder="calculated"
                                                   decimalScale={2}
                                                   decimalsLimit={2}
-                                                  value={formState.MonthlyPayment * formState.TotalTermLength}
+                                                  value={isNaN(formState.MonthlyPayment * formState.TotalTermLength) ? "" : formState.MonthlyPayment * formState.TotalTermLength}
                                                   onValueChange={(value, name) => handleChange(value, name)}
                                              />
                                         </Form.Group>
@@ -290,11 +267,11 @@ export default function AddALoan() {
                                    {/* Second Row*/}
                                    <div className="formGroupRow">
                                         {/* Amount Remaining */}
-                                        <Form.Group controlId="RemainingAmount" className="remainingAmountDiv">
-                                             <Form.Label>Amount Remaining</Form.Label>
+                                        <Form.Group controlId="OutstandingBalance" className="remainingAmountDiv">
+                                             <Form.Label>Outstanding / Current Balance</Form.Label>
                                              <CurrencyInput
                                                   prefix="$"
-                                                  name="RemainingAmount"
+                                                  name="OutstandingBalance"
                                                   placeholder="ex $10,000"
                                                   decimalScale={2}
                                                   decimalsLimit={2}
@@ -321,7 +298,7 @@ export default function AddALoan() {
 
                               </div>
 
-                              <Button variant="success" type="submit"
+                              <Button variant="success"
                               onClick={() => submission()}>
                                    Submit
                               </Button>

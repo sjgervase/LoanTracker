@@ -229,7 +229,7 @@ export default function LoanItemView() {
 
                <div className="loanRemainingInfo">
 
-                    <span className="display-4">{"$" + new Intl.NumberFormat().format(state.RemainingAmount)} remaining</span>
+                    <span className="display-4">{"$" + new Intl.NumberFormat().format(state.CalculatedLoanAmount)} remaining</span>
 
                     <p className="lead">Principal: {"$" + new Intl.NumberFormat().format(state.PrincipalAmount)} at <b>{state.InterestRate}% interest</b></p>
                </div>

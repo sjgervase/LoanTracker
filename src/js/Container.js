@@ -48,7 +48,29 @@ export default function Container() {
 
      }, [dispatch]);
 
-     // console.log(data);
+
+     // if data exists, calculate remaining loan balance by subtracting payments and adding late fees.
+     if (data !== undefined) {
+          // console.log(data.data);
+          // for each loan item
+          for (let i = 0; i < data.data.length; i++) {               
+               let calculatedAmount = parseFloat(data.data[i].loan.TotalLoanAmount);
+
+               // for each payment in PaymentHistory
+               for (let j = 0; j < data.data[i].loan.PaymentHistory.length; j++) {
+                    calculatedAmount -= parseFloat(data.data[i].loan.PaymentHistory[j].amount);
+               }
+
+               // for each late fee in LateFees
+               for (let j = 0; j < data.data[i].loan.LateFees.length; j++) {
+                    calculatedAmount += parseFloat(data.data[i].loan.LateFees[j].amount);
+               }
+
+               data.data[i].loan.CalculatedLoanAmount = calculatedAmount.toFixed(2);
+          }
+     }
+     
+
 
 
      return(
