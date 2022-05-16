@@ -2,7 +2,7 @@ import React from "react";
 
 // import components
 import LoanList from "../components/LoanList";
-import LoansPieChart from "../components/LoansPieChart";
+import LoansPieChart from "../components/Charts/LoansPieChart";
 import RecentlyRecordedPayments from "../components/RecentRecordedPayments";
 
 
@@ -26,7 +26,6 @@ export default function DashBoard(props) {
                <div className="dashboardModules">
                
                     <div className="activeLoans dashboardModule">
-
                          <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
                          
                          <div className="loanListContainer">

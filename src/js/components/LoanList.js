@@ -29,7 +29,7 @@ export default function LoanList(props) {
      let loans = props.loans;
 
      return(               
-          <div className="loanList">
+          <>
 
                {/* Sort by interest rate of the loan THEN map. */}
 
@@ -47,6 +47,6 @@ export default function LoanList(props) {
 
                
 
-          </div>
+          </>
      );
 }

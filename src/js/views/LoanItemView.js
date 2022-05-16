@@ -15,10 +15,11 @@ import { AiFillCar, AiFillHome } from "react-icons/ai";
 import { FaGraduationCap, FaUser, FaCreditCard, FaInfoCircle } from "react-icons/fa";
 
 // import Components
-import RecordAPaymentModal from "../components/RecordAPaymentModal";
-import LoansLineChart from "../components/LoansLineChart";
-import RecordALateFeeModal from "../components/RecordALateFeeModal";
+import RecordAPaymentModal from "../components/Modals/RecordAPaymentModal";
+import LoansLineChart from "../components/Charts/LoansLineChart";
+import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
 import CurrencyInput from "react-currency-input-field";
+
 
 
 

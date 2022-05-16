@@ -14,7 +14,7 @@ import { AiFillCar, AiFillHome } from "react-icons/ai";
 import { FaGraduationCap, FaUser, FaCreditCard } from "react-icons/fa";
 
 // import components
-import RecordAPaymentModal from "./RecordAPaymentModal";
+import RecordAPaymentModal from "./Modals/RecordAPaymentModal";
 
 
 

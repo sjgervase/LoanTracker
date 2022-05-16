@@ -24,7 +24,7 @@ import AddALoan from './views/AddALoan';
 import LoanItemView from './views/LoanItemView';
 
 // import navbar
-import NavigationBar from "./components/NavigationBar";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 
 export default function Container() {
 
