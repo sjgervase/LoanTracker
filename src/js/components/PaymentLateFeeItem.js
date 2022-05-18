@@ -3,11 +3,6 @@ import React from "react";
 
 export default function PaymentLateFeeItem(props) {
 
-     console.log(props);
-
-
-     
-     // dateRecorded: "2022-05-14T23:35:30.964Z"
 
 
      // function to set border style

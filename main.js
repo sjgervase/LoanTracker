@@ -12,12 +12,10 @@ const {dialog, remote} = require('electron');
 function createWindow() {
      // Browser Window <- Renderer Process
      const win = new BrowserWindow({
-          width : 1600,
-          height: 800,
           minWidth: 545,
           minHeight: 100,
           width: 1600,
-          height: 800,
+          height: 850,
           frame: false,
           webPreferences: {
                nodeIntegration: true,

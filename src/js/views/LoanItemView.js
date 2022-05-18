@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 
 // import from react-bootstrap
-import { Button, Popover, OverlayTrigger, Form } from "react-bootstrap";
+import { Button, Popover, OverlayTrigger } from "react-bootstrap";
 
 // icons from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
@@ -18,8 +18,7 @@ import { FaGraduationCap, FaUser, FaCreditCard, FaInfoCircle } from "react-icons
 import RecordAPaymentModal from "../components/Modals/RecordAPaymentModal";
 import LoansLineChart from "../components/Charts/LoansLineChart";
 import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
-import CurrencyInput from "react-currency-input-field";
-
+import AdjustMonthlyPaymentModal from "../components/Modals/AdjustMonthlyPaymentModal";
 
 
 
@@ -206,7 +205,7 @@ export default function LoanItemView() {
      }
 
 
-     const [rangeValueState, setRangeValueState] = useState(parseFloat(state.MonthlyPayment));
+     
 
      return(
           <div className="componentContainer">
@@ -248,51 +247,7 @@ export default function LoanItemView() {
                
 
 
-               <h3>Description bitch</h3>
-               <Form.Group className="mb-3 loanItemViewRangeSlider">
-
-                    <div className="rangeSelectorFull">
-                         <h1>${rangeValueState - state.MonthlyPayment} <span className="text-muted">more per month</span></h1>
-                         
-                    </div>
-
-                    <div className="rangeSelectorSmall">
-                         <h1>${state.MonthlyPayment}</h1>
-                         <Form.Label>Minimum Montly Payment</Form.Label>
-                    </div>
-                    
-                    <div className="rangeSelectorLarge">
-                         <Form.Range
-                              min={state.MonthlyPayment}
-                              max={5 * state.MonthlyPayment}
-                              value={rangeValueState}
-                              onChange={e => setRangeValueState(e.target.value)}
-                         />
-                    </div>
-
-                    <div className="rangeSelectorSmall">
-                         <h1>${rangeValueState ==  state.MonthlyPayment ? "---" : rangeValueState}</h1>
-                         <Form.Label>New Montly Payment</Form.Label>
-                    </div>
-
-                    <div className="rangeSelectorFull">
-                         <div className="rangeSelectorInputHolder">
-                         <Form.Label>Alternatively, you may enter a desired number</Form.Label>
-                         <CurrencyInput
-                              prefix="$"
-                              name="desiredMonthlyPayment"
-                              placeholder="or, enter a value"
-                              decimalScale={2}
-                              decimalsLimit={2}
-                              value={rangeValueState}
-                              onValueChange={(value) => setRangeValueState(value)}
-                         />
-                         </div>
-                    </div>
-
-                    
-
-               </Form.Group>
+               <AdjustMonthlyPaymentModal loan={state}/>
 
 
                <br></br>

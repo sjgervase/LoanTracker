@@ -438,25 +438,111 @@ input {
 }
 
 
+
+
+
+
+
+
+
+
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+.loanItemViewGraph {
+     height: 300px;
+     width: 95%;
+     margin: 2.5%;
+     border: 1px solid $green;
+     // padding: 1%;
+}
+
+
+
+
+
+
+
+// Line chart
+
+.customLineChartTooltip {
+     background-color: white;
+     padding: 5px;
+     border: 1px solid $darkGreen;
+}
+
+.customLineChartTooltip span {
+     display: block;
+
+}
+
+
+
+
+
+// paymentLatefee item
+.paymentOrFeeItem {
+     background-color: $cream;
+     border: 1px solid;
+     margin: 0.5%;
+     padding: 7px;
+     display: flex;
+     border-radius: 5px;
+}
+
+.paymentOrFeeItem div {
+     padding-left: 10px;
+     padding-right: 10px;
+}
+
+.paymentOrFeeItemName {
+     border-right: 1px solid $green;
+}
+
+
+.paymentOrFeeItemAmount {
+     border-right: 1px solid $green;
+}
+
+.paymentOrFeeItemAmount span {
+     font-weight: 500;
+}
+
+.paymentOrFeeItemAmount .payment {
+     color: $green;
+     border: 1px solid $green;
+     padding: 2px 4px 2px 4px;
+}
+
+.paymentOrFeeItemAmount .lateFee {
+     color: $red;
+     border: 1px solid $red;
+     padding: 2px 4px 2px 4px;
+}
+
+
+
+
+
+
+// adjust monthly payment modal
 .loanItemViewRangeSlider {
      text-align: center;
      display: flex;
      margin-top: 5px;
      flex-wrap: wrap;
-     border: 1px solid $green;
      padding: 25px;
-}
-
-.rangeSelectorSmall {
-     margin-top: 15px;
-     flex-basis: 18%;
-     margin-left: 1%;
-     margin-right: 1%;
-}
-
-
-.rangeSelectorSmall label {
-     font-size: 0.8em;
 }
 
 .rangeSelectorFull {
@@ -464,18 +550,30 @@ input {
      flex-basis: 100%;
 }
 
-.rangeSelectorInputHolder {
-     width: 50%;
-     margin: auto;
+.rangeSelectorSmall {
+     margin-top: 15px;
+     flex-basis: 19%;
+}
+
+.rangeSelectorSmall label {
+     font-size: 0.8em;
 }
 
 
 .rangeSelectorLarge {
-     flex-basis: 60%;
+     flex-basis: 55%;
+     margin-left: 1%;
+     margin-right: 1%;
 }
 
 .rangeSelectorLarge input{
      border: none;
+}
+
+.rangeSelectorInputHolder {
+     width: 50%;
+     margin: auto;
+     margin-bottom: 5px;
 }
 
 // from : https://www.cssportal.com/style-input-range/
@@ -568,87 +666,3 @@ input[type=range] {
    input[type=range]:focus::-ms-fill-upper {
      background: #36733F;
    }
-   
-   
-
-
-
-
-
-
-
-
-
-
-
-
-.loanItemViewGraph {
-     height: 300px;
-     width: 95%;
-     margin: 2.5%;
-     border: 1px solid $green;
-     // padding: 1%;
-}
-
-
-
-
-
-
-
-// Line chart
-
-.customLineChartTooltip {
-     background-color: white;
-     padding: 5px;
-     border: 1px solid $darkGreen;
-}
-
-.customLineChartTooltip span {
-     display: block;
-
-}
-
-
-
-
-
-// paymentLatefee item
-.paymentOrFeeItem {
-     background-color: $cream;
-     border: 1px solid;
-     margin: 0.5%;
-     padding: 7px;
-     display: flex;
-     border-radius: 5px;
-}
-
-.paymentOrFeeItem div {
-     padding-left: 10px;
-     padding-right: 10px;
-}
-
-.paymentOrFeeItemName {
-     border-right: 1px solid $green;
-}
-
-
-.paymentOrFeeItemAmount {
-     border-right: 1px solid $green;
-}
-
-.paymentOrFeeItemAmount span {
-     font-weight: 500;
-}
-
-.paymentOrFeeItemAmount .payment {
-     color: $green;
-     border: 1px solid $green;
-     padding: 2px 4px 2px 4px;
-}
-
-.paymentOrFeeItemAmount .lateFee {
-     color: $red;
-     border: 1px solid $red;
-     padding: 2px 4px 2px 4px;
-}

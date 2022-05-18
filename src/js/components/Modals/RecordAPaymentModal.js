@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ipcRenderer } from "electron";
 
 // import from react bootstrap
-import { Button, Modal, Popover, OverlayTrigger, Form } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 
 // import from react currency field
 import CurrencyInput from "react-currency-input-field";
@@ -59,15 +59,9 @@ export default function RecordAPaymentModal(props) {
           
                <Button
                     variant="light"
-
-                    
-
                     // conditional classname depending on the parent of the button
                     className={`${props.parent.name == "LoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
-
-
                     onClick={showPaymentModalFunc}>
-                    
                     Record a Payment
                </Button>
 
