@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 
 // import from react-bootstrap
-import { Button, Popover, OverlayTrigger } from "react-bootstrap";
+import { Button, Popover, OverlayTrigger, Carousel } from "react-bootstrap";
 
 // icons from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
@@ -19,16 +19,24 @@ import RecordAPaymentModal from "../components/Modals/RecordAPaymentModal";
 import LoansLineChart from "../components/Charts/LoansLineChart";
 import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
 import AdjustMonthlyPaymentModal from "../components/Modals/AdjustMonthlyPaymentModal";
+import RecentlyRecordedPayments from "../components/RecentRecordedPayments";
 
 
 
 
-export default function LoanItemView() {
+export default function LoanItemView(props) {
      
      // gets the params passed to this page from the "More Info" button on dashboard
      const { state } = useLocation();
-     // console.log(state);
+     
+     // find the clicked on loan based on the passed state out of all available loans
+     let currentLoan = props.data?.data.find(obj => obj.loan.GUID === state.GUID);
+     
+     // console.log(currentLoan);
 
+
+
+     
 
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
@@ -210,56 +218,46 @@ export default function LoanItemView() {
      return(
           <div className="componentContainer">
 
-               <h1 className="componentTitle">{state.LoanName}</h1>
+               <h1 className="componentTitle">{currentLoan?.loan.LoanName}</h1>
 
                <div className="loanItemType">
-                    <h3>{loanTypeIcon(state.LoanCategory)} {state.LoanCategory}</h3>
+                    <h3>{loanTypeIcon(currentLoan?.loan.LoanCategory)} {currentLoan?.loan.LoanCategory}</h3>
                     
                     <div className="loanTypeInfoDiv">
-                         {loanTypeInfo(state.LoanCategory)}
+                         {loanTypeInfo(currentLoan?.loan.LoanCategory)}
                     </div>
                </div>
 
-               <div className="loanRemainingInfo">
+               <div className="loanInfoHeader">
 
-                    <span className="display-4">{"$" + new Intl.NumberFormat().format(state.CalculatedLoanAmount)} remaining</span>
-
-                    <p className="lead">Original Loan: {"$" + new Intl.NumberFormat().format(state.TotalLoanAmount)} at <b>{state.InterestRate}% interest</b></p>
-               </div>
-
-               <div className="paymentDate">
-                    Next Payment of {"$" + new Intl.NumberFormat().format(state.MonthlyPayment)} due in {dateCalculator(state.PaymentDate)}
-               </div>
-
-               <div className="buttonsDiv">
+                    <span className="display-4">{"$" + new Intl.NumberFormat().format(currentLoan?.loan.CalculatedLoanAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</span>
                     
-                    <RecordAPaymentModal loan={state} parent={LoanItemView}/>
+                    <span className="lead"> Next Payment of {"$" + new Intl.NumberFormat().format(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</span>
 
-                    <RecordALateFeeModal loan={state} parent={LoanItemView}/>
-                    
-                    <Button variant="success" className="btn-custom" onClick={() => openLinkInBrowser(state.LoanLink)}>Link to Loan</Button>
+                    <div className="buttonsDiv">
+                         <Button variant="success" className="btn-custom" onClick={() => openLinkInBrowser(currentLoan?.loan.LoanLink)}>Link to Loan</Button>
+                         <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
+                         <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>                         
+                    </div>
+
                </div>
 
-          
-               
-               {/* https://react-bootstrap.github.io/forms/range/ */}
-               {/* https://jaywilz.github.io/react-bootstrap-range-slider/ */}
-               
-
-
-               <AdjustMonthlyPaymentModal loan={state}/>
-
-
-               <br></br>
-               <br></br>
-               <br></br>
 
                <div className="dashboardModule loanItemViewGraph">
-                    <div className="moduleHeader"><span>TOTAL LOANS</span></div>
+                    <div className="moduleHeader"><span>PAYMENTS OVER TIME</span></div>
                          
-                    <LoansLineChart data={state}/>
+                    <LoansLineChart data={currentLoan}/>
                          
                </div>
+
+
+               <div className="recentTrackedPayments dashboardModule">
+
+                    <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
+                    <RecentlyRecordedPayments data={props.data?.data} thisLoan={currentLoan?.loan.GUID}/>
+               </div>
+
+               <AdjustMonthlyPaymentModal loan={currentLoan}/>
           </div>
      );
 }

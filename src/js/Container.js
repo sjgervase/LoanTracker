@@ -88,7 +88,7 @@ export default function Container() {
                               <Route path="/addaloan" element={<AddALoan/>}/>
 
                               {/* dynamic view for closer look at an individual loan */}
-                              <Route path="/loanitemview" element={<LoanItemView/>}></Route>
+                              <Route path="/loanitemview" element={<LoanItemView data={data}/> }></Route>
 
                               <Route path="/" element={<DashBoard data={data} />} />
                               

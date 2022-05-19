@@ -18,7 +18,7 @@ export default function RecordALateFeeModal(props) {
      const [showLateFeeModalState, setLateFeeModalState] = useState(false);
 
      // state for capturing record a LateFee function
-     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan.GUID});
+     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan?.loan?.GUID});
 
 
      // functions to show or hide the record LateFee modal
@@ -26,7 +26,7 @@ export default function RecordALateFeeModal(props) {
      const hideLateFeeModalFunc = () => {
           // clear the state 
           setRecordLateFeeState({
-               GUID: props.loan.GUID
+               GUID: props.loan?.loan.GUID
           });
           // hide the modal
           setLateFeeModalState(false);
@@ -84,10 +84,9 @@ export default function RecordALateFeeModal(props) {
                                    <CurrencyInput
                                         prefix="$"
                                         name="LateFee"
-                                        placeholder="ex $10,000"
+                                        placeholder="ex $100"
                                         decimalScale={2}
                                         decimalsLimit={2}
-                                        defaultValue={props.loan.MonthlyLateFee}
                                         onValueChange={(value, name) => recordLateFeeStateFunc(value, name)}
                                         autoFocus
                                    />

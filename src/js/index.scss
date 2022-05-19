@@ -282,12 +282,6 @@ input {
 }
 
 
-// due to a common bug in recharts, this style is being applied
-// https://stackoverflow.com/questions/50891591/recharts-responsive-container-does-not-resize-correctly-in-flexbox
-// .recharts-wrapper {
-//      position: absolute !important;
-//      overflow: auto;
-// }
 
 
 
@@ -428,44 +422,31 @@ input {
      color: $lightGreen;
 }
 
+.loanInfoBox {
+     background-color: rgba(255, 0, 0, 0.144);
+}
 
-.loanRemainingInfo {
-     // background-color: red;
+.loanInfoHeader {
+     padding-left: 5px;
+     padding-right: 5px;
+     margin-bottom: 30px;
+}
+
+.loanInfoHeader > span {
+     display: block;
 }
 
 .buttonsDiv button {
      margin: 5px;
 }
 
-
-
-
-
-
-
-
-
-
-   
-   
-
-
-
-
-
-
-
-
-
-
-
-
 .loanItemViewGraph {
+     background-color: $greenWhite;
      height: 300px;
-     width: 95%;
-     margin: 2.5%;
-     border: 1px solid $green;
-     // padding: 1%;
+}
+
+.loanItemViewGraph .recharts-responsive-container {
+     margin-top: 25px;
 }
 
 
@@ -475,7 +456,6 @@ input {
 
 
 // Line chart
-
 .customLineChartTooltip {
      background-color: white;
      padding: 5px;
@@ -548,11 +528,13 @@ input {
 .rangeSelectorFull {
      margin: auto;
      flex-basis: 100%;
+     text-align: center;
 }
+
 
 .rangeSelectorSmall {
      margin-top: 15px;
-     flex-basis: 19%;
+     flex-basis: 22.5%;
 }
 
 .rangeSelectorSmall label {
@@ -562,8 +544,6 @@ input {
 
 .rangeSelectorLarge {
      flex-basis: 55%;
-     margin-left: 1%;
-     margin-right: 1%;
 }
 
 .rangeSelectorLarge input{

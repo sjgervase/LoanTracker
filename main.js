@@ -222,7 +222,8 @@ async function addFormDataToFile(formData) {
           loan: {
                GUID: newGuid,
                PaymentHistory: [], 
-               LateFees:[]
+               LateFees:[],
+               DesiredMonthlyPayment: 0
           }
      }
 

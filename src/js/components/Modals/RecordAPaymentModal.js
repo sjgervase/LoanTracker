@@ -13,12 +13,13 @@ import CurrencyInput from "react-currency-input-field";
 export default function RecordAPaymentModal(props) {
 
      // console.log(props.parent.name);
+     // console.log(props);
 
      // state for showing or hiding the record payment modal
      const [showPaymentModalState, setPaymentModalState] = useState(false);
 
      // state for capturing record a payment function
-     const [recordPaymentState, setRecordPaymentState] = useState({GUID: props.loan.GUID});
+     const [recordPaymentState, setRecordPaymentState] = useState({GUID: props.loan?.loan?.GUID});
 
 
      // functions to show or hide the record payment modal
@@ -26,7 +27,7 @@ export default function RecordAPaymentModal(props) {
      const hidePaymentModalFunc = () => {
           // clear the state 
           setRecordPaymentState({
-               GUID: props.loan.GUID
+               GUID: props.loan?.loan.GUID
           });
           // hide the modal
           setPaymentModalState(false);
@@ -41,6 +42,7 @@ export default function RecordAPaymentModal(props) {
      // function to submit entered data from "record a payment modal"
      function submitRecordedPayment() {
           // console.log(recordPaymentState);
+          
 
           ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
 
@@ -49,8 +51,8 @@ export default function RecordAPaymentModal(props) {
      }
      
 
-// conditional classnames on button:
-// className="btn-sm btn-custom btn-light py0" if parent is loanitem
+     // conditional classnames on button:
+     // className="btn-sm btn-custom btn-light py0" if parent is loanitem
 
 
 
@@ -87,7 +89,7 @@ export default function RecordAPaymentModal(props) {
                                         placeholder="ex $10,000"
                                         decimalScale={2}
                                         decimalsLimit={2}
-                                        defaultValue={props.loan.MonthlyPayment}
+                                        defaultValue={props.loan?.loan?.MonthlyPayment}
                                         onValueChange={(value, name) => recordPaymentStateFunc(value, name)}
                                         autoFocus
                                    />
