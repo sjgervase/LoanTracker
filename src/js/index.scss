@@ -234,6 +234,16 @@ input {
      width: max-content;
 }
 
+.noLoansDiv {
+     width: 90%;
+     margin: 5%;
+     margin-top: 15%;
+     text-align: center;
+     padding: 20px;
+     border: 1px solid $green;
+     background-color: $cream;
+}
+
 .dashboardModule {
      border: 1px solid $green;
      padding: 0px 5px 0px 5px;
@@ -449,6 +459,15 @@ input {
      margin-top: 25px;
 }
 
+.accordion-body {
+     border: 1px solid $green;
+     background-color: $greenWhite;
+}
+
+.accordion-body > .recharts-responsive-container {
+     top: 0;
+}
+
 
 
 
@@ -479,6 +498,7 @@ input {
      padding: 7px;
      display: flex;
      border-radius: 5px;
+     align-items: baseline;
 }
 
 .paymentOrFeeItem div {
@@ -509,6 +529,10 @@ input {
      color: $red;
      border: 1px solid $red;
      padding: 2px 4px 2px 4px;
+}
+
+.deletePaymentLateFeeButton {
+     margin-left: auto;
 }
 
 

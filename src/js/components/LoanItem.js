@@ -56,18 +56,6 @@ export default function LoanItem(props) {
           }
      }
 
-
-     // function termLengthCalculation() {
-     //      // if either fields are empty, do not do the calc
-     //      if (loan.TotalTermLength !== "" && loan.RemainingTermLength !== "") {
-
-     //           var remainingPayments = parseInt(loan.TotalTermLength) - parseInt(loan.RemainingTermLength);
-
-
-     //           return(<span>{remainingPayments} Remaining Payments</span>);
-     //      }
-     // }
-
      
      // calculate date until payment
      function dateCalculator(paymentDate) {
@@ -78,15 +66,8 @@ export default function LoanItem(props) {
           let dateDiff = parseInt(paymentDate) - parseInt(dd);
 
           if (dateDiff > 0) {
-               // its due this month, easy calculation
-               // ex due in 6 days
-               // console.log("due in " + dateDiff + " days");
-
                return dateDiff
           } else {
-               // due next month
-               // get today
-
                // get next month
                var nextMonthDate = new Date(today.setMonth(today.getMonth()+1));
 
@@ -113,13 +94,6 @@ export default function LoanItem(props) {
           }
      }
 
-     // calculate amount paid
-     function amountPaid(remaining, total) {
-          // console.log(remaining);
-          // console.log(total);
-          return parseInt(total) - parseInt(remaining);
-     }
-
      function borderStyle(color) {
           if (color !="") {
                return {
@@ -136,11 +110,6 @@ export default function LoanItem(props) {
           navigate('/loanitemview', {state:seeThisLoan});
           
      }
-
-
-      // fields remaining
-     // "InterestRate": "4.59",
-     // "LoanColor": "#007bff"
 
 
      return(               

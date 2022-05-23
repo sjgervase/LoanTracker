@@ -40,11 +40,11 @@ export default function Container() {
      useEffect(() => {
           dispatch(fetchData());
 
-          // then every 3 seconds
+          // // then every 3 seconds
           // setInterval(() => {
           //      console.log("fetching");
           //      dispatch(fetchData());
-          // }, 1000)
+          // }, 2000)
 
      }, [dispatch]);
 

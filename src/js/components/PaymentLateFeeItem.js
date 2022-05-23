@@ -1,12 +1,17 @@
 import React from "react";
 
-import { Button } from "react-bootstrap";
+// import components
+import DeletePaymentLateFeeModal from "./Modals/DeletePaymentLateFeeModal";
+
+
 
 export default function PaymentLateFeeItem(props) {
 
      // note: all payment/late fee items will have a unique dateRecorded property as two cannot be made at the same time
 
-     console.log(props);
+     // console.log(props);
+
+     
 
      // function to set border style
      function borderStyle(color) {
@@ -19,6 +24,7 @@ export default function PaymentLateFeeItem(props) {
      }
 
 
+     // function to format if the item is a payment or a latefee
      function paymentFormatType(amount, type) {
           if (type == "payment") {
                return(
@@ -36,6 +42,8 @@ export default function PaymentLateFeeItem(props) {
                )
           }
      }
+
+
 
 
      function datesFormat(dateMade) {
@@ -77,15 +85,10 @@ export default function PaymentLateFeeItem(props) {
 
                <div className="paymentOrFeeItemAmountDates">
                     <span>{datesFormat(props.item.dateMade)}</span>
-
-                    <span>{props.item.loanGUID}</span>
                </div>
 
+               <DeletePaymentLateFeeModal item={props.item}/>
 
-
-               <Button variant="outline-danger" className="btn-sm btn-custom py0">
-                    Delete
-               </Button>
 
           </div>
      );

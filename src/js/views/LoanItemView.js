@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 
 // import from react-bootstrap
-import { Button, Popover, OverlayTrigger, Carousel } from "react-bootstrap";
+import { Button, Popover, OverlayTrigger, Accordion } from "react-bootstrap";
 
 // icons from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
@@ -28,6 +28,8 @@ export default function LoanItemView(props) {
      
      // gets the params passed to this page from the "More Info" button on dashboard
      const { state } = useLocation();
+
+     
      
      // find the clicked on loan based on the passed state out of all available loans
      let currentLoan = props.data?.data.find(obj => obj.loan.GUID === state.GUID);
@@ -229,7 +231,6 @@ export default function LoanItemView(props) {
                </div>
 
                <div className="loanInfoHeader">
-
                     <span className="display-4">{"$" + new Intl.NumberFormat().format(currentLoan?.loan.CalculatedLoanAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</span>
                     
                     <span className="lead"> Next Payment of {"$" + new Intl.NumberFormat().format(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</span>
@@ -239,25 +240,45 @@ export default function LoanItemView(props) {
                          <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
                          <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>                         
                     </div>
-
                </div>
 
+               <Accordion flush defaultActiveKey="0">
 
-               <div className="dashboardModule loanItemViewGraph">
-                    <div className="moduleHeader"><span>PAYMENTS OVER TIME</span></div>
-                         
-                    <LoansLineChart data={currentLoan}/>
-                         
-               </div>
+                    <Accordion.Item eventKey="0">
+                         <Accordion.Header>
+                              Payments Over Time
+                         </Accordion.Header>
+
+                         <Accordion.Body>
+                              <LoansLineChart data={currentLoan}/>
+                         </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="1">
+                         <Accordion.Header>
+                              Recently Recorded Payments
+                         </Accordion.Header>
+
+                         <Accordion.Body>
+                              <RecentlyRecordedPayments data={props.data?.data} thisLoan={currentLoan?.loan.GUID}/>
+                         </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="2">
+                         <Accordion.Header>
+                              Monthly Payment Adjustment Calculator
+                         </Accordion.Header>
+
+                         <Accordion.Body>
+                         <p className="lead"> Paying more than your required monthly payment can reduce the amount of interest you pay, and total loan cost over the life of the loan. Click the button below to get started.</p>
+                              <AdjustMonthlyPaymentModal loan={currentLoan}/>
+                         </Accordion.Body>
+                    </Accordion.Item>
+
+               </Accordion>
 
 
-               <div className="recentTrackedPayments dashboardModule">
-
-                    <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
-                    <RecentlyRecordedPayments data={props.data?.data} thisLoan={currentLoan?.loan.GUID}/>
-               </div>
-
-               <AdjustMonthlyPaymentModal loan={currentLoan}/>
+              
           </div>
      );
 }

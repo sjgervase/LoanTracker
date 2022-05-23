@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import CurrencyInput from "react-currency-input-field";
 
+import { Button, Form, Modal, Table } from "react-bootstrap";
 
-import { Button, Form, Modal } from "react-bootstrap";
+import { BigNumber } from "bignumber.js"
+
+import { ipcRenderer } from "electron";
 
 
 
@@ -12,16 +15,15 @@ import { Button, Form, Modal } from "react-bootstrap";
 
 
 export default function AdjustMonthlyPaymentModal(props) {
-     // console.log(props);
+     console.log(props);
 
      // state for showing or hiding the modal
      const [showAdjustMonthlyPaymentState, setAdjustMonthlyPaymentState] = useState(false);
 
-     // state for capturing adjustedMonthlypayment function
-     const [recordPaymentState, setRecordPaymentState] = useState({GUID: props.loan?.loan?.GUID});
 
      // state to keep track of the current monthly payment and user selected range for slider / currency input functionality
      const [rangeValueState, setRangeValueState] = useState();
+
 
 
      // functions to show or hide the record payment modal
@@ -37,11 +39,7 @@ export default function AdjustMonthlyPaymentModal(props) {
      
      
      const hideAdjustMonthlyPaymentFunc = () => {
-          // clear the state 
-          setRecordPaymentState({
-               GUID: props.loan?.loan?.GUID
-          });
-
+         
           // clear the value state
           setRangeValueState(
                Number(props.loan?.loan?.MonthlyPayment)
@@ -51,9 +49,76 @@ export default function AdjustMonthlyPaymentModal(props) {
      }
 
 
-     // useEffect(() => {
-     //      console.log(rangeValueState);
-     // }, [rangeValueState])
+     // function to calculate new desired payback
+     // doing it this way as down the line i would like to output a CSV list of all payments, but at the moment will just return some numbers
+     function repaymentInterestCalculator(monthlyPayment) {
+          
+          // create an empty array to calculate all interest payments
+          let interestPaymentsArray = [];
+
+          // get the total amount
+          let totalLoanAmountBN = new BigNumber(props.loan?.loan.TotalLoanAmount);
+
+          // get the monthly payment
+          let monthlyPaymentBN = new BigNumber(monthlyPayment);
+
+          // get the total payments
+          let terms = totalLoanAmountBN.div(monthlyPaymentBN);
+
+          // get the interest rate and convert it to decimal 
+          let interestRateBN = new BigNumber(props.loan?.loan.InterestRate);
+          interestRateBN = interestRateBN.dividedBy(100);
+
+          // for each term
+          for (let i = 0; i < terms; i++) {
+               // divide interest rate by 12 and multiply by totalLoanAmount
+               // this gives us the amount of that payment which is interest
+               let interestPayment = interestRateBN.dividedBy(12).multipliedBy(totalLoanAmountBN);
+               
+               // push this amount to the array
+               interestPaymentsArray.push(interestPayment.toNumber());
+
+               // subtract the monthly payment from the the total
+               totalLoanAmountBN -= monthlyPaymentBN;
+          }
+
+          let totalInterestPaid = interestPaymentsArray.reduce((partialSum, a) => partialSum + a, 0);
+
+          return totalInterestPaid.toFixed(2);
+     }
+
+
+
+
+     function repaymentTermCalculator(monthlyPayment) {
+          // get the total amount
+          let totalLoanAmountBN = new BigNumber(props.loan?.loan.TotalLoanAmount);
+
+          // get the monthly payment
+          let monthlyPaymentBN = new BigNumber(monthlyPayment);
+
+          // get the total payments
+          let terms = totalLoanAmountBN.div(monthlyPaymentBN);
+
+          return terms.toFixed(0);
+     }
+
+
+
+     // function to submit entered data from "adjust monthly payment modal"
+     function submitDesiredMonthlyPayment() {
+
+          let monthlyPaymentSubmission = {
+               GUID: props.loan?.loan.GUID,
+               value: rangeValueState
+          }
+
+          ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
+          // hide the modal
+          setAdjustMonthlyPaymentState(false);
+     }
+     
+
      
 
 
@@ -133,9 +198,51 @@ export default function AdjustMonthlyPaymentModal(props) {
                          </Form.Group>
 
                          <div className="adjustedPaymentResult">
-                              <p>
-                              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                              </p>
+                              {/* not going with an actual table as i may show or hide additional columns */}
+
+                              <div className="adjustedPaymentResultColumn columnTitles">
+                                   <span>Total Payback Amount</span>
+                                   <span>Total Interest Paid</span>
+                                   <span>Total Payments</span>
+                              </div>
+
+                              <Table>
+                                   <thead>
+                                        <tr>
+                                             <th></th>
+                                             <th>New Payment: {"$" + new Intl.NumberFormat().format(rangeValueState)}</th>
+                                             <th>Old Payment: ${parseFloat(props.loan?.loan?.MonthlyPayment)}</th> 
+                                        </tr>
+                                   </thead>
+                                   
+                                   <tbody>
+                                        <tr>
+                                             <td>Total Payments</td>
+
+                                             <td>{repaymentTermCalculator(rangeValueState)} terms</td>
+
+                                             <td>{repaymentTermCalculator(props.loan?.loan.MonthlyPayment)} terms</td>
+                                             
+                                        </tr>
+                                        <tr>
+                                             <td>Total Interest Paid</td>
+                                             
+                                             <td>
+                                                  {"$" + new Intl.NumberFormat().format(
+                                                       repaymentInterestCalculator(rangeValueState)
+                                                  )}
+                                             </td>
+                                             
+                                             <td>
+                                                  {"$" + new Intl.NumberFormat().format(
+                                                       repaymentInterestCalculator(props.loan?.loan.MonthlyPayment)
+                                                  )}
+                                             </td>
+                                        
+                                        </tr>
+                                   </tbody>
+                              </Table>
+
                          </div>
 
                     </Modal.Body>
@@ -148,7 +255,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                               Cancel
                          </Button>
 
-                         <Button variant="success" onClick={() => submitAdjustedMonthlyPayment()}>
+                         <Button variant="success" onClick={() => submitDesiredMonthlyPayment()}>
                               Record
                          </Button>
                     </Modal.Footer>

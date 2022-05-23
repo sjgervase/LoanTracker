@@ -12,13 +12,11 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function RecordALateFeeModal(props) {
 
-     // console.log(props.parent.name);
-
      // state for showing or hiding the record LateFee modal
      const [showLateFeeModalState, setLateFeeModalState] = useState(false);
 
      // state for capturing record a LateFee function
-     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan?.loan?.GUID});
+     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan?.loan.GUID});
 
 
      // functions to show or hide the record LateFee modal
@@ -41,10 +39,8 @@ export default function RecordALateFeeModal(props) {
 
      // function to submit entered data from "record a Late Fee modal"
      function submitRecordedLateFee() {
-          // console.log(recordLateFeeState);
-
+          console.log(recordLateFeeState);
           ipcRenderer.invoke('newLateFeeSubmission', (recordLateFeeState));
-
           // hide the modal
           setLateFeeModalState(false);
      }

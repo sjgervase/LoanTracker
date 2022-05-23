@@ -12,23 +12,26 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function RecordAPaymentModal(props) {
 
-     // console.log(props.parent.name);
-     // console.log(props);
+
+     // get the guid. this has passed differently based on the view, so its an if
+     let thisGUID = (props.parent.name == "LoanItemView" ? props.loan?.loan.GUID : props.loan?.GUID);
+
+     
+
+     
 
      // state for showing or hiding the record payment modal
      const [showPaymentModalState, setPaymentModalState] = useState(false);
 
      // state for capturing record a payment function
-     const [recordPaymentState, setRecordPaymentState] = useState({GUID: props.loan?.loan?.GUID});
+     const [recordPaymentState, setRecordPaymentState] = useState({GUID: thisGUID});
 
 
      // functions to show or hide the record payment modal
      const showPaymentModalFunc = () => setPaymentModalState(true);
      const hidePaymentModalFunc = () => {
           // clear the state 
-          setRecordPaymentState({
-               GUID: props.loan?.loan.GUID
-          });
+          setRecordPaymentState({GUID: thisGUID});
           // hide the modal
           setPaymentModalState(false);
      }
@@ -41,7 +44,7 @@ export default function RecordAPaymentModal(props) {
 
      // function to submit entered data from "record a payment modal"
      function submitRecordedPayment() {
-          // console.log(recordPaymentState);
+          console.log(submitRecordedPayment);
           
 
           ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));

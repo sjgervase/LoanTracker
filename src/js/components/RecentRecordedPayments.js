@@ -15,7 +15,6 @@ export default function RecentlyRecordedPayments(props) {
 
           // if this field exists, then this component is being viewed in a specific loan item
           if (props.thisLoan) {
-               console.log(props.thisLoan);
 
                let currentLoan = props.data?.find(obj => obj.loan.GUID === props.thisLoan);
 

@@ -44,11 +44,7 @@ function createWindow() {
           } else {
                win.maximize();
           }
-     })
-
-
-
-    
+     })    
 }
 
 
@@ -75,12 +71,8 @@ if (isDevelopmentMode) {
      })
 }
 
-
 // create window when ready
 app.whenReady().then(createWindow);
-
-
-
 
 
 
@@ -118,12 +110,10 @@ function dataFileVerifier() {
      }
 }
 
+
+
 // when app is ready, run above function to ensure library files exist in the userData folder and if not, create them
 app.whenReady().then(dataFileVerifier());
-
-
-
-
 
 
 
@@ -153,7 +143,6 @@ async function dataGrabber() {
      return data;
 }
 
-
 // runs above function to get data from file
 ipcMain.handle('dataRequest', async (event, arg) => {
      // get the objects from the file
@@ -163,29 +152,45 @@ ipcMain.handle('dataRequest', async (event, arg) => {
 
 
 
+// open url for bank
+ipcMain.handle("openLinkToPaymentURL", (event, url) => {
+     // console.log(url);
+     shell.openExternal(url);
+})
 
 
-// add the data recieved in the ipc message below to the file
-async function addFormDataToFile(formData) {
 
-     // console.log(formData);
+// read the current data. this function is called in all functions for adding data to datafile
+function fileReader(){
+     // path to OS appdata folder
+     var userDataPath = app.getPath('userData');
 
+     // build the string to the path of the current user library json file
+     var dataFile = path.join(userDataPath, "dataFile.json");
+     
+     // console.log("documentRead");
+     data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
+
+     // return album object
+     return data;
+}
+
+// write updated data to the file
+function fileWriter(filedata) {
      // path to OS appdata folder
      var userDataPath = app.getPath('userData');
 
      // build the string to the path of the current user library json file
      var dataFile = path.join(userDataPath, "dataFile.json");
 
+     // write to file
+     fs.writeFileSync(path.resolve(dataFile), JSON.stringify(filedata));
+}
 
-     // read the current data
-     function fileReader(){
-          // console.log("documentRead");
-          data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
-          // return album object
-          return data;
-     }
-
+// add the data recieved in the ipc message below to the file
+async function addFormDataToFile(formData) {
+    
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
 
@@ -231,10 +236,10 @@ async function addFormDataToFile(formData) {
      Object.assign(loanObject.loan, formData);
 
      filedata.data.push(loanObject);
-
-     fs.writeFileSync(path.resolve(dataFile), JSON.stringify(filedata));
+     
+     // write to file
+     fileWriter(filedata);
 }
-
 
 //  New Loan Item Submission
 ipcMain.handle('newLoanSubmission', async (event, formData) => {
@@ -244,45 +249,8 @@ ipcMain.handle('newLoanSubmission', async (event, formData) => {
 
 
 
-// open url for bank
-ipcMain.handle("openLinkToPaymentURL", (event, url) => {
-     // console.log(url);
-     shell.openExternal(url);
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // add the data recieved in the ipc message below to the file
 async function addPaymentToLoan(recordPaymentState) {
-
-     // console.log(recordPaymentState);
-
-     // path to OS appdata folder
-     var userDataPath = app.getPath('userData');
-
-     // build the string to the path of the current user library json file
-     var dataFile = path.join(userDataPath, "dataFile.json");
-
-     // read the current data
-     function fileReader(){
-          // console.log("documentRead");
-          data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-
-          // return album object
-          return data;
-     }
 
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
@@ -292,26 +260,9 @@ async function addPaymentToLoan(recordPaymentState) {
 
      let paymentHistory = loanToUpdate.loan.PaymentHistory;
 
-     // adding an index for easier sorting for graph data.
-     // the number itself isnt too important as recorded payments can be deleted by the user.
-     // but the graph really needs data in order to draw effectively
-
-     // create an empty object
-     let maxIndex = {};
-
-     if (paymentHistory.length > 0) {
-          // if there is a payment history, find the hightest index
-          maxIndex = paymentHistory.reduce((prev, current) => (prev.index > current.index) ? prev : current)     
-     } else {
-          // else, add an index of one
-          maxIndex.index = 0;
-     }
-
-     // console.log(maxIndex.index);
-
+     
      // create empty payment object
      let paymentObject = {
-          index: maxIndex.index + 1,
           amount: recordPaymentState.Payment,
           dateMade: recordPaymentState.Date,
           dateRecorded: new Date()
@@ -319,9 +270,8 @@ async function addPaymentToLoan(recordPaymentState) {
 
      paymentHistory.push(paymentObject);
 
-
      // write to file
-     fs.writeFileSync(path.resolve(dataFile), JSON.stringify(filedata));
+     fileWriter(filedata);
      
 }
 
@@ -333,31 +283,8 @@ ipcMain.handle('newPaymentSubmission', async (event, recordPaymentState) => {
 
 
 
-
-
-
-
-
-
 // add the data recieved in the ipc message below to the file
 async function addLateFeeToLoan(recordLateFeeState) {
-
-     // console.log(recordLateFeeState);
-
-     // path to OS appdata folder
-     var userDataPath = app.getPath('userData');
-
-     // build the string to the path of the current user library json file
-     var dataFile = path.join(userDataPath, "dataFile.json");
-
-     // read the current data
-     function fileReader(){
-          // console.log("documentRead");
-          data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-
-          // return album object
-          return data;
-     }
 
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
@@ -367,36 +294,19 @@ async function addLateFeeToLoan(recordLateFeeState) {
 
      let LateFees = loanToUpdate.loan.LateFees;
 
-     // adding an index for easier sorting for graph data.
-     // the number itself isnt too important as recorded payments can be deleted by the user.
-     // but the graph really needs data in order to draw effectively
-
-     // create an empty object
-     let maxIndex = {};
-
-     if (LateFees.length > 0) {
-          // if there is a payment history, find the hightest index
-          maxIndex = LateFees.reduce((prev, current) => (prev.index > current.index) ? prev : current)     
-     } else {
-          // else, add an index of one
-          maxIndex.index = 0;
-     }
-
      // console.log(maxIndex.index);
 
      let LateFeeObject = {
-          index: maxIndex.index + 1,
           amount: recordLateFeeState.LateFee,
           dateMade: recordLateFeeState.Date,
           dateRecorded: new Date()
      }
 
      LateFees.push(LateFeeObject);
-
+     
      // write to file
-     fs.writeFileSync(path.resolve(dataFile), JSON.stringify(filedata));
+     fileWriter(filedata);
 }
-
 
 //  New Late Fee Submission
 ipcMain.handle('newLateFeeSubmission', async (event, recordLateFeeState) => {
@@ -408,3 +318,55 @@ ipcMain.handle('newLateFeeSubmission', async (event, recordLateFeeState) => {
 
 
 
+// add the data recieved in the ipc message below to the file
+async function deletePaymentLateFee(GUIDAndTimestampType) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // find the loan to update based on the guid
+     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === GUIDAndTimestampType.GUID);
+
+     let propertyName = GUIDAndTimestampType.type;
+
+     // determine payment history / late fee based on recieved type
+     let listToUpdate = loanToUpdate.loan[propertyName];
+
+     // get the index
+     let removeThisIndex = listToUpdate.findIndex(item => item.dateRecorded === GUIDAndTimestampType.TimeStamp);
+
+     // remove that item
+     listToUpdate.splice(removeThisIndex, 1);
+
+     // write to file
+     fileWriter(filedata);
+}
+
+//  Delete Payment / late fee from history
+ipcMain.handle('deletePaymentLateFee', async (event, GUIDAndTimestampType) => {
+     const result = await deletePaymentLateFee(GUIDAndTimestampType);
+     return result
+})
+
+
+
+// add the data recieved in the ipc message below to the file
+async function addDesiredMonthlyPayment(desiredMonthlyPayment) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // find the loan to update based on the guid
+     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === desiredMonthlyPayment.GUID);
+
+     loanToUpdate.loan.DesiredMonthlyPayment = desiredMonthlyPayment.value;
+
+     fileWriter(filedata);
+}
+
+
+//  add desired monthly payment to form
+ipcMain.handle('desiredMonthlyPaymentSubmission', async (event, desiredMonthlyPayment) => {
+     const result = await addDesiredMonthlyPayment(desiredMonthlyPayment);
+     return result
+})
