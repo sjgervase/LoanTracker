@@ -15,7 +15,6 @@ import { ipcRenderer } from "electron";
 
 
 export default function AdjustMonthlyPaymentModal(props) {
-     console.log(props);
 
      // state for showing or hiding the modal
      const [showAdjustMonthlyPaymentState, setAdjustMonthlyPaymentState] = useState(false);
@@ -187,12 +186,6 @@ export default function AdjustMonthlyPaymentModal(props) {
                                         onValueChange={(value) => setRangeValueState(Number(value))}
                                         />
                                    </div>
-                              </div>
-
-                              <div className="rangeSelectorFull">
-                                   <Button variant="success" size="lg" onClick={() => hidePaymentModalFunc()}>
-                                        Calculate
-                                   </Button>
                               </div>
 
                          </Form.Group>

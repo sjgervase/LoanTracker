@@ -5,7 +5,6 @@ import {
      PieChart,
      Pie,
      Cell,
-     Sector,
      Tooltip, 
      Legend,
      Label
@@ -18,18 +17,19 @@ export default function LoansPieChart(props) {
 
      // https://celiaongsl.medium.com/2-secret-pie-chart-hacks-to-up-your-recharts-game-hack-recharts-1-9fa62ff9416a
 
-
-
      // format data for pie chart
      function rechartData() {
           let dataArray = [];
 
           for (let i = 0; i < props.data?.length; i++) {
-               dataArray.push({
-                    "name": props.data?.[i].loan.LoanName,
-                    "value": parseFloat(props.data?.[i].loan.CalculatedLoanAmount),
-                    "color": props.data?.[i].loan.LoanColor
-               });
+
+               if (!props.data?.[i].loan.PaidOff) {
+                    dataArray.push({
+                         "name": props.data?.[i].loan.LoanName,
+                         "value": parseFloat(props.data?.[i].loan.CalculatedLoanAmount),
+                         "color": props.data?.[i].loan.LoanColor
+                    });     
+               }
           }
           return dataArray
      }

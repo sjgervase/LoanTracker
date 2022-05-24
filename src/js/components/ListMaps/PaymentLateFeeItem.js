@@ -1,7 +1,7 @@
 import React from "react";
 
 // import components
-import DeletePaymentLateFeeModal from "./Modals/DeletePaymentLateFeeModal";
+import DeletePaymentLateFeeModal from "../Modals/DeletePaymentLateFeeModal";
 
 
 

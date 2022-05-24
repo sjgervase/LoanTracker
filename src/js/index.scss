@@ -157,7 +157,9 @@ form button {
 }
 
 
-
+.totalLoanAmountDiv {
+     width: 33%;
+}
 
 
 .formGroupDiv {
@@ -306,6 +308,12 @@ input {
      margin-bottom: 5px;
 }
 
+.paidOffLoan {
+     opacity: 0.33;
+}
+
+
+
 .loanItem:hover {
      box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
@@ -340,6 +348,7 @@ input {
      display: flex;
      flex-wrap: wrap;
      justify-content: flex-start;
+     width: 100%;
 
 }
 
@@ -670,3 +679,27 @@ input[type=range] {
    input[type=range]:focus::-ms-fill-upper {
      background: #36733F;
    }
+
+
+
+
+
+
+
+
+
+
+
+
+// All Loans
+.activeLoansAllLoans {
+     background-color: $greenWhite;
+     height: 33vh;
+     margin-bottom: 4vh;
+     margin-top: 4vh;
+}
+
+.paidOffLoansAllLoans {
+     background-color: $greenWhite;
+     height: 33vh;
+}

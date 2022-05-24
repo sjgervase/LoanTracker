@@ -19,7 +19,7 @@ import {
 import DashBoard from "./views/DashBoard";
 import Settings from "./views/Settings"
 import SimpleBudget from "./views/SimpleBudget";
-import Loans from "./views/Loans";
+import AllLoans from "./views/AllLoans";
 import AddALoan from './views/AddALoan';
 import LoanItemView from './views/LoanItemView';
 
@@ -67,6 +67,16 @@ export default function Container() {
                }
 
                data.data[i].loan.CalculatedLoanAmount = calculatedAmount.toFixed(2);
+
+               
+               // add additional prop to loan if its calculated amount is less than or equal to 0
+               if (calculatedAmount <= 0) {
+                    data.data[i].loan.PaidOff = true;
+
+                    
+               } else {
+                    data.data[i].loan.PaidOff = false;
+               }
           }
      }
      
@@ -84,7 +94,7 @@ export default function Container() {
                          <Routes>
                               <Route path="/settings" element={<Settings/>}/>
                               <Route path="/simplebudget" element={<SimpleBudget/>}/>
-                              <Route path="/loans" element={<Loans/>}/>
+                              <Route path="/allloans" element={<AllLoans data={data}/>}/>
                               <Route path="/addaloan" element={<AddALoan/>}/>
 
                               {/* dynamic view for closer look at an individual loan */}

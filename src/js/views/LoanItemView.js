@@ -19,7 +19,7 @@ import RecordAPaymentModal from "../components/Modals/RecordAPaymentModal";
 import LoansLineChart from "../components/Charts/LoansLineChart";
 import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
 import AdjustMonthlyPaymentModal from "../components/Modals/AdjustMonthlyPaymentModal";
-import RecentlyRecordedPayments from "../components/RecentRecordedPayments";
+import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayments";
 
 
 

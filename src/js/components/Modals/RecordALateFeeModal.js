@@ -44,6 +44,13 @@ export default function RecordALateFeeModal(props) {
           // hide the modal
           setLateFeeModalState(false);
      }
+
+     // set the default date picker value to today
+     function dateDefaultToday() {
+          let today = new Date();
+          let formattedToday = today.toISOString().split('T')[0]
+          return formattedToday;
+     }
      
 
 // conditional classnames on button:
@@ -92,6 +99,7 @@ export default function RecordALateFeeModal(props) {
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Issued</Form.Label>
                                    <Form.Control type="date" name="Date"
+                                   defaultValue={dateDefaultToday()}
                                    onChange={e => recordLateFeeStateFunc(e.target.value, e.target.name)} />
                               </Form.Group>
 

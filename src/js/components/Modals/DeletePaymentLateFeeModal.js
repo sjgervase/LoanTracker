@@ -25,7 +25,6 @@ export default function DeletePaymentLateFeeModal(props) {
      }
 
      function deletePaymentLateFee() {
-          console.log("hi");
 
           let GUIDAndTimestampType = {
                GUID: props.item.loanGUID,

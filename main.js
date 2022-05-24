@@ -228,7 +228,8 @@ async function addFormDataToFile(formData) {
                GUID: newGuid,
                PaymentHistory: [], 
                LateFees:[],
-               DesiredMonthlyPayment: 0
+               DesiredMonthlyPayment: 0,
+               TotalLoanAmount: formData.MonthlyPayment * formData.TotalTermLength
           }
      }
 
@@ -368,5 +369,36 @@ async function addDesiredMonthlyPayment(desiredMonthlyPayment) {
 //  add desired monthly payment to form
 ipcMain.handle('desiredMonthlyPaymentSubmission', async (event, desiredMonthlyPayment) => {
      const result = await addDesiredMonthlyPayment(desiredMonthlyPayment);
+     return result
+})
+
+
+
+
+
+
+
+
+
+
+
+// delete loan
+async function deleteLoan(GUID) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // find the loan to update based on the guid
+     let loanToDeleteIndex = filedata.data.findIndex(loan => loan.loan.GUID === GUID);
+
+     filedata.data.splice(loanToDeleteIndex, 1);
+
+     fileWriter(filedata);
+}
+
+
+//  delete specified loan
+ipcMain.handle('deleteLoan', async (event, GUID) => {
+     const result = await deleteLoan(GUID);
      return result
 })

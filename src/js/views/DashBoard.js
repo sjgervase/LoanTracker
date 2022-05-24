@@ -5,15 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 // import components
-import LoanList from "../components/LoanList";
+import LoanList from "../components/ListMaps/ActiveLoanList";
 import LoansPieChart from "../components/Charts/LoansPieChart";
-import RecentlyRecordedPayments from "../components/RecentRecordedPayments";
+import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayments";
 
 
 export default function DashBoard(props) {
 
-     console.log(props.data);
-
+     
 
      // navigate functionality
      let navigate = useNavigate();
@@ -25,9 +24,7 @@ export default function DashBoard(props) {
 
      function noData() {
           // if there is no data
-          if (props.data?.length == undefined) {
-               console.log("hi");
-
+          if (props.data?.data.length == 0 || props.data?.data.length == undefined) {
                return(
                     <div className="noLoansDiv">
                          <p>It looks like you don't have any loans yet. Click the button below to add your first one. Or, you can click on "Loans" in the top navigation bar and add a loan from there.</p>
@@ -49,8 +46,6 @@ export default function DashBoard(props) {
                <h1 className="componentTitle">DashBoard</h1>
 
                <div className="dashboardModules">
-
-                    
                
                     <div className="activeLoans dashboardModule">
                          <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
@@ -59,7 +54,7 @@ export default function DashBoard(props) {
                               {/* if the end user has no loans */}
                               {noData()}
 
-                              <LoanList loans={props.data?.data}/>
+                              <LoanList loans={props.data?.data} parent={"DashBoard"}/>
                          </div>
                          
                     </div>

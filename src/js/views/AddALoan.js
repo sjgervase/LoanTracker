@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // import from electron
 import { ipcRenderer } from "electron";
 
 // import from react-bootstrap
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 
 // import from currency field
 import CurrencyInput from "react-currency-input-field";
@@ -80,33 +80,116 @@ export default function AddALoan() {
      }
 
 
+     // state for holding the invalid field
+     const [errorState, setErrorState] = useState({
+          field: "",
+          text: ""
+     })
+
+     // state for showing whether or not the form is submittable
+     const [submittable, setSubmittable] = useState(true);
 
 
-     function submission() {
-          // console.log(formState);
-          // validate data (no negatives, etc)
+     // const isMounted = useRef(false);
 
-          // if formState.TotalLoanAmount has NOT been added to the state, then the end user used the calculated amount
-          if (formState.TotalLoanAmount == undefined) {
-               formState.TotalLoanAmount = formState.MonthlyPayment * formState.TotalTermLength;
+
+
+     async function dataValidator() {
+          console.log("validating");
+
+          // if loan name is blank or spaces
+          if (formState.LoanName == undefined || formState.LoanName.match(/^ *$/) !== null) {
+               // console.log("bad");
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "LoanName",
+                    text: "Ensure the entered Loan Name is not blank or comprised of spaces"
+               });
+          
+          // if monthly payment is blank or negative
+          } else if(formState.MonthlyPayment == undefined || parseFloat(formState.MonthlyPayment) < 1) {
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "MonthlyPayment",
+                    text: "Ensure the entered Monthly Payment is not blank, $0,  or a negative number"
+               });
+
+          // if term length is undefined or less than 1
+          } else if(formState.TotalTermLength == undefined || parseInt(formState.TotalTermLength) < 1) {
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "TotalTermLength",
+                    text: "Ensure the entered Total Term Length is not blank, 0, or a negative number"
+               })
+              
+          // if interest rate is blank or negative
+          } else if(formState.InterestRate == undefined || parseFloat(formState.InterestRate) < 1) {
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "InterestRate",
+                    text: "Ensure the entered Interest Rate is not blank, 0, or a negative number"
+               })
+               
+
+          // if disbursement date is blank
+          } else if(formState.DisbursementDate == undefined) {
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "DisbursementDate",
+                    text: "Ensure the entered Disbursement Date is not blank"
+               })
+               
+          
+          // if payment due date is blank or negative
+          }  else if(formState.PaymentDate == undefined || parseFloat(formState.PaymentDate) < 1) {
+               setSubmittable(false);
+
+               setErrorState({
+                    field: "PaymentDate",
+                    text: "Ensure the entered Payment Date is not blank, 0, or a negative number"
+               })
+
+
+          // everything is valid
+          } else {
+               setSubmittable(true);
+
+               setErrorState({
+                    field: "",
+                    text: ""
+               })
+
+               // invoke main process to write data to file
+               console.log("submit");
+               ipcRenderer.invoke('newLoanSubmission', (formState));
+
+               // spin wheel until its done, ensuring the new data appears on the overview          
+               // return to overview
+               navigate('/');
           }
-          
-          // invoke main process to write data to file       https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendererinvokechannel-args
-          ipcRenderer.invoke('newLoanSubmission', (formState));
-          
-          // spin wheel until its done, ensuring the new data appears on the overview
-          
-          // return to overview
-          navigate('/');
-
      }
+     
+
+
+     
+     
+     
+
+
+
+     
 
      function cancel() {
           // add "are you sure" popup   https://react-bootstrap.github.io/components/modal/
-
           // return to overview
           navigate('/');
      }
+
 
 
      return(
@@ -116,6 +199,7 @@ export default function AddALoan() {
                <span>Fill out the fields below to add this loan to your total list of loans</span>
 
                <div className="loanInfoForm">
+
                     
 
                     {/* https://www.investopedia.com/terms/a/amortized_loan.asp */}
@@ -137,8 +221,13 @@ export default function AddALoan() {
                     <div className={`loanTypes ${loanTypeState == "Amortized Loan" ? "showLoanTypes": ""}`}>
                          <Form>
 
-                              
-
+                              {/* function to show alert */}
+                              <Alert variant="danger" show={!submittable}>
+                              <Alert.Heading>
+                              Error
+                              </Alert.Heading>
+                              {errorState.text}
+                              </Alert>
                               
 
                               <span className="formGroupLegend">REQUIRED INFO</span>
@@ -149,7 +238,7 @@ export default function AddALoan() {
                                         {/* Loan Name */}
                                         <Form.Group controlId="LoanName" className="loanNameDiv">
                                              <Form.Label>Loan Name</Form.Label>
-                                             <Form.Control type="Text" name="LoanName" placeholder="Enter a name for this loan" 
+                                             <Form.Control type="Text" name="LoanName" placeholder="Enter a name for this loan" className={`${errorState.field == "LoanName" ? "errorField": ""}`} 
                                              onChange={e => handleChange(e.target.value, e.target.name)} />
                                              <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
                                         </Form.Group>
@@ -182,7 +271,9 @@ export default function AddALoan() {
                                                   placeholder="ex $100"
                                                   decimalScale={2}
                                                   decimalsLimit={2}
+                                                  allowNegativeValue={false}
                                                   onValueChange={(value, name) => handleChange(value, name)}
+                                                  className={`${errorState.field == "MonthlyPayment" ? "errorField": ""}`}
                                              />
                                         </Form.Group>
 
@@ -195,7 +286,7 @@ export default function AddALoan() {
                                         {/* Total Term Length */}
                                         <Form.Group controlId="TotalTermLength" className="termLengthDiv">
                                              <Form.Label>Total Term Length (Months)</Form.Label>
-                                             <Form.Control type="number" placeholder="ex 36" name="TotalTermLength"
+                                             <Form.Control type="number" placeholder="ex 36" name="TotalTermLength" className={`${errorState.field == "TotalTermLength" ? "errorField": ""}`}
                                              onChange={e => handleChange(e.target.value, e.target.name)} />
                                              <Form.Text className="text-muted">The Total number of payments that will be made on this loan</Form.Text>
                                         </Form.Group>
@@ -206,18 +297,12 @@ export default function AddALoan() {
                                              </svg>
                                         </div>
 
-                                         {/* Principal Amount */}
+
+                                        {/* Principal Amount */}
                                         <Form.Group controlId="TotalLoanAmount" className="totalLoanAmountDiv">
                                              <Form.Label>Total Loan Amount</Form.Label>
-                                             <CurrencyInput
-                                                  prefix="$"
-                                                  name="TotalLoanAmount"
-                                                  placeholder="calculated"
-                                                  decimalScale={2}
-                                                  decimalsLimit={2}
-                                                  value={isNaN(formState.MonthlyPayment * formState.TotalTermLength) ? "" : formState.MonthlyPayment * formState.TotalTermLength}
-                                                  onValueChange={(value, name) => handleChange(value, name)}
-                                             />
+                                             
+                                             <h3>{(isNaN(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))) ? "---" : "$" + new Intl.NumberFormat().format(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))}</h3>
                                         </Form.Group>
                                    </div>
 
@@ -233,17 +318,29 @@ export default function AddALoan() {
                                                   placeholder="ex 3%"
                                                   decimalScale={2}
                                                   decimalsLimit={2}
+                                                  allowNegativeValue={false}
                                                   onValueChange={(value, name) => handleChange(value, name)}
+                                                  className={`${errorState.field == "InterestRate" ? "errorField": ""}`}
                                              />
+                                        </Form.Group>
+
+                                        {/* Disbursement Date */}
+                                        <Form.Group controlId="DisbursementDate" className="disbursementDateDiv">
+                                             <Form.Label>Disbursement Date</Form.Label>
+                                             <Form.Control type="date" name="DisbursementDate" className={`${errorState.field == "DisbursementDate" ? "errorField": ""}`}
+                                             onChange={e => handleChange(e.target.value, e.target.name)} />
+                                             <Form.Text className="text-muted">This is the date the loan began</Form.Text>
                                         </Form.Group>
 
                                         {/* Payment Date */}
                                         <Form.Group controlId="PaymentDate" className="termLengthDiv">
                                              <Form.Label>Payment Due Date</Form.Label>
-                                             <Form.Control type="number" name="PaymentDate" placeholder="ex 18"
+                                             <Form.Control type="number" name="PaymentDate" placeholder="ex 18" className={`${errorState.field == "PaymentDate" ? "errorField": ""}`}
                                              onChange={e => handleChange(e.target.value, e.target.name)} />
                                              <Form.Text className="text-muted">The day you pay the bill. If you pay on the 18th of each month, enter 18</Form.Text>
                                         </Form.Group>
+
+                                       
                                    </div>
 
                               </div>
@@ -279,14 +376,6 @@ export default function AddALoan() {
                                              />
                                         </Form.Group>
 
-                                        {/* Disbursement Date */}
-                                        <Form.Group controlId="DisbursementDate" className="disbursementDateDiv">
-                                             <Form.Label>DisbursementDate</Form.Label>
-                                             <Form.Control type="date" name="DisbursementDate"
-                                             onChange={e => handleChange(e.target.value, e.target.name)} />
-                                             <Form.Text className="text-muted">This is the date the loan began</Form.Text>
-                                        </Form.Group>
-
                                         {/* Remaining Term Length */}
                                         <Form.Group controlId="RemainingTermLength" className="termLengthDiv">
                                              <Form.Label>Remaining Term Length (Months)</Form.Label>
@@ -299,7 +388,7 @@ export default function AddALoan() {
                               </div>
 
                               <Button variant="success"
-                              onClick={() => submission()}>
+                              onClick={() => dataValidator()}>
                                    Submit
                               </Button>
 

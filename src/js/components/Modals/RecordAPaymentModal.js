@@ -44,7 +44,7 @@ export default function RecordAPaymentModal(props) {
 
      // function to submit entered data from "record a payment modal"
      function submitRecordedPayment() {
-          console.log(submitRecordedPayment);
+          // console.log(submitRecordedPayment);
           
 
           ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
@@ -57,6 +57,13 @@ export default function RecordAPaymentModal(props) {
      // conditional classnames on button:
      // className="btn-sm btn-custom btn-light py0" if parent is loanitem
 
+     // set the default date picker value to today
+     function dateDefaultToday() {
+          let today = new Date();
+          let formattedToday = today.toISOString().split('T')[0]
+          return formattedToday;
+     }
+
 
 
      return(
@@ -65,7 +72,7 @@ export default function RecordAPaymentModal(props) {
                <Button
                     variant="light"
                     // conditional classname depending on the parent of the button
-                    className={`${props.parent.name == "LoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
+                    className={`${props.parent.name == "ActiveLoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
                     onClick={showPaymentModalFunc}>
                     Record a Payment
                </Button>
@@ -102,6 +109,7 @@ export default function RecordAPaymentModal(props) {
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Paid</Form.Label>
                                    <Form.Control type="date" name="Date"
+                                   defaultValue={dateDefaultToday()}
                                    onChange={e => recordPaymentStateFunc(e.target.value, e.target.name)} />
                               </Form.Group>
 

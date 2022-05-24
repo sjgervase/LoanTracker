@@ -48,12 +48,12 @@ export default function NavigationBar() {
                <Nav>
      
                     <Nav.Link href="#/">
-                         Overview
+                         DashBoard
                     </Nav.Link>
      
                     <NavDropdown title="Loans" bg="dark" id="basic-nav-dropdown">
                          <NavDropdown.Item href="#/addaloan">Add A Loan</NavDropdown.Item>
-                         <NavDropdown.Item href="#/loans">All Loans</NavDropdown.Item>
+                         <NavDropdown.Item href="#/allloans">All Loans</NavDropdown.Item>
                          <NavDropdown.Divider/>
                          <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                          <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
