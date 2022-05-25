@@ -19,15 +19,11 @@ export default function AddMonthlyPayModal() {
      // state for showing or hiding the modal
      const [showAddMonthlyPay, setShowAddMonthlyPay] = useState(false);
 
-
      // state to keep track of user entered data
      const [monthlyPayState, setMonthlyPayState] = useState({});
 
-
-
      // functions to show or hide the modal
      const showAddMonthlyPayFunc = () => {setShowAddMonthlyPay(true)};
-     
      
      const hideAddMonthlyPayFunc = () => {
           // clear the value state
@@ -41,18 +37,25 @@ export default function AddMonthlyPayModal() {
           setMonthlyPayState({ ...monthlyPayState, [name]: value })
      }
 
-
-     
-
      // function to submit entered data from "adjust monthly payment modal"
      function submitMonthlyPay() {
-          console.log("submit");
+          // get the calculated monthly pay
+          let calculatedMonthlyPay = monthlyPayCalculator();
 
-          ipcRenderer.invoke('submitMonthlyPay', (monthlyPayState));
+          // create an income object with the state and calculated monthly pay
+          let incomeObject = {
+               ...monthlyPayState,
+               MonthlyPay: calculatedMonthlyPay,
+          }
+
+          ipcRenderer.invoke('submitMonthlyPay', (incomeObject));
+
+          // clear the value state
+          setMonthlyPayState({});
+
           // hide the modal
           setShowAddMonthlyPay(false);
      }
-
 
      // function to show estimated monthly payment
      function monthlyPayCalculator() {
@@ -61,7 +64,8 @@ export default function AddMonthlyPayModal() {
 
           // ensure both fields are selected
           if (monthlyPayState.hasOwnProperty("PayFrequency") && monthlyPayState.hasOwnProperty("PaymentAmount")) {
-               let pay = new BigNumber(monthlyPayState.PaymentAmount)
+               
+               let pay = new BigNumber(monthlyPayState.PaymentAmount);
 
                switch (monthlyPayState.PayFrequency) {
                     case "Weekly":
@@ -70,33 +74,24 @@ export default function AddMonthlyPayModal() {
 
                     case "Every 2 Weeks":
                          monthlypay = pay.multipliedBy(26).dividedBy(12).toFixed(2);
-                    
                     break;    
                
                     case "Twice per Month":
-                         monthlypay = pay.multipliedBy(2);
+                         monthlypay = pay.multipliedBy(2).toFixed(2);
                     break;    
 
                     case "Monthly":
-                         monthlypay = pay;
-                    break;    
+                         monthlypay = pay.toFixed(2);
+                    break;
 
-
-                    default:
-                         break;
+                    case "Quarterly":
+                         monthlypay = pay.multipliedBy(4).dividedBy(12).toFixed(2);
                }
 
-               return(
-                    <>
-                         <span>You make approximately</span>
-                         <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlypay)}</h2>
-
-                         <span>per month</span>
-                    </>
-               );
+               return monthlypay;
+          } else {
+               return 0;
           }
-
-          
      }
      
 
@@ -116,12 +111,20 @@ export default function AddMonthlyPayModal() {
                     centered>
 
                     <Modal.Header closeButton>
-                         <Modal.Title>Add a monthly bill</Modal.Title>
+                         <Modal.Title>Add a Recurring Income</Modal.Title>
                     </Modal.Header>
 
 
                     <Modal.Body>
-                         <p className="lead">Add your paycheck to be stored for budgeting calculations</p>
+                         <p className="lead">Add your income sources and amounts to be stored for budgeting calculations</p>
+
+                         <Form.Group controlId="IncomeName">
+                              <Form.Label>Income Name</Form.Label>
+                              <Form.Control type="Text" name="IncomeName" placeholder="Paycheck" 
+                              onChange={e => handleChange(e.target.value, e.target.name)} />
+                              <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
+                         </Form.Group>
+
 
                          <Form.Group className="mb-3">
                               <Form.Label>Select a Pay Frequency. This is how often a paycheck is recieved</Form.Label>
@@ -131,11 +134,12 @@ export default function AddMonthlyPayModal() {
                                    <option>Every 2 Weeks</option>
                                    <option>Twice per Month</option>
                                    <option>Monthly</option>
+                                   <option>Quarterly</option>
                               </Form.Select>
                          </Form.Group>
 
                          <Form.Group>
-                              <Form.Label>Select a Pay Amount. If you recieve irregular amounts (from tips or inconsistent hours), enter an average</Form.Label>
+                              <Form.Label>Enter an amount. If you recieve irregular amounts (from tips or inconsistent hours), enter an average</Form.Label>
                               <CurrencyInput
                                    prefix="$"
                                    name="PaymentAmount"
@@ -148,8 +152,10 @@ export default function AddMonthlyPayModal() {
                          </Form.Group>
 
                          <div className="monthlyPayDiv">
-                              {monthlyPayCalculator()}
-                         </div>                         
+                              <span>You make approximately</span>
+                              <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyPayCalculator())}</h2>
+                              <span>per month</span>
+                         </div>
                          
                     </Modal.Body>
 
@@ -162,7 +168,7 @@ export default function AddMonthlyPayModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlyPay()}
-                         disabled={!(monthlyPayState.hasOwnProperty("PayFrequency")) || !(monthlyPayState.hasOwnProperty("PaymentAmount")) ? true : false}>
+                         disabled={!(monthlyPayState.hasOwnProperty("IncomeName")) || !(monthlyPayState.hasOwnProperty("PayFrequency")) || !(monthlyPayState.hasOwnProperty("PaymentAmount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

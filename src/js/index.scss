@@ -710,3 +710,53 @@ input[type=range] {
      text-align: center;
      padding: 5px;
 }
+
+
+// Add monthly bill modal
+.monthlyBillDiv {
+     text-align: center;
+     padding: 5px;
+}
+
+
+// simple budget
+.budgetTotals {
+     width: 100%;
+     // background-color: cyan;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: space-evenly;
+}
+
+.budgetLists {
+     border: 1px solid $green;
+     padding: 7px;
+     text-align: center;
+     display: flex;
+     flex-direction: column;
+}
+
+.minus {
+     margin: auto;
+}
+
+.verticalLine {
+     background-color: black;
+     padding-bottom: 10px;
+     width: 1px;
+     margin: auto;
+     flex-grow: 500;
+}
+
+.budgetLists h3 {
+     margin-top: auto;
+}
+
+.budgetTableFloatLeft {
+     text-align: left;
+}
+
+.budgetTableFloatRight {
+     text-align: right;
+}

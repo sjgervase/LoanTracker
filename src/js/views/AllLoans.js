@@ -8,12 +8,14 @@ import PaidOffLoanList from "../components/ListMaps/PaidOffLoanList";
 
 export default function AllLoans(props) {
 
+     console.log(props);
+
      // function for total loan amount
      function totalLoanAmount() {
           let runningTotal = new BigNumber(0);
           
-          for (let i = 0; i < props.data?.data.length; i++) {
-               let currentAmount = new BigNumber(props.data.data[i].loan.CalculatedLoanAmount);
+          for (let i = 0; i < props.loans?.length; i++) {
+               let currentAmount = new BigNumber(props.loans[i].loan.CalculatedLoanAmount);
 
                runningTotal = runningTotal.plus(currentAmount);
           }
@@ -30,13 +32,13 @@ export default function AllLoans(props) {
                <div className="activeLoansAllLoans dashboardModule">
                          <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
                          
-                         <ActiveLoanList loans={props.data?.data} parent={"AllLoans"}/>
+                         <ActiveLoanList loans={props.loans} parent={"AllLoans"}/>
                </div>
 
                <div className="paidOffLoansAllLoans dashboardModule">
                          <div className="moduleHeader"><span>PAID OFF LOANS</span></div>
                          
-                         <PaidOffLoanList loans={props.data?.data}/>
+                         <PaidOffLoanList loans={props.loans}/>
                </div>
           </div>
      )

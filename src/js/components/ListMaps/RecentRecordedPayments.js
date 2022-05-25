@@ -5,8 +5,6 @@ import PaymentLateFeeItem from "./PaymentLateFeeItem";
 
 export default function RecentlyRecordedPayments(props) {
 
-     // console.log(props);
-
      function paymentHistoryData() {
           // create empty array to be populated
           let dataArray = [];
@@ -44,33 +42,33 @@ export default function RecentlyRecordedPayments(props) {
           
           // else the component is being viewed on the dashboard
           } else {
-               if (props.data?.length > 0) {
+               if (props.loans?.length > 0) {
                     // for each loan within all loans data
-                    for (let i = 0; i < props.data?.length; i++) {
-                         
+                    for (let i = 0; i < props.loans.length; i++) {
+
                          // for each item within the payment history of each loan
-                         for (let j = 0; j < props.data[i].loan.PaymentHistory.length; j++) {
+                         for (let j = 0; j < props.loans[i].loan.PaymentHistory.length; j++) {
                               dataArray.push({
-                                   "loanName": props.data[i].loan.LoanName,
-                                   "loanGUID": props.data[i].loan.GUID,
-                                   "loanColor": props.data[i].loan.LoanColor,
+                                   "loanName": props.loans[i].loan.LoanName,
+                                   "loanGUID": props.loans[i].loan.GUID,
+                                   "loanColor": props.loans[i].loan.LoanColor,
                                    "type": "payment",
-                                   "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.PaymentHistory[j].amount),
-                                   "dateMade": props.data[i].loan.PaymentHistory[j].dateMade,
-                                   "dateRecorded": props.data[i].loan.PaymentHistory[j].dateRecorded
+                                   "amount": "$" + new Intl.NumberFormat().format(props.loans[i].loan.PaymentHistory[j].amount),
+                                   "dateMade": props.loans[i].loan.PaymentHistory[j].dateMade,
+                                   "dateRecorded": props.loans[i].loan.PaymentHistory[j].dateRecorded
                               })
                          }
      
                          // for each item within the late fees of each loan
-                         for (let j = 0; j < props.data[i].loan.LateFees.length; j++) {
+                         for (let j = 0; j < props.loans[i].loan.LateFees.length; j++) {
                               dataArray.push({
-                                   "loanName": props.data[i].loan.LoanName,
-                                   "loanGUID": props.data[i].loan.GUID,
-                                   "loanColor": props.data[i].loan.LoanColor,
+                                   "loanName": props.loans[i].loan.LoanName,
+                                   "loanGUID": props.loans[i].loan.GUID,
+                                   "loanColor": props.loans[i].loan.LoanColor,
                                    "type": "lateFee",
-                                   "amount": "$" + new Intl.NumberFormat().format(props.data[i].loan.LateFees[j].amount),
-                                   "dateMade": props.data[i].loan.LateFees[j].dateMade,
-                                   "dateRecorded": props.data[i].loan.LateFees[j].dateRecorded
+                                   "amount": "$" + new Intl.NumberFormat().format(props.loans[i].loan.LateFees[j].amount),
+                                   "dateMade": props.loans[i].loan.LateFees[j].dateMade,
+                                   "dateRecorded": props.loans[i].loan.LateFees[j].dateRecorded
                               })
                          }
                     }

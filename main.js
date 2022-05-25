@@ -333,7 +333,7 @@ async function deletePaymentLateFee(GUIDAndTimestampType) {
      let filedata = fileReader();
 
      // find the loan to update based on the guid
-     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === GUIDAndTimestampType.GUID);
+     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === GUIDAndTimestampType.GUID);
 
      let propertyName = GUIDAndTimestampType.type;
 
@@ -365,7 +365,7 @@ async function addDesiredMonthlyPayment(desiredMonthlyPayment) {
      let filedata = fileReader();
 
      // find the loan to update based on the guid
-     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === desiredMonthlyPayment.GUID);
+     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === desiredMonthlyPayment.GUID);
 
      loanToUpdate.loan.DesiredMonthlyPayment = desiredMonthlyPayment.value;
 
@@ -396,7 +396,7 @@ async function deleteLoan(GUID) {
      let filedata = fileReader();
 
      // find the loan to update based on the guid
-     let loanToDeleteIndex = filedata.data.findIndex(loan => loan.loan.GUID === GUID);
+     let loanToDeleteIndex = filedata.data[0].loans.findIndex(loan => loan.loan.GUID === GUID);
 
      filedata.data.splice(loanToDeleteIndex, 1);
 
@@ -415,22 +415,45 @@ ipcMain.handle('deleteLoan', async (event, GUID) => {
 
 
 // Add monthly pay
-async function monthlyPay(monthlyPayState) {
+async function monthlyPay(incomeObject) {
 
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
 
-     // find the loan to update based on the guid
-     let loanToDeleteIndex = filedata.data.findIndex(loan => loan.loan.GUID === GUID);
+     console.log(incomeObject);
 
-     filedata.data.splice(loanToDeleteIndex, 1);
+
+     filedata.data[2].incomes.push(incomeObject);
 
      fileWriter(filedata);
 }
 
 
-//  delete specified loan
-ipcMain.handle('submitMonthlyPay', async (event, monthlyPayState) => {
-     const result = await monthlyPay(monthlyPayState);
+//  add monthly pay
+ipcMain.handle('submitMonthlyPay', async (event, incomeObject) => {
+     const result = await monthlyPay(incomeObject);
+     return result
+})
+
+
+
+// Add monthly pay
+async function monthlyBill(billObject) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     console.log(billObject);
+
+
+     filedata.data[1].bills.push(billObject);
+
+     fileWriter(filedata);
+}
+
+
+//  add monthly pay
+ipcMain.handle('submitMonthlyBill', async (event, billObject) => {
+     const result = await monthlyBill(billObject);
      return result
 })

@@ -1,0 +1,10 @@
+TODO:
+
+simple budget:
+- ability to delete incomes / bills
+- ability to edit incomes / bills
+- reorganize page, specifically buttons
+
+
+Record a payment modal
+- acknowledge desired payment
