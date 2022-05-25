@@ -15,9 +15,6 @@ export default function RecordALateFeeModal(props) {
      // state for showing or hiding the record LateFee modal
      const [showLateFeeModalState, setLateFeeModalState] = useState(false);
 
-     // state for capturing record a LateFee function
-     const [recordLateFeeState, setRecordLateFeeState] = useState({GUID: props.loan?.loan.GUID});
-
 
      // functions to show or hide the record LateFee modal
      const showLateFeeModalFunc = () => setLateFeeModalState(true);
@@ -39,7 +36,6 @@ export default function RecordALateFeeModal(props) {
 
      // function to submit entered data from "record a Late Fee modal"
      function submitRecordedLateFee() {
-          console.log(recordLateFeeState);
           ipcRenderer.invoke('newLateFeeSubmission', (recordLateFeeState));
           // hide the modal
           setLateFeeModalState(false);
@@ -51,6 +47,13 @@ export default function RecordALateFeeModal(props) {
           let formattedToday = today.toISOString().split('T')[0]
           return formattedToday;
      }
+
+
+     // state for capturing record a LateFee function
+     const [recordLateFeeState, setRecordLateFeeState] = useState({
+          GUID: props.loan?.loan.GUID,
+          Date: dateDefaultToday()
+     });
      
 
 // conditional classnames on button:
@@ -113,7 +116,8 @@ export default function RecordALateFeeModal(props) {
                               Cancel
                          </Button>
 
-                         <Button variant="success" onClick={() => submitRecordedLateFee()}>
+                         <Button variant="success" onClick={() => submitRecordedLateFee()}
+                         disabled={!(recordLateFeeState.hasOwnProperty("LateFee")) || !(recordLateFeeState.hasOwnProperty("Date")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

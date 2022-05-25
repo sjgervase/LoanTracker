@@ -8,10 +8,8 @@ export default function RecentlyRecordedPayments(props) {
      // console.log(props);
 
      function paymentHistoryData() {
-
           // create empty array to be populated
           let dataArray = [];
-
 
           // if this field exists, then this component is being viewed in a specific loan item
           if (props.thisLoan) {

@@ -51,31 +51,32 @@ export default function Container() {
 
      // if data exists, calculate remaining loan balance by subtracting payments and adding late fees.
      if (data !== undefined) {
-          // console.log(data.data);
+
           // for each loan item
-          for (let i = 0; i < data.data.length; i++) {               
-               let calculatedAmount = parseFloat(data.data[i].loan.TotalLoanAmount);
+          for (let i = 0; i < data.data[0].loans.length; i++) {              
+               
+               let calculatedAmount = parseFloat(data.data[0].loans[i].loan.TotalLoanAmount);
 
                // for each payment in PaymentHistory
-               for (let j = 0; j < data.data[i].loan.PaymentHistory.length; j++) {
-                    calculatedAmount -= parseFloat(data.data[i].loan.PaymentHistory[j].amount);
+               for (let j = 0; j < data.data[0].loans[i].loan.PaymentHistory.length; j++) {
+                    calculatedAmount -= parseFloat(data.data[0].loans[i].loan.PaymentHistory[j].amount);
                }
 
                // for each late fee in LateFees
-               for (let j = 0; j < data.data[i].loan.LateFees.length; j++) {
-                    calculatedAmount += parseFloat(data.data[i].loan.LateFees[j].amount);
+               for (let j = 0; j < data.data[0].loans[i].loan.LateFees.length; j++) {
+                    calculatedAmount += parseFloat(data.data[0].loans[i].loan.LateFees[j].amount);
                }
 
-               data.data[i].loan.CalculatedLoanAmount = calculatedAmount.toFixed(2);
+               data.data[0].loans[i].loan.CalculatedLoanAmount = calculatedAmount.toFixed(2);
 
                
                // add additional prop to loan if its calculated amount is less than or equal to 0
                if (calculatedAmount <= 0) {
-                    data.data[i].loan.PaidOff = true;
+                    data.data[0].loans[i].loan.PaidOff = true;
 
                     
                } else {
-                    data.data[i].loan.PaidOff = false;
+                    data.data[0].loans[i].loan.PaidOff = false;
                }
           }
      }
@@ -86,21 +87,21 @@ export default function Container() {
      return(
 
           <Router>
-               <NavigationBar/>
+               <NavigationBar />
 
                {/* The two viewContainer divs are used for aesthectic purposes */}
                <div className="viewsContainerParent">
                     <div className="viewsContainerChild">
-                         <Routes>
+                         <Routes>  ``
                               <Route path="/settings" element={<Settings/>}/>
-                              <Route path="/simplebudget" element={<SimpleBudget/>}/>
+                              <Route path="/simplebudget" element={<SimpleBudget data={data}/>}/>
                               <Route path="/allloans" element={<AllLoans data={data}/>}/>
                               <Route path="/addaloan" element={<AddALoan/>}/>
 
                               {/* dynamic view for closer look at an individual loan */}
-                              <Route path="/loanitemview" element={<LoanItemView data={data}/> }></Route>
+                              <Route path="/loanitemview" element={<LoanItemView loans={data?.data[0].loans}/> }></Route>
 
-                              <Route path="/" element={<DashBoard data={data} />} />
+                              <Route path="/" element={<DashBoard loans={data?.data[0].loans} />} />
                               
                          </Routes>
                     </div>

@@ -89,10 +89,20 @@ function dataFileVerifier() {
      // path exists
      } else {
           console.log("file DOES NOT exist:");
-          var data = '{"data":[]}';
+
+          // var data = {data:[]}
+
+          var data = {
+               "data":[
+                    {"loans":[]},
+                    {"bills":[]},
+                    {"incomes":[]},
+                    {"settings":[]}
+               ]
+          }
 
           // create the file and add the empty data
-          fs.writeFileSync(dataFile, data,
+          fs.writeFileSync(dataFile, JSON.stringify(data),
                {
                     encoding: "utf8",
                     // a means append
@@ -197,8 +207,8 @@ async function addFormDataToFile(formData) {
      // create empty array to be populated by all guids currently in the file
      let guidArray = [];
 
-     for (let i = 0; i < filedata.data.length; i++) {
-          guidArray.push(filedata.data[i].loan.GUID)
+     for (let i = 0; i < filedata.data[0].loans.length; i++) {
+          guidArray.push(filedata.data[0].loans[i].loan.GUID)
      }
 
      // generate 20 digit GUID for album and album art
@@ -236,7 +246,7 @@ async function addFormDataToFile(formData) {
      // add the recieved formdata to the above loan object
      Object.assign(loanObject.loan, formData);
 
-     filedata.data.push(loanObject);
+     filedata.data[0].loans.push(loanObject);
      
      // write to file
      fileWriter(filedata);
@@ -257,10 +267,9 @@ async function addPaymentToLoan(recordPaymentState) {
      let filedata = fileReader();
 
      // find the loan to update based on the guid
-     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === recordPaymentState.GUID);
+     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === recordPaymentState.GUID);
 
      let paymentHistory = loanToUpdate.loan.PaymentHistory;
-
      
      // create empty payment object
      let paymentObject = {
@@ -291,11 +300,9 @@ async function addLateFeeToLoan(recordLateFeeState) {
      let filedata = fileReader();
 
      // find the loan to update based on the guid
-     let loanToUpdate = filedata.data.find(loan => loan.loan.GUID === recordLateFeeState.GUID);
+     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === recordLateFeeState.GUID);
 
      let LateFees = loanToUpdate.loan.LateFees;
-
-     // console.log(maxIndex.index);
 
      let LateFeeObject = {
           amount: recordLateFeeState.LateFee,
@@ -400,5 +407,30 @@ async function deleteLoan(GUID) {
 //  delete specified loan
 ipcMain.handle('deleteLoan', async (event, GUID) => {
      const result = await deleteLoan(GUID);
+     return result
+})
+
+
+
+
+
+// Add monthly pay
+async function monthlyPay(monthlyPayState) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // find the loan to update based on the guid
+     let loanToDeleteIndex = filedata.data.findIndex(loan => loan.loan.GUID === GUID);
+
+     filedata.data.splice(loanToDeleteIndex, 1);
+
+     fileWriter(filedata);
+}
+
+
+//  delete specified loan
+ipcMain.handle('submitMonthlyPay', async (event, monthlyPayState) => {
+     const result = await monthlyPay(monthlyPayState);
      return result
 })

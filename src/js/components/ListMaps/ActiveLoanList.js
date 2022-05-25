@@ -7,7 +7,9 @@ import ActiveLoanItem from "../ListMaps/ActiveLoanItem"
 export default function ActiveLoanList(props) {
 
      let loans;
-     
+
+     console.log(props);
+
      // for each element, remove if paid off
      if (props.loans) {
           // create a deep copy of the item 
@@ -21,6 +23,7 @@ export default function ActiveLoanList(props) {
                }
           }
      }
+     
      
      return(
           <>

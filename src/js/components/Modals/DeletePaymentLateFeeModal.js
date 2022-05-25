@@ -57,12 +57,9 @@ export default function DeletePaymentLateFeeModal(props) {
                          <Modal.Title>Delete this {props.item.type == "payment" ? "payment" : "late fee"}?</Modal.Title>
                     </Modal.Header>
 
-
                     <Modal.Body>
                          <span>This should only be done if either the amount or the date is erroneous.</span>
                          <div className="modalBody">
-
-
                               <Table striped bordered hover>
                                    <tbody>
                                         <tr>
@@ -79,11 +76,8 @@ export default function DeletePaymentLateFeeModal(props) {
                                         </tr>
                                    </tbody>
                               </Table>
-
-                              
                          </div>
                     </Modal.Body>
-
 
                     <Modal.Footer>
                          <Button variant="outline-danger" onClick={handleDeleteModalClose}>

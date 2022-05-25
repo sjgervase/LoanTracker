@@ -3,21 +3,12 @@ import React from "react";
 // ipc from electron
 import { ipcRenderer } from "electron";
 
-// import from react router dom
-import { useLocation, useNavigate } from "react-router-dom";
-
 // import from react bootstrap
-import { Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
+import { Navbar, Nav, Button } from 'react-bootstrap';
 
 
 
 export default function NavigationBar() {
-     const navigate = useNavigate();
-
-
-     // get the current location so the view the end user is looking at is highlighted in the navbar
-     const location = useLocation().pathname;
-     // console.log(location);
 
      // send to ipcMain to close app
      function closeApp() {
@@ -34,10 +25,6 @@ export default function NavigationBar() {
           ipcRenderer.send('minimizeApp');
      }
 
-     // back button necessary?
-     // <Button className="btn-custom shadow-none" onClick={() => navigate(-1)}>
-     //      back
-     // </Button>
 
      return(
 
@@ -47,18 +34,11 @@ export default function NavigationBar() {
 
                <Nav>
      
-                    <Nav.Link href="#/">
-                         DashBoard
-                    </Nav.Link>
+                    <Nav.Link href="#/">DashBoard</Nav.Link>
      
-                    <NavDropdown title="Loans" bg="dark" id="basic-nav-dropdown">
-                         <NavDropdown.Item href="#/addaloan">Add A Loan</NavDropdown.Item>
-                         <NavDropdown.Item href="#/allloans">All Loans</NavDropdown.Item>
-                         <NavDropdown.Divider/>
-                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                         <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                    </NavDropdown>
+                    <Nav.Link href="#/addaloan">Add A Loan</Nav.Link>
+                    
+                    <Nav.Link href="#/allloans">All Loans</Nav.Link>
 
                     <Nav.Link href="#/simplebudget">Simple Budget</Nav.Link>
 

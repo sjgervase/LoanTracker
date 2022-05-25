@@ -17,23 +17,32 @@ export default function LoansPieChart(props) {
 
      // https://celiaongsl.medium.com/2-secret-pie-chart-hacks-to-up-your-recharts-game-hack-recharts-1-9fa62ff9416a
 
+     // console.log(props.loans?.loans.length);
+
      // format data for pie chart
      function rechartData() {
           let dataArray = [];
 
-          for (let i = 0; i < props.data?.length; i++) {
+          for (let i = 0; i < props.loans?.length; i++) {
 
-               if (!props.data?.[i].loan.PaidOff) {
+               // console.log(props.loans?.loans[i]);
+
+               if (!props.loans[i].loan.PaidOff) {
+
+
+
                     dataArray.push({
-                         "name": props.data?.[i].loan.LoanName,
-                         "value": parseFloat(props.data?.[i].loan.CalculatedLoanAmount),
-                         "color": props.data?.[i].loan.LoanColor
+                         "name": props.loans[i].loan.LoanName,
+                         "value": parseFloat(props.loans[i].loan.CalculatedLoanAmount),
+                         "color": props.loans[i].loan.LoanColor
                     });     
                }
           }
           return dataArray
      }
      let pieData = rechartData();
+
+     // console.log(pieData);
 
 
      // pie chart pulls colors in order, so loan[0] needs loan[0].color
@@ -62,8 +71,8 @@ export default function LoansPieChart(props) {
           let vals = [];
 
           // get all values from props and push to array
-          for (let i = 0; i < props.data?.length; i++) {
-               vals.push(parseFloat(props.data?.[i].loan.CalculatedLoanAmount));
+          for (let i = 0; i < props.loans?.length; i++) {
+               vals.push(parseFloat(props.loans[i].loan.CalculatedLoanAmount));
           }
 
           // add all remaining values up and utilize javascript's number formating

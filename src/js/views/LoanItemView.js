@@ -29,17 +29,9 @@ export default function LoanItemView(props) {
      // gets the params passed to this page from the "More Info" button on dashboard
      const { state } = useLocation();
 
-     
-     
      // find the clicked on loan based on the passed state out of all available loans
-     let currentLoan = props.data?.data.find(obj => obj.loan.GUID === state.GUID);
+     let currentLoan = props.loans?.find(obj => obj.loan.GUID === state.GUID);
      
-     // console.log(currentLoan);
-
-
-
-     
-
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
           switch (loanCategory) {
@@ -119,7 +111,6 @@ export default function LoanItemView(props) {
                <>
                     <span className="text-muted">{useThisLoanInfo.type}</span>
                     
-
                     <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={popover}>
                          <Button variant="light" className="btn-sm btn-overlay"><FaInfoCircle className="loanInfoTypeHelp"/></Button>
                     </OverlayTrigger>
@@ -260,7 +251,7 @@ export default function LoanItemView(props) {
                          </Accordion.Header>
 
                          <Accordion.Body>
-                              <RecentlyRecordedPayments data={props.data?.data} thisLoan={currentLoan?.loan.GUID}/>
+                              <RecentlyRecordedPayments data={props.loans} thisLoan={currentLoan?.loan.GUID}/>
                          </Accordion.Body>
                     </Accordion.Item>
 

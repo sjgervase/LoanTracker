@@ -27,9 +27,7 @@ export default function AdjustMonthlyPaymentModal(props) {
 
      // functions to show or hide the record payment modal
      const showAdjustMonthlyPaymentFunc = () => {
-          
-          setAdjustMonthlyPaymentState(true)
-
+          setAdjustMonthlyPaymentState(true);
           // set the range value on open
           setRangeValueState(
                Number(props.loan?.loan.MonthlyPayment)
@@ -38,7 +36,6 @@ export default function AdjustMonthlyPaymentModal(props) {
      
      
      const hideAdjustMonthlyPaymentFunc = () => {
-         
           // clear the value state
           setRangeValueState(
                Number(props.loan?.loan?.MonthlyPayment)
@@ -248,7 +245,8 @@ export default function AdjustMonthlyPaymentModal(props) {
                               Cancel
                          </Button>
 
-                         <Button variant="success" onClick={() => submitDesiredMonthlyPayment()}>
+                         <Button variant="success" onClick={() => submitDesiredMonthlyPayment()}
+                         disabled={rangeValueState == Number(props.loan?.loan.MonthlyPayment) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

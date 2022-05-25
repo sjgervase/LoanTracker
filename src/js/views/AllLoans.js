@@ -25,7 +25,7 @@ export default function AllLoans(props) {
           <div className="componentContainer">
                <h1 className="componentTitle">All Loans</h1>
 
-               <h1 className="display-4">Total Loan Amount: {"$" + new Intl.NumberFormat().format(totalLoanAmount())}</h1>
+               <h1 className="display-4">Total Loans Amount: {"$" + new Intl.NumberFormat().format(totalLoanAmount())}</h1>
 
                <div className="activeLoansAllLoans dashboardModule">
                          <div className="moduleHeader"><span>ACTIVE LOANS</span></div>

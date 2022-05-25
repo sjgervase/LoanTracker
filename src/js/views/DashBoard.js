@@ -12,8 +12,6 @@ import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayme
 
 export default function DashBoard(props) {
 
-     
-
      // navigate functionality
      let navigate = useNavigate();
 
@@ -24,7 +22,9 @@ export default function DashBoard(props) {
 
      function noData() {
           // if there is no data
-          if (props.data?.data.length == 0 || props.data?.data.length == undefined) {
+
+          if (props.loans?.length == 0 || props.loans?.length == undefined) {
+
                return(
                     <div className="noLoansDiv">
                          <p>It looks like you don't have any loans yet. Click the button below to add your first one. Or, you can click on "Loans" in the top navigation bar and add a loan from there.</p>
@@ -36,9 +36,6 @@ export default function DashBoard(props) {
                );
           }
      }
-
-     
-
 
 
      return(               
@@ -54,7 +51,7 @@ export default function DashBoard(props) {
                               {/* if the end user has no loans */}
                               {noData()}
 
-                              <LoanList loans={props.data?.data} parent={"DashBoard"}/>
+                              <LoanList loans={props.loans} parent={"DashBoard"}/>
                          </div>
                          
                     </div>
@@ -69,7 +66,7 @@ export default function DashBoard(props) {
                     <div className="activeLoansGraphs dashboardModule">
                          <div className="moduleHeader"><span>TOTAL LOANS</span></div>
                          
-                         <LoansPieChart data={props.data?.data}/>
+                         <LoansPieChart loans={props.loans}/>
                          
                     </div>
 
@@ -78,7 +75,7 @@ export default function DashBoard(props) {
                     <div className="recentTrackedPayments dashboardModule">
 
                          <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
-                         <RecentlyRecordedPayments data={props.data?.data}/>
+                         <RecentlyRecordedPayments loans={props.loans}/>
                     </div>
 
                     

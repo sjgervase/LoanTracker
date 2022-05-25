@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // import from electron
 import { ipcRenderer } from "electron";
@@ -12,20 +12,17 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function RecordAPaymentModal(props) {
 
-
      // get the guid. this has passed differently based on the view, so its an if
      let thisGUID = (props.parent.name == "LoanItemView" ? props.loan?.loan.GUID : props.loan?.GUID);
-
-     
-
-     
 
      // state for showing or hiding the record payment modal
      const [showPaymentModalState, setPaymentModalState] = useState(false);
 
      // state for capturing record a payment function
-     const [recordPaymentState, setRecordPaymentState] = useState({GUID: thisGUID});
-
+     const [recordPaymentState, setRecordPaymentState] = useState({
+          GUID: thisGUID,
+          Date: dateDefaultToday()
+     });
 
      // functions to show or hide the record payment modal
      const showPaymentModalFunc = () => setPaymentModalState(true);
@@ -41,30 +38,19 @@ export default function RecordAPaymentModal(props) {
           setRecordPaymentState({ ...recordPaymentState, [name]: value })
      }
 
-
      // function to submit entered data from "record a payment modal"
      function submitRecordedPayment() {
-          // console.log(submitRecordedPayment);
-          
-
           ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
-
           // hide the modal
           setPaymentModalState(false);
      }
      
-
-     // conditional classnames on button:
-     // className="btn-sm btn-custom btn-light py0" if parent is loanitem
-
      // set the default date picker value to today
      function dateDefaultToday() {
           let today = new Date();
           let formattedToday = today.toISOString().split('T')[0]
           return formattedToday;
      }
-
-
 
      return(
           <>
@@ -123,7 +109,8 @@ export default function RecordAPaymentModal(props) {
                               Cancel
                          </Button>
 
-                         <Button variant="success" onClick={() => submitRecordedPayment()}>
+                         <Button variant="success" onClick={() => submitRecordedPayment()}
+                         disabled={!(recordPaymentState.hasOwnProperty("Payment")) || !(recordPaymentState.hasOwnProperty("Date")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>
