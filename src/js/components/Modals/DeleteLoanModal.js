@@ -5,16 +5,16 @@ import { ipcRenderer } from "electron";
 export default function DeleteLoanModal(props) {
 
      // state to show delete modal
-     const [showDeleteModal, setShowDeleteModal] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
-     const handleDeleteModalClose = () => setShowDeleteModal(false);
-     const handleDeleteModalShow = () => setShowDeleteModal(true);
+     const handleDeleteModalClose = () => setShowModal(false);
+     const handleDeleteModalShow = () => setShowModal(true);
 
 
      function deleteLoan() {
           ipcRenderer.invoke('deleteLoan', (props.loan.GUID));
 
-          setShowDeleteModal(false)
+          setShowModal(false)
      }
 
 
@@ -29,7 +29,7 @@ export default function DeleteLoanModal(props) {
                </Button>
 
                <Modal
-                    show={showDeleteModal}
+                    show={showModal}
                     onHide={handleDeleteModalClose}
                     centered>
 

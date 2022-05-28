@@ -13,18 +13,18 @@ import CurrencyInput from "react-currency-input-field";
 export default function RecordALateFeeModal(props) {
 
      // state for showing or hiding the record LateFee modal
-     const [showLateFeeModalState, setLateFeeModalState] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
 
      // functions to show or hide the record LateFee modal
-     const showLateFeeModalFunc = () => setLateFeeModalState(true);
+     const showLateFeeModalFunc = () => setShowModal(true);
      const hideLateFeeModalFunc = () => {
           // clear the state 
           setRecordLateFeeState({
                GUID: props.loan?.loan.GUID
           });
           // hide the modal
-          setLateFeeModalState(false);
+          setShowModal(false);
      }
 
 
@@ -38,7 +38,7 @@ export default function RecordALateFeeModal(props) {
      function submitRecordedLateFee() {
           ipcRenderer.invoke('newLateFeeSubmission', (recordLateFeeState));
           // hide the modal
-          setLateFeeModalState(false);
+          setShowModal(false);
      }
 
      // set the default date picker value to today
@@ -72,7 +72,7 @@ export default function RecordALateFeeModal(props) {
                </Button>
 
                <Modal
-                    show={showLateFeeModalState}
+                    show={showModal}
                     onHide={hideLateFeeModalFunc}
                     backdrop="static"
                     keyboard={false}

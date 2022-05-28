@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import CurrencyInput from "react-currency-input-field";
 
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Button, Form, Modal, Table, Popover, Overlay, OverlayTrigger } from "react-bootstrap";
 
 import { BigNumber } from "bignumber.js"
 
@@ -14,10 +14,10 @@ import { ipcRenderer } from "electron";
 
 
 
-export default function AddMonthlyBillModal() {
+export default function AddMonthlyExpenseModal() {
 
      // state for showing or hiding the modal
-     const [showAddMonthlyBill, setShowAddMonthlyBill] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
 
      // state to keep track of user entered data
@@ -26,14 +26,14 @@ export default function AddMonthlyBillModal() {
 
 
      // functions to show or hide the modal
-     const showAddMonthlyBillFunc = () => {setShowAddMonthlyBill(true)};
+     const showModalFunc = () => {setShowModal(true)};
      
      
      const hideAddMonthlyBillFunc = () => {
           // clear the value state
           setMonthlyBillState({});
           // hide the modal
-          setShowAddMonthlyBill(false);
+          setShowModal(false);
      }
 
      // function to handle form item updates
@@ -49,18 +49,19 @@ export default function AddMonthlyBillModal() {
           // get the calculated monthly bill
           let calculatedMonthlyBill = monthlyBillCalculator();
 
-          // create an income object with the state and calculated monthly bill
+          // create an bill object with the state and calculated monthly bill
           let billObject = {
                ...monthlyBillState,
+               Type: "bill",
                MonthlyBill: calculatedMonthlyBill
           }
 
-          ipcRenderer.invoke('submitMonthlyBill', (billObject));
+          ipcRenderer.invoke('submitMonthlydeduction', (billObject));
 
           // clear the value state
           setMonthlyBillState({});
           // hide the modal
-          setShowAddMonthlyBill(false);
+          setShowModal(false);
      }
 
 
@@ -104,18 +105,38 @@ export default function AddMonthlyBillModal() {
      }
      
 
-     
+     const popover = (
+          <Popover id="popover-basic">
+               <Popover.Header as="h3">Add Monthly Bill</Popover.Header>
+               
+               <Popover.Body>
+                    Add any sort of regular bills you recieve to be incorporated into your monthly budget. While very similar to expenses, these tend to be more consistent in amount and are paid at regular intervals.
+                    <br></br>
+                    Some Examples:
+                    <br></br>
+                    <ul>
+                         <li>Rent</li>
+                         <li>Utilities</li>
+                         <li>Mobile Phone Plan</li>
+                         <li>Streaming Service Plan</li>
+                         <li>Car Insurance</li>
+                    </ul>
+               </Popover.Body>
+          </Popover>
+     );
 
 
      return(
           <>
-               <Button variant="outline-danger"
-               onClick={showAddMonthlyBillFunc}>
-                    Add Monthly Bill
-               </Button>
+               <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={popover}>
+                    <Button variant="danger" size="lg" className="btn-AddMonthlyBill"
+                    onClick={showModalFunc}>
+                         Add Monthly Bill
+                    </Button>
+               </OverlayTrigger>
 
                <Modal
-                    show={showAddMonthlyBill}
+                    show={showModal}
                     onHide={hideAddMonthlyBillFunc}
                     backdrop="static"
                     keyboard={false}
@@ -130,7 +151,7 @@ export default function AddMonthlyBillModal() {
                          <p>Add a recurring bill to keep track of your total average expenses throughout the month</p>
 
                          <Form.Group controlId="BillName">
-                              <Form.Label>Income Name</Form.Label>
+                              <Form.Label>Bill Name</Form.Label>
                               <Form.Control type="Text" name="BillName" placeholder="Rent" 
                               onChange={e => handleChange(e.target.value, e.target.name)} />
                               <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>

@@ -21,10 +21,12 @@ export default function BudgetPieChart(props) {
      function rechartData() {
           let dataArray = [];
 
-          // 3 colors to denote loans, bills, and incomes
-          let loanColor = "#d91434";
-          let billColor = "#bd0909";
-          let incomeColor = "#0f6304";
+          // 3 colors to denote loans, bills, expenses, savings, and incomes
+          let incomeColor = "#36733F";
+          let loanColor = "#8F0E1D";
+          let billColor = "#FF4A5F";
+          let expenseColor = "#DB2A3F";
+          let savingsColor = "#3FB559";
 
           // loans
           for (let i = 0; i < props.loans?.length; i++) {
@@ -38,13 +40,33 @@ export default function BudgetPieChart(props) {
                }
           }
 
-          // bills
-          for (let i = 0; i < props.bills?.length; i++) {
-               dataArray.push({
-                    "name": props.bills[i].BillName,
-                    "value": parseFloat(props.bills[i].MonthlyBill),
-                    "color": billColor
-               });
+          // deductions
+          for (let i = 0; i < props.deductions?.length; i++) {
+
+               // if bill
+               if (props.deductions[i].Type == "bill") {
+                    dataArray.push({
+                         "name": props.deductions[i].BillName,
+                         "value": parseFloat(props.deductions[i].MonthlyBill),
+                         "color": billColor
+                    });
+
+               // expense
+               } else if(props.deductions[i].Type == "expense") {
+                    dataArray.push({
+                         "name": props.deductions[i].ExpenseName,
+                         "value": parseFloat(props.deductions[i].MonthlyExpense),
+                         "color": expenseColor
+                    });
+               
+               // else savings
+               } else {
+                    dataArray.push({
+                         "name": props.deductions[i].SavingsName,
+                         "value": parseFloat(props.deductions[i].MonthlySavings),
+                         "color": savingsColor
+                    });
+               }
           }
 
 
@@ -103,9 +125,18 @@ export default function BudgetPieChart(props) {
                vals.push(parseFloat(props.loans[i].loan.MonthlyPayment));
           }
 
-          // get all values from bills
-          for (let i = 0; i < props.bills?.length; i++) {
-               vals.push(parseFloat(props.bills[i].MonthlyBill));
+          // get all values from deductions
+          for (let i = 0; i < props.deductions?.length; i++) {
+               
+               if (props.deductions[i].Type == "bill") {
+                    vals.push(parseFloat(props.deductions[i].MonthlyBill));
+
+               } else if(props.deductions[i].Type == "expense") {
+                    vals.push(parseFloat(props.deductions[i].MonthlyExpense));
+               } else {
+                    vals.push(parseFloat(props.deductions[i].MonthlySavings));
+               }
+               
           }
 
           // add all remaining values up and utilize javascript's number formating
@@ -134,7 +165,7 @@ export default function BudgetPieChart(props) {
                               textAnchor: 'middle' 
                          }}>
 
-                              total monthly bill amount
+                              total nondisposable amount
 
                          </tspan>
                     </text>

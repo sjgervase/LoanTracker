@@ -98,7 +98,7 @@ export default function Container() {
                               element={
                                    <SimpleBudget 
                                    loans={data?.data[0].loans}
-                                   bills={data?.data[1].bills}
+                                   deductions={data?.data[1].deductions}
                                    incomes={data?.data[2].incomes}
                                    />
                               }/>

@@ -7,10 +7,10 @@ export default function DeletePaymentLateFeeModal(props) {
      
 
      // state to show delete modal
-     const [showDeleteModal, setShowDeleteModal] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
-     const handleDeleteModalClose = () => setShowDeleteModal(false);
-     const handleDeleteModalShow = () => setShowDeleteModal(true);
+     const handleDeleteModalClose = () => setShowModal(false);
+     const handleDeleteModalShow = () => setShowModal(true);
 
      
      // function to format date to MM-DD-YYYY
@@ -36,7 +36,7 @@ export default function DeletePaymentLateFeeModal(props) {
 
           ipcRenderer.invoke('deletePaymentLateFee', (GUIDAndTimestampType));
 
-          setShowDeleteModal(false)
+          setShowModal(false)
      }
 
      return(
@@ -49,7 +49,7 @@ export default function DeletePaymentLateFeeModal(props) {
                </Button>
 
                <Modal
-                    show={showDeleteModal}
+                    show={showModal}
                     onHide={handleDeleteModalClose}
                     centered>
 

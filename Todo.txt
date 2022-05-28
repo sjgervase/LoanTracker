@@ -3,8 +3,51 @@ TODO:
 simple budget:
 - ability to delete incomes / bills
 - ability to edit incomes / bills
-- reorganize page, specifically buttons
+- color coordinate list tables with pie chart colors, 1 px border
 
+- budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
+
+
+overlays to all buttons outlining the different tools plus examples
+
+"A bill is money that your business owes but will pay at a later date. An expense is money that your business spends at the time of purchase."
+
+- print option: create a printable sheet? to put on a wall?
+
+
+
+Adjustment of overlays, does it have to be a button?
+More overlays everywhere
+
+new intl formatter function, a single function and send all values that need to be formatted to it?
 
 Record a payment modal
 - acknowledge desired payment
+
+Settings
+- all of settings
+
+Splash Screen
+- create splash Screen
+
+Icon
+- get icon
+
+Add a loan: Credit Card?
+
+Tidy up all imports
+
+Standard spacing:
+- 2 lines between functions
+- props and attrs indented
+
+Organize scss
+
+recharts animationDuration
+
+encrypted data?
+4 digit pin?
+
+collect all text for abby 
+
+combine modals into one, with specific info as props?

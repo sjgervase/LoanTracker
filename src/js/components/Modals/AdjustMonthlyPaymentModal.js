@@ -17,7 +17,7 @@ import { ipcRenderer } from "electron";
 export default function AdjustMonthlyPaymentModal(props) {
 
      // state for showing or hiding the modal
-     const [showAdjustMonthlyPaymentState, setAdjustMonthlyPaymentState] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
 
      // state to keep track of the current monthly payment and user selected range for slider / currency input functionality
@@ -27,7 +27,7 @@ export default function AdjustMonthlyPaymentModal(props) {
 
      // functions to show or hide the record payment modal
      const showAdjustMonthlyPaymentFunc = () => {
-          setAdjustMonthlyPaymentState(true);
+          setShowModal(true);
           // set the range value on open
           setRangeValueState(
                Number(props.loan?.loan.MonthlyPayment)
@@ -41,7 +41,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                Number(props.loan?.loan?.MonthlyPayment)
           );
           // hide the modal
-          setAdjustMonthlyPaymentState(false);
+          setShowModal(false);
      }
 
 
@@ -111,7 +111,7 @@ export default function AdjustMonthlyPaymentModal(props) {
 
           ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
           // hide the modal
-          setAdjustMonthlyPaymentState(false);
+          setShowModal(false);
      }
      
 
@@ -127,7 +127,7 @@ export default function AdjustMonthlyPaymentModal(props) {
 
 
                <Modal
-                    show={showAdjustMonthlyPaymentState}
+                    show={showModal}
                     onHide={hideAdjustMonthlyPaymentFunc}
                     backdrop="static"
                     keyboard={false}

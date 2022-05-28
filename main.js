@@ -95,7 +95,7 @@ function dataFileVerifier() {
           var data = {
                "data":[
                     {"loans":[]},
-                    {"bills":[]},
+                    {"deductions":[]},
                     {"incomes":[]},
                     {"settings":[]}
                ]
@@ -198,17 +198,27 @@ function fileWriter(filedata) {
 }
 
 
-// add the data recieved in the ipc message below to the file
-async function addFormDataToFile(formData) {
-    
+// read and generate unique GUIDS
+function guidGenerator() {
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
 
      // create empty array to be populated by all guids currently in the file
      let guidArray = [];
 
+     // for each loan item
      for (let i = 0; i < filedata.data[0].loans.length; i++) {
-          guidArray.push(filedata.data[0].loans[i].loan.GUID)
+          guidArray.push(filedata.data[0].loans[i].loan.GUID);
+     }
+
+     // for each deduction
+     for (let i = 0; i < filedata.data[1].deductions.length; i++) {
+          guidArray.push(filedata.data[1].deductions[i].GUID);
+     }
+
+     // for each income
+     for (let i = 0; i < filedata.data[2].incomes.length; i++) {
+          guidArray.push(filedata.data[2].incomes[i].GUID);
      }
 
      // generate 20 digit GUID for album and album art
@@ -230,7 +240,21 @@ async function addFormDataToFile(formData) {
           return str;
      };
 
-     var newGuid = randomGUID();
+     return randomGUID();
+    
+}
+
+
+
+// add the data recieved in the ipc message below to the file
+async function addFormDataToFile(formData) {
+    
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     
+
+     var newGuid = guidGenerator();
 
      // the new loan object to be added
      let loanObject = {
@@ -416,12 +440,12 @@ ipcMain.handle('deleteLoan', async (event, GUID) => {
 
 // Add monthly pay
 async function monthlyPay(incomeObject) {
-
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
 
-     console.log(incomeObject);
+     let newGUID = guidGenerator();
 
+     incomeObject.GUID = newGUID;
 
      filedata.data[2].incomes.push(incomeObject);
 
@@ -430,30 +454,30 @@ async function monthlyPay(incomeObject) {
 
 
 //  add monthly pay
-ipcMain.handle('submitMonthlyPay', async (event, incomeObject) => {
+ipcMain.handle('submitMonthlyIncome', async (event, incomeObject) => {
      const result = await monthlyPay(incomeObject);
      return result
 })
 
 
 
-// Add monthly pay
-async function monthlyBill(billObject) {
-
+// Add monthly deduction
+async function monthlyDeduction(deductionObject) {
      // run above fileReader function to get a variable with all data
      let filedata = fileReader();
 
-     console.log(billObject);
+     let newGUID = guidGenerator();
 
+     deductionObject.GUID = newGUID;
 
-     filedata.data[1].bills.push(billObject);
+     filedata.data[1].deductions.push(deductionObject);
 
      fileWriter(filedata);
 }
 
 
 //  add monthly pay
-ipcMain.handle('submitMonthlyBill', async (event, billObject) => {
-     const result = await monthlyBill(billObject);
+ipcMain.handle('submitMonthlydeduction', async (event, deductionObject) => {
+     const result = await monthlyDeduction(deductionObject);
      return result
 })

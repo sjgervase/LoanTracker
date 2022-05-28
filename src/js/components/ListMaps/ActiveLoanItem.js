@@ -9,6 +9,12 @@ import { useNavigate } from "react-router-dom";
 // import from react bootstrap
 import { Button } from "react-bootstrap";
 
+// import from bignumber
+import { BigNumber } from "bignumber.js";
+
+
+
+
 // icons from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
 import { FaGraduationCap, FaUser, FaCreditCard } from "react-icons/fa";
@@ -22,9 +28,6 @@ import DeleteLoanModal from "../Modals/DeleteLoanModal";
 export default function ActiveLoanItem(props) {
     
      let loan = props.loan;
-
-     // navigate functionality
-     let navigate = useNavigate();
 
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
@@ -65,12 +68,12 @@ export default function ActiveLoanItem(props) {
                nextMonthDate.setDate(paymentDate);
 
                // ensure it doesnt break in december as january might be 0
-               let timeDifferenceMS = nextMonthDate - new Date();
+               let timeDifferenceMS = new BigNumber(nextMonthDate - new Date());
 
-               let timeDiffDays = timeDifferenceMS/(1000*60*60*24);
-
+               let timeDiffDays = timeDifferenceMS.dividedBy((1000*60*60*24));
+               
                // console.log(timeDiffDays);
-               return timeDiffDays
+               return timeDiffDays.toString();
           }
      }
 
@@ -93,6 +96,9 @@ export default function ActiveLoanItem(props) {
           }
      }
 
+
+     // navigate functionality
+     let navigate = useNavigate();
 
      // functionality for more info button
      function loanItemView(seeThisLoan) {

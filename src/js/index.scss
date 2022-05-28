@@ -249,11 +249,11 @@ input {
 .dashboardModule {
      border: 1px solid $green;
      padding: 0px 5px 0px 5px;
+     background-color: $greenWhite;
 }
 
 .activeLoans {
      flex-basis: 63%;
-     background-color: $greenWhite;
      height: 49vh;
 }
 
@@ -720,14 +720,78 @@ input[type=range] {
 
 
 // simple budget
-.budgetTotals {
-     width: 100%;
-     // background-color: cyan;
+.budgetTopRow {
      display: flex;
      flex-direction: row;
      flex-wrap: nowrap;
      justify-content: space-evenly;
+     margin-top: 20px;
 }
+
+.budgetBottomRow {
+     margin: 0.5%;
+     margin-top: 20px;
+     width: 99%;
+}
+
+
+.budgetQuickLook {
+     padding-left: 10px;
+     padding-right: 10px;
+     padding-bottom: 10px;
+     flex-basis: 74%;
+}
+
+.budgetTools {
+     flex-basis: 24%;
+     display: flex;
+     flex-direction: column;
+}
+
+
+
+.budgetTools button {
+     margin: 2px;
+}
+
+// let incomeColor = "#36733F";
+// let savingsColor = "#3FB559";
+
+
+.btn-AddALoan {
+     background-color: #8F0E1D;
+ }
+
+ .btn-AddMonthlyBill {
+      background-color: #FF4A5F;
+ }
+
+ .btn-AddMonthlyExpense {
+      background-color: #DB2A3F;
+ }
+
+ .btn-AddMonthlyIncome {
+      background-color: #36733F;
+ }
+
+ .btn-AddMonthlySavings {
+      background-color: #3FB559;
+ }
+
+
+.budgetTotals {
+     width: 100%;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: space-evenly;
+
+}
+
+
+
+
+
 
 .budgetLists {
      border: 1px solid $green;
@@ -735,6 +799,8 @@ input[type=range] {
      text-align: center;
      display: flex;
      flex-direction: column;
+     background-color: $cream;
+     margin: 3px;
 }
 
 .minus {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import CurrencyInput from "react-currency-input-field";
 
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Button, Form, Modal, Table, Popover, Overlay, OverlayTrigger } from "react-bootstrap";
 
 import { BigNumber } from "bignumber.js"
 
@@ -14,22 +14,22 @@ import { ipcRenderer } from "electron";
 
 
 
-export default function AddMonthlyPayModal() {
+export default function AddMonthlyIncomeModal() {
 
      // state for showing or hiding the modal
-     const [showAddMonthlyPay, setShowAddMonthlyPay] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
      // state to keep track of user entered data
      const [monthlyPayState, setMonthlyPayState] = useState({});
 
      // functions to show or hide the modal
-     const showAddMonthlyPayFunc = () => {setShowAddMonthlyPay(true)};
+     const showModalFunc = () => {setShowModal(true)};
      
      const hideAddMonthlyPayFunc = () => {
           // clear the value state
           setMonthlyPayState({});
           // hide the modal
-          setShowAddMonthlyPay(false);
+          setShowModal(false);
      }
 
      // function to handle form item updates
@@ -48,13 +48,13 @@ export default function AddMonthlyPayModal() {
                MonthlyPay: calculatedMonthlyPay,
           }
 
-          ipcRenderer.invoke('submitMonthlyPay', (incomeObject));
+          ipcRenderer.invoke('submitMonthlyIncome', (incomeObject));
 
           // clear the value state
           setMonthlyPayState({});
 
           // hide the modal
-          setShowAddMonthlyPay(false);
+          setShowModal(false);
      }
 
      // function to show estimated monthly payment
@@ -93,18 +93,43 @@ export default function AddMonthlyPayModal() {
                return 0;
           }
      }
+
+
+     const popover = (
+          <Popover id="popover-basic">
+               <Popover.Header as="h3">Add Monthly Income</Popover.Header>
+               
+               <Popover.Body>
+                    Add any sort of regular income you recieve to be incorporated into your monthly budget.
+                    <br></br>
+                    Some Examples:
+                    <br></br>
+                    <ul>
+                         <li>Regular Paychecks</li>
+                         <li>Passive Income</li>
+                         <li>Dividends</li>
+                    </ul>
+               </Popover.Body>
+          </Popover>
+     );
      
 
 
      return(
           <>
-               <Button variant="success"
-               onClick={showAddMonthlyPayFunc}>
-                    Add Monthly Pay
-               </Button>
+               <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={popover}>
+                    <Button variant="success" size="lg" className="btn-AddMonthlyIncome"
+                    onClick={showModalFunc}>
+                         Add Monthly Income
+                    </Button>
+               </OverlayTrigger>
+
+               
+                         
+                    
 
                <Modal
-                    show={showAddMonthlyPay}
+                    show={showModal}
                     onHide={hideAddMonthlyPayFunc}
                     backdrop="static"
                     keyboard={false}
@@ -152,7 +177,7 @@ export default function AddMonthlyPayModal() {
                          </Form.Group>
 
                          <div className="monthlyPayDiv">
-                              <span>You make approximately</span>
+                              <span>You income is approximately</span>
                               <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyPayCalculator())}</h2>
                               <span>per month</span>
                          </div>

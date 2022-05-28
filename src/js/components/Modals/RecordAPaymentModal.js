@@ -16,7 +16,7 @@ export default function RecordAPaymentModal(props) {
      let thisGUID = (props.parent.name == "LoanItemView" ? props.loan?.loan.GUID : props.loan?.GUID);
 
      // state for showing or hiding the record payment modal
-     const [showPaymentModalState, setPaymentModalState] = useState(false);
+     const [showModal, setShowModal] = useState(false);
 
      // state for capturing record a payment function
      const [recordPaymentState, setRecordPaymentState] = useState({
@@ -25,12 +25,12 @@ export default function RecordAPaymentModal(props) {
      });
 
      // functions to show or hide the record payment modal
-     const showPaymentModalFunc = () => setPaymentModalState(true);
+     const showPaymentModalFunc = () => setShowModal(true);
      const hidePaymentModalFunc = () => {
           // clear the state 
           setRecordPaymentState({GUID: thisGUID});
           // hide the modal
-          setPaymentModalState(false);
+          setShowModal(false);
      }
 
      // function that ensures the "record a payment" modal captures the entered value
@@ -42,7 +42,7 @@ export default function RecordAPaymentModal(props) {
      function submitRecordedPayment() {
           ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
           // hide the modal
-          setPaymentModalState(false);
+          setShowModal(false);
      }
      
      // set the default date picker value to today
@@ -64,7 +64,7 @@ export default function RecordAPaymentModal(props) {
                </Button>
 
                <Modal
-                    show={showPaymentModalState}
+                    show={showModal}
                     onHide={hidePaymentModalFunc}
                     backdrop="static"
                     keyboard={false}
