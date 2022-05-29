@@ -53,7 +53,7 @@ export default function AddMonthlyExpenseModal() {
           let billObject = {
                ...monthlyBillState,
                Type: "bill",
-               MonthlyBill: calculatedMonthlyBill
+               MonthlyAmount: calculatedMonthlyBill
           }
 
           ipcRenderer.invoke('submitMonthlydeduction', (billObject));
@@ -72,11 +72,11 @@ export default function AddMonthlyExpenseModal() {
           let monthlybill;
 
           // ensure both fields are selected
-          if (monthlyBillState.hasOwnProperty("BillFrequency") && monthlyBillState.hasOwnProperty("BillAmount")) {
+          if (monthlyBillState.hasOwnProperty("Frequency") && monthlyBillState.hasOwnProperty("Amount")) {
                
-               let bill = new BigNumber(monthlyBillState.BillAmount);
+               let bill = new BigNumber(monthlyBillState.Amount);
 
-               switch (monthlyBillState.BillFrequency) {
+               switch (monthlyBillState.Frequency) {
                     case "Weekly":
                          monthlybill = bill.multipliedBy(52).dividedBy(12).toFixed(2);
                     break;
@@ -150,9 +150,9 @@ export default function AddMonthlyExpenseModal() {
                     <Modal.Body>
                          <p>Add a recurring bill to keep track of your total average expenses throughout the month</p>
 
-                         <Form.Group controlId="BillName">
+                         <Form.Group controlId="Name">
                               <Form.Label>Bill Name</Form.Label>
-                              <Form.Control type="Text" name="BillName" placeholder="Rent" 
+                              <Form.Control type="Text" name="Name" placeholder="Rent" 
                               onChange={e => handleChange(e.target.value, e.target.name)} />
                               <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
                          </Form.Group>
@@ -160,7 +160,7 @@ export default function AddMonthlyExpenseModal() {
 
                          <Form.Group className="mb-3">
                               <Form.Label>Select a Bill Frequency. This is how often a bill is recieved</Form.Label>
-                              <Form.Select  name="BillFrequency" onChange={e => handleChange(e.target.value, e.target.name)} >
+                              <Form.Select  name="Frequency" onChange={e => handleChange(e.target.value, e.target.name)} >
                                    <option>⎯⎯⎯⎯⎯</option>
                                    <option>Weekly</option>
                                    <option>Monthly</option>
@@ -174,7 +174,7 @@ export default function AddMonthlyExpenseModal() {
                               <Form.Label>Enter an amount. For inconsistent bills such as gas and electricity, try and enter an average amount</Form.Label>
                               <CurrencyInput
                                    prefix="$"
-                                   name="BillAmount"
+                                   name="Amount"
                                    placeholder="ex $200"
                                    decimalScale={2}
                                    decimalsLimit={2}
@@ -183,7 +183,7 @@ export default function AddMonthlyExpenseModal() {
                               />
                          </Form.Group>
 
-                         <div className="monthlyBillDiv">
+                         <div className="monthlyTotalDiv">
                               <span>Your bill is approximately</span>
                               <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyBillCalculator())}</h2>
                               <span>per month</span>
@@ -197,7 +197,7 @@ export default function AddMonthlyExpenseModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlyBill()}
-                         disabled={!(monthlyBillState.hasOwnProperty("BillName")) || !(monthlyBillState.hasOwnProperty("BillFrequency")) || !(monthlyBillState.hasOwnProperty("BillAmount")) ? true : false}>
+                         disabled={!(monthlyBillState.hasOwnProperty("Name")) || !(monthlyBillState.hasOwnProperty("Frequency")) || !(monthlyBillState.hasOwnProperty("Amount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

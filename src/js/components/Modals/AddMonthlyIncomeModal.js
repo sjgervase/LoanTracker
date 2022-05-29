@@ -45,7 +45,7 @@ export default function AddMonthlyIncomeModal() {
           // create an income object with the state and calculated monthly pay
           let incomeObject = {
                ...monthlyPayState,
-               MonthlyPay: calculatedMonthlyPay,
+               MonthlyAmount: calculatedMonthlyPay,
           }
 
           ipcRenderer.invoke('submitMonthlyIncome', (incomeObject));
@@ -63,11 +63,11 @@ export default function AddMonthlyIncomeModal() {
           let monthlypay;
 
           // ensure both fields are selected
-          if (monthlyPayState.hasOwnProperty("PayFrequency") && monthlyPayState.hasOwnProperty("PaymentAmount")) {
+          if (monthlyPayState.hasOwnProperty("Frequenct") && monthlyPayState.hasOwnProperty("Amount")) {
                
-               let pay = new BigNumber(monthlyPayState.PaymentAmount);
+               let pay = new BigNumber(monthlyPayState.Amount);
 
-               switch (monthlyPayState.PayFrequency) {
+               switch (monthlyPayState.Frequenct) {
                     case "Weekly":
                          monthlypay = pay.multipliedBy(52).dividedBy(12).toFixed(2);
                     break;
@@ -143,9 +143,9 @@ export default function AddMonthlyIncomeModal() {
                     <Modal.Body>
                          <p className="lead">Add your income sources and amounts to be stored for budgeting calculations</p>
 
-                         <Form.Group controlId="IncomeName">
+                         <Form.Group controlId="Name">
                               <Form.Label>Income Name</Form.Label>
-                              <Form.Control type="Text" name="IncomeName" placeholder="Paycheck" 
+                              <Form.Control type="Text" name="Name" placeholder="Paycheck" 
                               onChange={e => handleChange(e.target.value, e.target.name)} />
                               <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
                          </Form.Group>
@@ -153,7 +153,7 @@ export default function AddMonthlyIncomeModal() {
 
                          <Form.Group className="mb-3">
                               <Form.Label>Select a Pay Frequency. This is how often a paycheck is recieved</Form.Label>
-                              <Form.Select  name="PayFrequency" onChange={e => handleChange(e.target.value, e.target.name)} >
+                              <Form.Select  name="Frequency" onChange={e => handleChange(e.target.value, e.target.name)} >
                                    <option>⎯⎯⎯⎯⎯</option>
                                    <option>Weekly</option>
                                    <option>Every 2 Weeks</option>
@@ -167,7 +167,7 @@ export default function AddMonthlyIncomeModal() {
                               <Form.Label>Enter an amount. If you recieve irregular amounts (from tips or inconsistent hours), enter an average</Form.Label>
                               <CurrencyInput
                                    prefix="$"
-                                   name="PaymentAmount"
+                                   name="Amount"
                                    placeholder="ex $200"
                                    decimalScale={2}
                                    decimalsLimit={2}
@@ -176,7 +176,7 @@ export default function AddMonthlyIncomeModal() {
                               />
                          </Form.Group>
 
-                         <div className="monthlyPayDiv">
+                         <div className="monthlyTotalDiv">
                               <span>You income is approximately</span>
                               <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyPayCalculator())}</h2>
                               <span>per month</span>
@@ -193,7 +193,7 @@ export default function AddMonthlyIncomeModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlyPay()}
-                         disabled={!(monthlyPayState.hasOwnProperty("IncomeName")) || !(monthlyPayState.hasOwnProperty("PayFrequency")) || !(monthlyPayState.hasOwnProperty("PaymentAmount")) ? true : false}>
+                         disabled={!(monthlyPayState.hasOwnProperty("Name")) || !(monthlyPayState.hasOwnProperty("Frequenct")) || !(monthlyPayState.hasOwnProperty("Amount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

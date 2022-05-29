@@ -46,24 +46,28 @@ export default function BudgetPieChart(props) {
                // if bill
                if (props.deductions[i].Type == "bill") {
                     dataArray.push({
-                         "name": props.deductions[i].BillName,
-                         "value": parseFloat(props.deductions[i].MonthlyBill),
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount),
                          "color": billColor
                     });
 
                // expense
                } else if(props.deductions[i].Type == "expense") {
                     dataArray.push({
-                         "name": props.deductions[i].ExpenseName,
-                         "value": parseFloat(props.deductions[i].MonthlyExpense),
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount),
                          "color": expenseColor
                     });
-               
-               // else savings
-               } else {
+               }
+          }
+          
+          // do savings in a seperate loop to ensure expenses and bills are next to each other on the chart
+          for (let i = 0; i < props.deductions?.length; i++) {
+                // else savings
+               if (props.deductions[i].Type == "savings") {
                     dataArray.push({
-                         "name": props.deductions[i].SavingsName,
-                         "value": parseFloat(props.deductions[i].MonthlySavings),
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount),
                          "color": savingsColor
                     });
                }
@@ -74,7 +78,7 @@ export default function BudgetPieChart(props) {
           // then push "remaining income" if available
           let incomeTotal = new BigNumber(0);
           for (let i = 0; i < props.incomes?.length; i++) {
-               let currentIncome = new BigNumber(props.incomes[i].MonthlyPay);
+               let currentIncome = new BigNumber(props.incomes[i].MonthlyAmount);
                incomeTotal = incomeTotal.plus(currentIncome);
           }
 
@@ -127,20 +131,12 @@ export default function BudgetPieChart(props) {
 
           // get all values from deductions
           for (let i = 0; i < props.deductions?.length; i++) {
-               
-               if (props.deductions[i].Type == "bill") {
-                    vals.push(parseFloat(props.deductions[i].MonthlyBill));
-
-               } else if(props.deductions[i].Type == "expense") {
-                    vals.push(parseFloat(props.deductions[i].MonthlyExpense));
-               } else {
-                    vals.push(parseFloat(props.deductions[i].MonthlySavings));
-               }
-               
+               vals.push(parseFloat(props.deductions[i].MonthlyAmount));
           }
 
           // add all remaining values up and utilize javascript's number formating
-          let sum = "$" + new Intl.NumberFormat().format(vals.reduce((partialSum, a) => partialSum + a, 0));
+          let sum = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(vals.reduce((partialSum, a) => partialSum + a, 0));
+          
           return (
                <React.Fragment>
                     <text x={cx} y={cy}>

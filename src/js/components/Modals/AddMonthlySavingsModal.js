@@ -46,7 +46,7 @@ export default function AddMonthlySavingsModal() {
           let savingsObject = {
                ...monthlySavingsState,
                Type:"savings",
-               MonthlySavings: calculatedMonthlySavings,
+               MonthlyAmount: calculatedMonthlySavings,
           }
 
           ipcRenderer.invoke('submitMonthlydeduction', (savingsObject));
@@ -64,11 +64,11 @@ export default function AddMonthlySavingsModal() {
           let monthlysavings;
 
           // ensure both fields are selected
-          if (monthlySavingsState.hasOwnProperty("SavingsFrequency") && monthlySavingsState.hasOwnProperty("SavingsmentAmount")) {
+          if (monthlySavingsState.hasOwnProperty("Frequency") && monthlySavingsState.hasOwnProperty("Amount")) {
                
-               let savings = new BigNumber(monthlySavingsState.SavingsmentAmount);
+               let savings = new BigNumber(monthlySavingsState.Amount);
 
-               switch (monthlySavingsState.SavingsFrequency) {
+               switch (monthlySavingsState.Frequency) {
                     case "Weekly":
                          monthlysavings = savings.multipliedBy(52).dividedBy(12).toFixed(2);
                     break;
@@ -138,9 +138,9 @@ export default function AddMonthlySavingsModal() {
                     <Modal.Body>
                          <p className="lead">Add any amounts that you contribute to your savings, as this is removed from your amount of disposable income.</p>
 
-                         <Form.Group controlId="SavingsName">
+                         <Form.Group controlId="Name">
                               <Form.Label>Savings Name</Form.Label>
-                              <Form.Control type="Text" name="SavingsName" placeholder="Savings Account" 
+                              <Form.Control type="Text" name="Name" placeholder="Savings Account" 
                               onChange={e => handleChange(e.target.value, e.target.name)} />
                               <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
                          </Form.Group>
@@ -148,7 +148,7 @@ export default function AddMonthlySavingsModal() {
 
                          <Form.Group className="mb-3">
                               <Form.Label>Select a Savings Frequency. This is how often a savingscheck is recieved</Form.Label>
-                              <Form.Select  name="SavingsFrequency" onChange={e => handleChange(e.target.value, e.target.name)} >
+                              <Form.Select  name="Frequency" onChange={e => handleChange(e.target.value, e.target.name)} >
                                    <option>⎯⎯⎯⎯⎯</option>
                                    <option>Weekly</option>
                                    <option>Every 2 Weeks</option>
@@ -162,7 +162,7 @@ export default function AddMonthlySavingsModal() {
                               <Form.Label>Enter an amount. If you recieve irregular amounts (from tips or inconsistent hours), enter an average</Form.Label>
                               <CurrencyInput
                                    prefix="$"
-                                   name="SavingsmentAmount"
+                                   name="Amount"
                                    placeholder="ex $200"
                                    decimalScale={2}
                                    decimalsLimit={2}
@@ -171,7 +171,7 @@ export default function AddMonthlySavingsModal() {
                               />
                          </Form.Group>
 
-                         <div className="monthlySavingsDiv">
+                         <div className="monthlyTotalDiv">
                               <span>You savings is approximately</span>
                               <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlySavingsCalculator())}</h2>
                               <span>per month</span>
@@ -188,7 +188,7 @@ export default function AddMonthlySavingsModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlySavings()}
-                         disabled={!(monthlySavingsState.hasOwnProperty("SavingsName")) || !(monthlySavingsState.hasOwnProperty("SavingsFrequency")) || !(monthlySavingsState.hasOwnProperty("SavingsmentAmount")) ? true : false}>
+                         disabled={!(monthlySavingsState.hasOwnProperty("Name")) || !(monthlySavingsState.hasOwnProperty("Frequency")) || !(monthlySavingsState.hasOwnProperty("Amount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

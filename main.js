@@ -422,7 +422,7 @@ async function deleteLoan(GUID) {
      // find the loan to update based on the guid
      let loanToDeleteIndex = filedata.data[0].loans.findIndex(loan => loan.loan.GUID === GUID);
 
-     filedata.data.splice(loanToDeleteIndex, 1);
+     filedata.data[0].loans.splice(loanToDeleteIndex, 1);
 
      fileWriter(filedata);
 }
@@ -479,5 +479,95 @@ async function monthlyDeduction(deductionObject) {
 //  add monthly pay
 ipcMain.handle('submitMonthlydeduction', async (event, deductionObject) => {
      const result = await monthlyDeduction(deductionObject);
+     return result
+})
+
+
+
+
+
+
+
+// edit budget item
+async function editBudgetItem(itemObject) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // delete the item, rewrite with new data
+     // search for items in deduction by guid
+
+     // search in the 2nd array, deductions
+     let itemToDeleteIndex = filedata.data[1].deductions.findIndex(item => item.GUID === itemObject.GUID);
+
+     // if find index does not return an index, it returns -1
+     if (itemToDeleteIndex == -1) {
+          // search in incomes
+          itemToDeleteIndex = filedata.data[2].incomes.findIndex(item => item.GUID === itemObject.GUID);
+
+          // delete the item
+          filedata.data[2].incomes.splice(itemToDeleteIndex, 1);
+
+          // add the recieved data
+          filedata.data[2].incomes.push(itemObject);
+     
+     // the item is in deductions
+     } else {
+          // delete the item
+          filedata.data[1].deductions.splice(itemToDeleteIndex, 1);
+
+          // add the recieved data
+          filedata.data[1].deductions.push(itemObject);
+     }
+
+     fileWriter(filedata);
+}
+
+// edit budget item
+ipcMain.handle('submitBudgetItemChange', async (event, itemObject) => {
+     const result = await editBudgetItem(itemObject);
+     return result
+})
+
+
+
+
+
+
+
+
+
+
+
+// delete budget item
+async function deleteBudgetItem(GUID) {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // search in the 2nd array, deductions
+     let itemToDeleteIndex = filedata.data[1].deductions.findIndex(item => item.GUID === GUID);
+
+     // if find index does not return an index, it returns -1
+     if (itemToDeleteIndex == -1) {
+          // search in incomes
+          itemToDeleteIndex = filedata.data[2].incomes.findIndex(item => item.GUID === GUID);
+
+          // delete the item
+          filedata.data[2].incomes.splice(itemToDeleteIndex, 1);
+     
+     // the item is in deductions
+     } else {
+          // delete the item
+          filedata.data[1].deductions.splice(itemToDeleteIndex, 1);
+     }
+
+     fileWriter(filedata);
+}
+
+
+// Delete budget item
+ipcMain.handle('deleteBudgetItem', async (event, GUID) => {
+     const result = await deleteBudgetItem(GUID);
      return result
 })

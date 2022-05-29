@@ -1,22 +1,17 @@
 TODO:
 
 simple budget:
-- ability to delete incomes / bills
-- ability to edit incomes / bills
-- color coordinate list tables with pie chart colors, 1 px border
+- similar to dashboard, add a button to simple budget where nothing else shows if an income hasnt been added.
 
 - budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
 
 
-overlays to all buttons outlining the different tools plus examples
-
-"A bill is money that your business owes but will pay at a later date. An expense is money that your business spends at the time of purchase."
 
 - print option: create a printable sheet? to put on a wall?
 
 
 
-Adjustment of overlays, does it have to be a button?
+
 More overlays everywhere
 
 new intl formatter function, a single function and send all values that need to be formatted to it?
@@ -51,3 +46,12 @@ encrypted data?
 collect all text for abby 
 
 combine modals into one, with specific info as props?
+
+organize into views with all related compononets in each folder, seperate shared folder
+
+add a loan:
+-react bootstrap progress bar?
+
+ensure buttons across app are consistent
+
+comment code everywhere

@@ -53,7 +53,7 @@ export default function AddMonthlyExpenseModal() {
           let expenseObject = {
                ...monthlyExpenseState,
                Type: "expense",
-               MonthlyExpense: calculatedMonthlyExpense
+               MonthlyAmount: calculatedMonthlyExpense
           }
 
           // invoke the same as bills with an additional field. these are treated very similarly to the database
@@ -73,11 +73,11 @@ export default function AddMonthlyExpenseModal() {
           let monthlyexpense;
 
           // ensure both fields are selected
-          if (monthlyExpenseState.hasOwnProperty("ExpenseFrequency") && monthlyExpenseState.hasOwnProperty("ExpenseAmount")) {
+          if (monthlyExpenseState.hasOwnProperty("Frequency") && monthlyExpenseState.hasOwnProperty("Amount")) {
                
-               let expense = new BigNumber(monthlyExpenseState.ExpenseAmount);
+               let expense = new BigNumber(monthlyExpenseState.Amount);
 
-               switch (monthlyExpenseState.ExpenseFrequency) {
+               switch (monthlyExpenseState.Frequency) {
                     case "Daily":
                          monthlyexpense = expense.multipliedBy(365).dividedBy(12).toFixed(2);
                     break;
@@ -150,9 +150,9 @@ export default function AddMonthlyExpenseModal() {
                     <Modal.Body>
                          <p>Add a recurring expense to keep track of your total average expenses throughout the month</p>
 
-                         <Form.Group controlId="ExpenseName">
+                         <Form.Group controlId="Name">
                               <Form.Label>Expense Name</Form.Label>
-                              <Form.Control type="Text" name="ExpenseName" placeholder="Groceries" 
+                              <Form.Control type="Text" name="Name" placeholder="Groceries" 
                               onChange={e => handleChange(e.target.value, e.target.name)} />
                               <Form.Text className="text-muted">You can name it whatever you'd like. This is just for you to keep track of it</Form.Text>
                          </Form.Group>
@@ -160,7 +160,7 @@ export default function AddMonthlyExpenseModal() {
 
                          <Form.Group className="mb-3">
                               <Form.Label>Select a Expense Frequency. This is how often a expense is recieved</Form.Label>
-                              <Form.Select  name="ExpenseFrequency" onChange={e => handleChange(e.target.value, e.target.name)} >
+                              <Form.Select  name="Frequency" onChange={e => handleChange(e.target.value, e.target.name)} >
                                    <option>⎯⎯⎯⎯⎯</option>
                                    <option>Daily</option>
                                    <option>Daily (excluding weekends)</option>
@@ -174,7 +174,7 @@ export default function AddMonthlyExpenseModal() {
                               <Form.Label>Enter an amount. For inconsistent expenses such as groceries or coffee shop purchases, try and enter an average amount</Form.Label>
                               <CurrencyInput
                                    prefix="$"
-                                   name="ExpenseAmount"
+                                   name="Amount"
                                    placeholder="ex $200"
                                    decimalScale={2}
                                    decimalsLimit={2}
@@ -183,7 +183,7 @@ export default function AddMonthlyExpenseModal() {
                               />
                          </Form.Group>
 
-                         <div className="monthlyExpenseDiv">
+                         <div className="monthlyTotalDiv">
                               <span>Your expense is approximately</span>
                               <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyExpenseCalculator())}</h2>
                               <span>per month</span>
@@ -197,7 +197,7 @@ export default function AddMonthlyExpenseModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlyExpense()}
-                         disabled={!(monthlyExpenseState.hasOwnProperty("ExpenseName")) || !(monthlyExpenseState.hasOwnProperty("ExpenseFrequency")) || !(monthlyExpenseState.hasOwnProperty("ExpenseAmount")) ? true : false}>
+                         disabled={!(monthlyExpenseState.hasOwnProperty("Name")) || !(monthlyExpenseState.hasOwnProperty("Frequency")) || !(monthlyExpenseState.hasOwnProperty("Amount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

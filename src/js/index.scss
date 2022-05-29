@@ -713,7 +713,7 @@ input[type=range] {
 
 
 // Add monthly bill modal
-.monthlyBillDiv {
+.monthlyTotalDiv {
      text-align: center;
      padding: 5px;
 }
@@ -825,4 +825,17 @@ input[type=range] {
 
 .budgetTableFloatRight {
      text-align: right;
+}
+
+
+
+
+// edit delete item
+
+.editDeleteItemTable {
+     text-align: center;
+}
+
+.editDeleteTableButtons button{
+     margin: 0 2px 0 2px;
 }

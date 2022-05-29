@@ -9,6 +9,7 @@ import AddMonthlyBillModal from "../components/Modals/AddMonthlyBillModal";
 import AddMonthlyExpenseModal from "../components/Modals/AddMonthlyExpenseModal";
 import AddMonthlyPayModal from "../components/Modals/AddMonthlyIncomeModal";
 import AddMonthlySavingsModal from "../components/Modals/AddMonthlySavingsModal";
+import EditOrDeleteBudgetItem from "../components/Modals/EditOrDeleteBudgetItem";
 
 import BudgetPieChart from "../components/Charts/BudgetPieChart";
 import BudgetLists from "../components/ListMaps/BudgetLists";
@@ -35,7 +36,7 @@ export default function SimpleBudget(props) {
      let monthlyIncomesTotal = () => {
           let runningTotal = new BigNumber(0);
           for (let i = 0; i < props.incomes?.length; i++) {
-               let currentAmount = new BigNumber(props.incomes[i].MonthlyPay);
+               let currentAmount = new BigNumber(props.incomes[i].MonthlyAmount);
                runningTotal = runningTotal.plus(currentAmount);
           }
           return runningTotal.toFixed(2);
@@ -48,7 +49,7 @@ export default function SimpleBudget(props) {
                for (let i = 0; i < props.deductions?.length; i++) {
                     // if bill
                     if (props.deductions[i].Type == "bill") {
-                         let currentAmount = new BigNumber(props.deductions[i].MonthlyBill);
+                         let currentAmount = new BigNumber(props.deductions[i].MonthlyAmount);
                          runningTotal = runningTotal.plus(currentAmount);
                     }
                }
@@ -62,7 +63,7 @@ export default function SimpleBudget(props) {
                for (let i = 0; i < props.deductions?.length; i++) {
                     // if bill
                     if (props.deductions[i].Type == "expense") {
-                         let currentAmount = new BigNumber(props.deductions[i].MonthlyExpense);
+                         let currentAmount = new BigNumber(props.deductions[i].MonthlyAmount);
                          runningTotal = runningTotal.plus(currentAmount);
                     }
                }
@@ -75,7 +76,7 @@ export default function SimpleBudget(props) {
                for (let i = 0; i < props.deductions?.length; i++) {
                     // if bill
                     if (props.deductions[i].Type == "savings") {
-                         let currentAmount = new BigNumber(props.deductions[i].MonthlySavings);
+                         let currentAmount = new BigNumber(props.deductions[i].MonthlyAmount);
                          runningTotal = runningTotal.plus(currentAmount);
                     }
                }
@@ -89,7 +90,9 @@ export default function SimpleBudget(props) {
           let loansTotal = new BigNumber(monthlyLoansTotal());
           let billsTotal = new BigNumber(monthlyBillsTotal());
           let expensesTotal = new BigNumber(monthlyExpensesTotal());
-          return incomeTotal.minus(loansTotal).minus(billsTotal).minus(expensesTotal).toFixed(2);
+          let savingsTotal = new BigNumber(monthlySavingsTotal());
+
+          return incomeTotal.minus(loansTotal).minus(billsTotal).minus(expensesTotal).minus(savingsTotal).toFixed(2);
      }
 
 
@@ -120,22 +123,22 @@ export default function SimpleBudget(props) {
                // if bill
                if (props.deductions[i].Type == "bill") {
                     billsArray.push({
-                         "name": props.deductions[i].BillName,
-                         "value": parseFloat(props.deductions[i].MonthlyBill)
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount)
                     })
 
                // if expense
                } else if(props.deductions[i].Type == "expense") {
                     expensesArray.push({
-                         "name": props.deductions[i].ExpenseName,
-                         "value": parseFloat(props.deductions[i].MonthlyExpense)
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount)
                     })
 
                // else savings
                } else {
                     savingsArray.push({
-                         "name": props.deductions[i].SavingsName,
-                         "value": parseFloat(props.deductions[i].MonthlySavings)
+                         "name": props.deductions[i].Name,
+                         "value": parseFloat(props.deductions[i].MonthlyAmount)
                     })
                }
 
@@ -145,8 +148,8 @@ export default function SimpleBudget(props) {
           // incomes
           for (let i = 0; i < props.incomes?.length; i++) {
                incomesArray.push({
-                    "name": props.incomes[i].IncomeName,
-                    "value": parseFloat(props.incomes[i].MonthlyPay)
+                    "name": props.incomes[i].Name,
+                    "value": parseFloat(props.incomes[i].MonthlyAmount)
                })
           }
 
@@ -203,6 +206,11 @@ export default function SimpleBudget(props) {
                                    Add A loan
                               </Button>
                          </OverlayTrigger>
+
+                         <EditOrDeleteBudgetItem
+                         incomes={props.incomes}
+                         deductions={props.deductions}
+                         />
                     </div>
 
                     <div className="budgetQuickLook dashboardModule">
@@ -261,7 +269,7 @@ export default function SimpleBudget(props) {
                          
                          <div className="moduleHeader"><span>TOTALS BREAKDOWN</span></div>
 
-                         <p>The pie chart below is a representation of your loans and bills compared to your incomes. The less green you in chart, the less disposable income you have after paying all of your monthly bills and loans.</p>
+                         <p>The pie chart below is a representation of your loans and bills compared to your incomes. The entire pie represents your average monthly income. The less green you in chart, the less disposable income you have after paying all of your monthly bills, expenses, and loans.</p>
 
 
                          <BudgetPieChart

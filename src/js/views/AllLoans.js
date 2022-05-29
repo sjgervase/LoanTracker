@@ -8,8 +8,6 @@ import PaidOffLoanList from "../components/ListMaps/PaidOffLoanList";
 
 export default function AllLoans(props) {
 
-     console.log(props);
-
      // function for total loan amount
      function totalLoanAmount() {
           let runningTotal = new BigNumber(0);
