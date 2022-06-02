@@ -1,28 +1,106 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useContext, createContext } from 'react';
+
+
+// Redux
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+// import actions
+import {
+     requestData
+} from './reduxStore/actions';
 
 
 
-// for store
-import { Provider } from "react-redux";
+
+// for from react-router-dom
+import {
+     HashRouter as Router,
+     Routes,
+     Route
+} from "react-router-dom"
 
 
-// data store. dont need to specify file bc file is named index.js
-import configureStore from "./store";
-
-const store = configureStore();
+// import bigNumber
+import BigNumber from 'bignumber.js';
 
 
+// import views
+import DashBoard from "./views/DashBoard";
+import Settings from "./views/Settings"
+import SimpleBudget from "./views/SimpleBudget";
+import AllLoans from "./views/AllLoans";
+import AddALoan from './views/AddALoan';
+import LoanItemView from './views/LoanItemView';
 
-// import container
-import Container from "./Container";
-// container is necessary as provider must be the parent component of the component that fetches data
+// import navbar
+import NavigationBar from "./components/NavigationBar/NavigationBar";
+
+
 
 
 export default function App() {
 
+     // get dispatch
+     const dispatch = useDispatch();
+
+     // run action to fetch local data on load
+     useEffect(() => {
+          dispatch(requestData())
+     },[])
+
      return(
-          <Provider store={store}>
-              <Container/>
-          </Provider> 
+
+          
+               <Router>
+               <NavigationBar />
+
+                    {/* The two viewContainer divs are used for aesthectic purposes */}
+                    <div className="viewsContainerParent">
+                         <div className="viewsContainerChild">
+
+                              <Routes>
+
+                                   <Route path="/settings" element={<Settings/>}/>
+                                   
+                                   <Route 
+                                   path="/simplebudget"
+                                   element={
+                                        <SimpleBudget />
+                                   }/>
+
+                                   <Route
+                                   path="/allloans"
+                                   element={
+                                        <AllLoans/>
+                                   }/>
+                                   
+                                   <Route
+                                   path="/addaloan"
+                                   element={
+                                        <AddALoan/>
+                                   }/>
+
+                                   {/* dynamic view for closer look at an individual loan */}
+                                   <Route
+                                   path="/loanitemview"
+                                   element={
+                                        <LoanItemView/>
+                                   }/>
+
+                                   <Route
+                                   path="/"
+                                   element={
+                                        <DashBoard/>
+                                   }/>
+                                   
+                              </Routes>
+
+                              
+                         </div>
+                    </div>
+
+               </Router>
+
+          
      )
 }

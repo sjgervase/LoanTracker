@@ -65,8 +65,9 @@ export default function RecordALateFeeModal(props) {
           <>
           
                <Button
-                    variant="outline-danger"
-                    onClick={showLateFeeModalFunc}>
+                    variant="danger"
+                    onClick={showLateFeeModalFunc}
+                    size="lg">
                     
                     Record a Late Fee
                </Button>

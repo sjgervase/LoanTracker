@@ -16,6 +16,9 @@ import { ipcRenderer } from "electron";
 
 export default function AdjustMonthlyPaymentModal(props) {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
 
@@ -120,9 +123,9 @@ export default function AdjustMonthlyPaymentModal(props) {
 
      return(
           <>
-               <Button variant="success" size="lg"
+               <Button variant="primary" size="lg"
                onClick={showAdjustMonthlyPaymentFunc}>
-                    Adjust Monthly Payment
+                    Adjust Monthly Amount
                </Button>
 
 
@@ -200,7 +203,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                                    <thead>
                                         <tr>
                                              <th></th>
-                                             <th>New Payment: {"$" + new Intl.NumberFormat().format(rangeValueState)}</th>
+                                             <th>New Payment: {moneyFormatter(rangeValueState)}</th>
                                              <th>Old Payment: ${parseFloat(props.loan?.loan?.MonthlyPayment)}</th> 
                                         </tr>
                                    </thead>
@@ -218,15 +221,11 @@ export default function AdjustMonthlyPaymentModal(props) {
                                              <td>Total Interest Paid</td>
                                              
                                              <td>
-                                                  {"$" + new Intl.NumberFormat().format(
-                                                       repaymentInterestCalculator(rangeValueState)
-                                                  )}
+                                                  {moneyFormatter(repaymentInterestCalculator(rangeValueState))}
                                              </td>
                                              
                                              <td>
-                                                  {"$" + new Intl.NumberFormat().format(
-                                                       repaymentInterestCalculator(props.loan?.loan.MonthlyPayment)
-                                                  )}
+                                                  {moneyFormatter(repaymentInterestCalculator(props.loan?.loan.MonthlyPayment))}
                                              </td>
                                         
                                         </tr>

@@ -8,9 +8,25 @@ $greenWhite:#E7F2D5;
 $cream:#fffffd;
 
 body {
-     // background-color: $cream;
      -webkit-user-select: none;
      overflow-y: hidden;
+
+     --bg-color: #fffffd;
+     --text-color: #212529;
+     --nav-bg-color: #36733F;
+     --bg-green: #E7F2D5;
+
+     color: var(--text-color);
+}
+
+body.dark-theme {
+     -webkit-user-select: none;
+     overflow-y: hidden;
+
+     --bg-color: #212529;
+     --text-color: #fffffd;
+     --nav-bg-color: #022601;
+     --bg-green: #022601;
 }
 
 
@@ -53,7 +69,7 @@ body {
 // Navbar stuff
 
 .navbar-custom {
-     background-color: $green;
+     background-color: var(--nav-bg-color);
 }
 
 .navbar-brand {
@@ -103,7 +119,20 @@ body {
      height: -webkit-calc(100vh - 56px);
 
      // from https://stripesgenerator.com/
-     background-image: linear-gradient(45deg, #b4d9b6 1.39%, #ffffff 1.39%, #ffffff 29.17%, #fff 29.17%, #fff 50%, #b4d9b6 50%, #b4d9b6 51.39%, #ffffff 51.39%, #ffffff 79.17%, #fff 79.17%, #fff 100%);
+     background-image: linear-gradient(
+          45deg, #b4d9b6 1.39%,
+          var(--bg-color) 1.39%,
+          var(--bg-color) 29.17%,
+          var(--bg-color) 29.17%,
+          var(--bg-color) 50%,
+          $lighterGreen 50%,
+          $lighterGreen 51.39%,
+          var(--bg-color) 51.39%,
+          var(--bg-color) 79.17%,
+          var(--bg-color) 79.17%,
+          var(--bg-color) 100%
+     );
+
      background-size: 50.91px 50.91px;
 }
 
@@ -114,7 +143,7 @@ body {
 }
 
 .componentContainer {
-     background-color: $cream;
+     background-color: var(--bg-color);
      min-height: 100%;
      padding: 10px;
 }
@@ -123,8 +152,6 @@ body {
 // Add a loan
 .loanInfoForm {
      margin: 10px;
-     // border: 1px solid red;
-     // background-color: purple;
 }
 
 
@@ -230,7 +257,7 @@ input {
      position: relative;
      top: -13px;
      left: 10px;
-     background-color: white;
+     background-color: var(--bg-color);
      border: 1px solid $green;
      padding: 0 3px 0px 3px;
      width: max-content;
@@ -249,7 +276,7 @@ input {
 .dashboardModule {
      border: 1px solid $green;
      padding: 0px 5px 0px 5px;
-     background-color: $greenWhite;
+     background-color: var(--bg-green);
 }
 
 .activeLoans {
@@ -265,7 +292,6 @@ input {
 
 .activeLoansGraphs {
      flex-basis: 36%;
-     background-color: $greenWhite;
      margin-left: auto;
      height: 49vh;
 }
@@ -281,7 +307,6 @@ input {
      margin-top: 20px;
      height: 29vh;
      flex-basis: 100%;
-     background-color: $greenWhite;
 }
 
 // recently recorded payments
@@ -301,7 +326,7 @@ input {
 .loanItem {
      height: 120px;
      padding: 10px;
-     background-color: $cream;
+     background-color: var(--bg-color);
      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
      border-radius: 5px;
@@ -478,6 +503,48 @@ input {
 }
 
 
+.loanTools {
+     flex-basis: 29%;
+     display: flex;
+     flex-wrap: wrap;
+     flex-direction: column;
+     padding-bottom: 15px;
+}
+
+.loanTools > button {
+     margin: 2px;
+}
+
+.loanQuickInfo {
+     margin-left: 1%;
+     flex-basis: 70%;
+}
+
+
+.paymentsOverTime {
+     margin-top: 2%;
+     flex-basis: 60%;
+}
+
+.paymentsOverTimeDirections {
+     margin-left: 12px;
+}
+
+.paymentsOverTiemChart > .recharts-responsive-container{
+     position: relative;
+     top: 0;
+}
+
+.recentlyRecordedPayments {
+     margin-left: 1%;
+     margin-top: 2%;
+     flex-basis: 39%;
+}
+
+
+
+
+
 
 
 
@@ -507,7 +574,13 @@ input {
      padding: 7px;
      display: flex;
      border-radius: 5px;
-     align-items: baseline;
+     align-items: center;
+     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.paymentOrFeeItem:hover {
+     box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
 
 .paymentOrFeeItem div {
@@ -785,7 +858,6 @@ input[type=range] {
      flex-direction: row;
      flex-wrap: nowrap;
      justify-content: space-evenly;
-
 }
 
 
@@ -801,6 +873,7 @@ input[type=range] {
      flex-direction: column;
      background-color: $cream;
      margin: 3px;
+     flex-grow: 100;
 }
 
 .minus {

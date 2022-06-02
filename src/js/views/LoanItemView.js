@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
 // import from electron
 import { ipcRenderer } from "electron";
 
@@ -24,14 +27,30 @@ import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayme
 
 
 
-export default function LoanItemView(props) {
+export default function LoanItemView() {
      
-     // gets the params passed to this page from the "More Info" button on dashboard
-     const { state } = useLocation();
+     // gets the params passed to this page from the "More Info" button
+     // only param is GUID
+     const {state} = useLocation();
 
-     // find the clicked on loan based on the passed state out of all available loans
-     let currentLoan = props.loans?.find(obj => obj.loan.GUID === state.GUID);
-     
+     // get data from redux store
+     // only loans are needed
+     const data = useSelector((data) => data.data[0]);
+
+
+     // function to return the current loan
+     function getCurrentLoan() {
+          let currentLoan;
+          // if data exists
+          if (data) {
+               // find the clicked on loan based on the passed state out of all available loans
+               currentLoan = data.loans.find(obj => obj.loan.GUID === state);
+          }
+          return currentLoan;
+     }
+
+     const currentLoan = getCurrentLoan();
+
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
           switch (loanCategory) {
@@ -57,7 +76,6 @@ export default function LoanItemView(props) {
           // string variables for each loan type
           var amortizingLoanInfo = "An amortized loan is a type of loan with scheduled, periodic payments that are applied to both the loan's principal amount and the interest accrued. An amortized loan payment first pays off the relevant interest expense for the period, after which the remainder of the payment is put toward reducing the principal amount. Common amortized loans include auto loans, home loans, and personal loans from a bank for small projects or debt consolidation.";
           var revolvingLoanInfo = "A revolving loan facility is a form of credit issued by a financial institution that provides the borrower with the ability to draw down or withdraw, repay, and withdraw again. A revolving loan is considered a flexible financing tool due to its repayment and re-borrowing accommodations. It is not considered a term loan because, during an allotted period of time, the facility allows the borrower to repay the loan or take it out again.A revolving loan facility is a form of credit issued by a financial institution that provides the borrower with the ability to draw down or withdraw, repay, and withdraw again. A revolving loan is considered a flexible financing tool due to its repayment and re-borrowing accommodations. It is not considered a term loan because, during an allotted period of time, the facility allows the borrower to repay the loan or take it out again.";
-
 
           // empty object to be populated by switch
           let useThisLoanInfo = {};
@@ -205,6 +223,8 @@ export default function LoanItemView(props) {
           }
      }
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      
 
@@ -212,7 +232,6 @@ export default function LoanItemView(props) {
           <div className="componentContainer">
 
                <h1 className="componentTitle">{currentLoan?.loan.LoanName}</h1>
-
                <div className="loanItemType">
                     <h3>{loanTypeIcon(currentLoan?.loan.LoanCategory)} {currentLoan?.loan.LoanCategory}</h3>
                     
@@ -221,55 +240,41 @@ export default function LoanItemView(props) {
                     </div>
                </div>
 
-               <div className="loanInfoHeader">
-                    <span className="display-4">{"$" + new Intl.NumberFormat().format(currentLoan?.loan.CalculatedLoanAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</span>
-                    
-                    <span className="lead"> Next Payment of {"$" + new Intl.NumberFormat().format(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</span>
+               <div className="dashboardModules">
+                    <div className="loanTools dashboardModule">
+                         <div className="moduleHeader"><span>TOOLS</span></div>
 
-                    <div className="buttonsDiv">
-                         <Button variant="success" className="btn-custom" onClick={() => openLinkInBrowser(currentLoan?.loan.LoanLink)}>Link to Loan</Button>
+                         <Button variant="success" className="btn-custom" size="lg" onClick={() => openLinkInBrowser(currentLoan?.loan.LoanLink)}>Link to Loan</Button>
                          <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
-                         <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>                         
+                         <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>
+                         <AdjustMonthlyPaymentModal loan={currentLoan}/>
                     </div>
-               </div>
 
-               <Accordion flush defaultActiveKey="0">
+                    <div className="loanQuickInfo dashboardModule">
+                         <div className="moduleHeader"><span>LOAN INFO</span></div>
+                         <div className="loanInfoHeader">
+                              <span className="display-4">{moneyFormatter(currentLoan?.loan.CalculatedRemainingAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</span>
+                              
+                              <h5> Next Payment of {moneyFormatter(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</h5>
+                         </div>
+                    </div>
 
-                    <Accordion.Item eventKey="0">
-                         <Accordion.Header>
-                              Payments Over Time
-                         </Accordion.Header>
+                    <div className="paymentsOverTime dashboardModule">
+                         <div className="moduleHeader"><span>PAYMENTS OVER TIME</span></div>
 
-                         <Accordion.Body>
+                         <p className="lead paymentsOverTimeDirections">Click "Record a Payment" or "Record a Late Fee" in the Tools module above to add more data points to this graph</p>
+
+                         <div className="paymentsOverTiemChart">
                               <LoansLineChart data={currentLoan}/>
-                         </Accordion.Body>
-                    </Accordion.Item>
+                         </div>
+                    </div>
 
-                    <Accordion.Item eventKey="1">
-                         <Accordion.Header>
-                              Recently Recorded Payments
-                         </Accordion.Header>
+                    <div className="recentlyRecordedPayments dashboardModule">
+                         <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
 
-                         <Accordion.Body>
-                              <RecentlyRecordedPayments data={props.loans} thisLoan={currentLoan?.loan.GUID}/>
-                         </Accordion.Body>
-                    </Accordion.Item>
-
-                    <Accordion.Item eventKey="2">
-                         <Accordion.Header>
-                              Monthly Payment Adjustment Calculator
-                         </Accordion.Header>
-
-                         <Accordion.Body>
-                         <p className="lead"> Paying more than your required monthly payment can reduce the amount of interest you pay, and total loan cost over the life of the loan. Click the button below to get started.</p>
-                              <AdjustMonthlyPaymentModal loan={currentLoan}/>
-                         </Accordion.Body>
-                    </Accordion.Item>
-
-               </Accordion>
-
-
-              
+                         <RecentlyRecordedPayments thisLoan={currentLoan?.loan.GUID}/>
+                    </div>
+               </div>              
           </div>
      );
 }

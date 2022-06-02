@@ -165,6 +165,9 @@ export default function SimpleBudget(props) {
           navigate('/addaloan');
      }
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      const addALoanPopover = (
           <Popover id="popover-basic">
                <Popover.Header as="h3">Add A Loan</Popover.Header>
@@ -191,7 +194,7 @@ export default function SimpleBudget(props) {
                
                <div className="budgetTopRow">
                     <div className="budgetTools dashboardModule">
-                         <div className="moduleHeader"><span>TOOLS</span></div>
+                         <div className="moduleHeader"><span>BUDGET TOOLS</span></div>
 
                          <AddMonthlyPayModal/>
 
@@ -219,7 +222,7 @@ export default function SimpleBudget(props) {
                          <div className="budgetLists">
                               <h4>Monthly Incomes Total</h4>
                               <BudgetLists array={incomesArray}/>
-                              <h3>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyIncomesTotal())}</h3>
+                              <h3>{moneyFormatter(monthlyIncomesTotal())}</h3>
                          </div>
 
                          <div className="budgetTotals">
@@ -227,26 +230,26 @@ export default function SimpleBudget(props) {
                               <div className="budgetLists">
                                    <h4>Monthly Savings Total</h4>
                                    <BudgetLists array={savingsArray}/>
-                                   <h3>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlySavingsTotal())}</h3>
+                                   <h3>{moneyFormatter(monthlySavingsTotal())}</h3>
                               </div>
                               
 
                               <div className="budgetLists">
                                    <h4>Monthly Loans Total</h4>
                                    <BudgetLists array={loansArray}/>
-                                   <h3>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyLoansTotal())}</h3>
+                                   <h3>{moneyFormatter(monthlyLoansTotal())}</h3>
                               </div>
 
                               <div className="budgetLists">
                                    <h4>Monthly Bills Total</h4>
                                    <BudgetLists array={billsArray}/>
-                                   <h3>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyBillsTotal())}</h3>
+                                   <h3>{moneyFormatter(monthlyBillsTotal())}</h3>
                               </div>
 
                               <div className="budgetLists">
                                    <h4>Monthly Expenses Total</h4>
                                    <BudgetLists array={expensesArray}/>
-                                   <h3>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyExpensesTotal())}</h3>
+                                   <h3>{moneyFormatter(monthlyExpensesTotal())}</h3>
                               </div>
                          </div>
 
@@ -254,7 +257,7 @@ export default function SimpleBudget(props) {
 
                               <h4>Total Remaining Income</h4>
                               <h3>
-                                   {new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(remainderTotal())}
+                                   {moneyFormatter(remainderTotal())}
                               </h3>
 
                          </div>

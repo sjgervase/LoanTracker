@@ -15,6 +15,9 @@ import {
 
 export default function LoansLineChart(props) {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // function to format date to DD-MM-YYYY
      function formatDate (input) {
           if (props.data) {
@@ -120,10 +123,10 @@ export default function LoansLineChart(props) {
                          <span>Date: {e.payload[0].payload["date"]}</span>
                          
                          <span>
-                              {"Amount: $" + new Intl.NumberFormat().format(
+                              {"Amount: " + moneyFormatter(
                                    parseFloat(
                                         e.payload[0].payload["currentLoanAmount"]
-                                   ).toFixed(2)
+                                   )
                               )}
                          </span>
                     </div>

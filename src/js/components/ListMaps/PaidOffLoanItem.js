@@ -19,6 +19,9 @@ export default function PaidOffLoanItem(props) {
 
      let loan = props.loan;
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // navigate functionality
      let navigate = useNavigate();
 
@@ -95,11 +98,11 @@ export default function PaidOffLoanItem(props) {
 
                               <div className="paymentsAndButtons">
                                    
-                                   <h3 className="paymentAndDate">was: {"$" + new Intl.NumberFormat().format(loan.TotalLoanAmount)}</h3>
+                                   <h3 className="paymentAndDate">was: {moneyFormatter(loan.TotalLoanAmount)}</h3>
                                    
                                    {/* make button only exist if link was entered */}
                                    <Button variant="success" className="btn-sm btn-custom py0" onClick={() => openLinkInBrowser(loan.LoanLink)}>Link to Loan</Button>
-                                   <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan)}>More Info</Button>
+                                   <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan.GUID)}>More Info</Button>
                                    
                               </div>
 

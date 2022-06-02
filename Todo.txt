@@ -1,20 +1,20 @@
 TODO:
 
-simple budget:
-- similar to dashboard, add a button to simple budget where nothing else shows if an income hasnt been added.
 
+***** Get data object on load, change objects within scope of app, send data to be written every second, 
+     excellent video:
+     https://www.youtube.com/watch?v=poQXNp9ItL4
+     
+     // import from react-redux
+     import { useDispatch, useSelector } from "react-redux";
+     
+     const data = useSelector(({data}) => data.items); 
+
+
+simple budget:
 - budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
 
-
-
-- print option: create a printable sheet? to put on a wall?
-
-
-
-
 More overlays everywhere
-
-new intl formatter function, a single function and send all values that need to be formatted to it?
 
 Record a payment modal
 - acknowledge desired payment
@@ -55,3 +55,11 @@ add a loan:
 ensure buttons across app are consistent
 
 comment code everywhere
+
+ensure everything looks as expected in fullscreen
+     - loan item view : components dont resize veritcally
+
+
+"LoanTracker" in navbar should be draggable
+
+switch all "if(data){}" statements to "data?"

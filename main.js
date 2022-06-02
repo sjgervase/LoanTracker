@@ -1,7 +1,7 @@
 // Main Process
 
 // DONT FORGET TO RUN NPM WATCH
-const { app, BrowserWindow, ipcMain, Notification, getCurrentWindow, shell } = require('electron');
+const { app, BrowserWindow, session, ipcMain, Notification, getCurrentWindow, shell } = require('electron');
 const path = require('path');
 const isDevelopmentMode = !app.isPackaged;
 
@@ -15,7 +15,7 @@ function createWindow() {
           minWidth: 545,
           minHeight: 100,
           width: 1600,
-          height: 850,
+          height: 870,
           frame: false,
           webPreferences: {
                nodeIntegration: true,
@@ -97,7 +97,9 @@ function dataFileVerifier() {
                     {"loans":[]},
                     {"deductions":[]},
                     {"incomes":[]},
-                    {"settings":[]}
+                    {"settings":[
+                         {"theme": "light"}
+                    ]}
                ]
           }
 
@@ -126,6 +128,11 @@ function dataFileVerifier() {
 app.whenReady().then(dataFileVerifier());
 
 
+const reduxDevToolsPath = 'C:/Users/sjger/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.0.11_0/';
+app.whenReady().then(async () => {
+     await session.defaultSession.loadExtension(reduxDevToolsPath)
+})
+
 
 // get data currently in file
 async function dataGrabber() {
@@ -140,7 +147,6 @@ async function dataGrabber() {
 
      // function to parse the data
      async function fileReader(){
-          // console.log("documentRead");
           data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
           // return album object
@@ -164,7 +170,6 @@ ipcMain.handle('dataRequest', async (event, arg) => {
 
 // open url for bank
 ipcMain.handle("openLinkToPaymentURL", (event, url) => {
-     // console.log(url);
      shell.openExternal(url);
 })
 
@@ -178,7 +183,6 @@ function fileReader(){
      // build the string to the path of the current user library json file
      var dataFile = path.join(userDataPath, "dataFile.json");
      
-     // console.log("documentRead");
      data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
      // return album object
@@ -570,4 +574,39 @@ async function deleteBudgetItem(GUID) {
 ipcMain.handle('deleteBudgetItem', async (event, GUID) => {
      const result = await deleteBudgetItem(GUID);
      return result
+})
+
+
+
+
+
+
+
+// function to toggle the theme
+function toggleTheme() {
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     let currentTheme = filedata.data[3].settings[0].theme;
+
+     // if current theme is light
+     if (currentTheme == "light") {
+          // set to dark
+          filedata.data[3].settings[0].theme = "dark";
+     } else {
+          // else, set to light
+          filedata.data[3].settings[0].theme = "light";
+     }
+
+     fileWriter(filedata);
+}
+
+
+
+
+
+// toggle color theme
+ipcMain.handle('toggleTheme', async (event) => {
+     toggleTheme();
 })

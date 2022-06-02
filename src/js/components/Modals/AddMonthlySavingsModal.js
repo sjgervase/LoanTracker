@@ -16,6 +16,9 @@ import { ipcRenderer } from "electron";
 
 export default function AddMonthlySavingsModal() {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
 
@@ -173,7 +176,7 @@ export default function AddMonthlySavingsModal() {
 
                          <div className="monthlyTotalDiv">
                               <span>You savings is approximately</span>
-                              <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlySavingsCalculator())}</h2>
+                              <h2>{moneyFormatter(monthlySavingsCalculator())}</h2>
                               <span>per month</span>
                          </div>
                          

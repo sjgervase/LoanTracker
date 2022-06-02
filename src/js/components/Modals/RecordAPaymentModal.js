@@ -59,6 +59,7 @@ export default function RecordAPaymentModal(props) {
                     variant="light"
                     // conditional classname depending on the parent of the button
                     className={`${props.parent.name == "ActiveLoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
+                    size="lg"
                     onClick={showPaymentModalFunc}>
                     Record a Payment
                </Button>

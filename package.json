@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/preset-env": "^7.17.10",
     "@babel/preset-react": "^7.16.7",
+    "@reduxjs/toolkit": "^1.8.2",
     "babel-loader": "^8.2.5",
     "bignumber.js": "^9.0.2",
     "bootstrap": "^5.1.3",

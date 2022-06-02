@@ -16,6 +16,9 @@ import {
 
 export default function BudgetPieChart(props) {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // https://celiaongsl.medium.com/2-secret-pie-chart-hacks-to-up-your-recharts-game-hack-recharts-1-9fa62ff9416a
      // format data for pie chart
      function rechartData() {
@@ -135,7 +138,7 @@ export default function BudgetPieChart(props) {
           }
 
           // add all remaining values up and utilize javascript's number formating
-          let sum = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(vals.reduce((partialSum, a) => partialSum + a, 0));
+          let sum = moneyFormatter(vals.reduce((partialSum, a) => partialSum + a, 0));
           
           return (
                <React.Fragment>
@@ -179,7 +182,7 @@ export default function BudgetPieChart(props) {
                          <span>{e.payload[0].payload["name"]}</span>
                          
                          <span>
-                              {new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(parseFloat(
+                              {moneyFormatter(parseFloat(
                                         e.payload[0].payload["value"]
                               ))}
                          </span>
@@ -203,7 +206,7 @@ export default function BudgetPieChart(props) {
                     nameKey="name"
                     color="color"
                     innerRadius={110}
-                    label={(entry) => entry.name  + " " + new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(parseFloat(entry.value))}
+                    label={(entry) => entry.name  + " " + moneyFormatter(parseFloat(entry.value))}
                     >
 
                          <Label

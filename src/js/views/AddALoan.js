@@ -17,6 +17,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddALoan() {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      const navigate = useNavigate();
 
      const [formState, setFormState] = useState({});
@@ -302,7 +305,7 @@ export default function AddALoan() {
                                         <Form.Group controlId="TotalLoanAmount" className="totalLoanAmountDiv">
                                              <Form.Label>Total Loan Amount</Form.Label>
                                              
-                                             <h3>{(isNaN(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))) ? "---" : "$" + new Intl.NumberFormat().format(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))}</h3>
+                                             <h3>{(isNaN(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))) ? "---" : moneyFormatter(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))}</h3>
                                         </Form.Group>
                                    </div>
 

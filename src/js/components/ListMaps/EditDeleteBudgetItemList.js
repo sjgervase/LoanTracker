@@ -11,6 +11,9 @@ import { ipcRenderer } from "electron";
 
 export default function EditOrDeleteBudgetItemList(props) {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // Edit Modal ---------------------------------------------------------------------------------------------------
 
      // state to show / hide the edit modal
@@ -165,7 +168,7 @@ export default function EditOrDeleteBudgetItemList(props) {
           // // create an item object with the state and calculated monthly amount
           let itemObject = {
                ...editState,
-               Type: props.name.toLowerCase() + 's',
+               Type: props.name.toLowerCase(),
                MonthlyAmount: calculatedMonthlyAmount,
           }
 
@@ -234,7 +237,7 @@ export default function EditOrDeleteBudgetItemList(props) {
 
                                    <td>{item.Name}</td>
                                    <td>{item.Frequency}</td>
-                                   <td>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(item.Amount)}</td>
+                                   <td>{moneyFormatter(item.Amount)}</td>
 
                                    <td>
                                         <Button size="sm" variant="danger" onClick={() => showDeleteModalFunc()}>
@@ -286,7 +289,7 @@ export default function EditOrDeleteBudgetItemList(props) {
 
                                              <div className="monthlyTotalDiv">
                                                   <span>Your {props.name} is approximately</span>
-                                                  <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyTotalCalculation())}</h2>
+                                                  <h2>{moneyFormatter(monthlyTotalCalculation())}</h2>
                                                   <span>per month</span>
                                              </div>
 
@@ -327,7 +330,7 @@ export default function EditOrDeleteBudgetItemList(props) {
                                                        <tr>
                                                             <td>{item.Name}</td>
                                                             <td>{item.Frequency}</td>
-                                                            <td>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(item.Amount)}</td>
+                                                            <td>{moneyFormatter(item.Amount)}</td>
                                                        </tr>
                                                   </tbody>
                                              </Table>

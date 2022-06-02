@@ -5,6 +5,9 @@ import { Table } from "react-bootstrap";
 
 export default function BudgetLists(props) {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      return(
           <Table striped hover size="sm">
                <tbody>
@@ -14,7 +17,7 @@ export default function BudgetLists(props) {
 
                          <tr key={item.name}>
                               <td className="budgetTableFloatLeft">{item.name}</td>
-                              <td className="budgetTableFloatRight">{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(item.value)}</td>
+                              <td className="budgetTableFloatRight">{moneyFormatter(item.value)}</td>
                          </tr>
 
                     )}

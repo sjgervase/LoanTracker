@@ -16,6 +16,9 @@ import { ipcRenderer } from "electron";
 
 export default function AddMonthlyIncomeModal() {
 
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
 
@@ -63,11 +66,11 @@ export default function AddMonthlyIncomeModal() {
           let monthlypay;
 
           // ensure both fields are selected
-          if (monthlyPayState.hasOwnProperty("Frequenct") && monthlyPayState.hasOwnProperty("Amount")) {
+          if (monthlyPayState.hasOwnProperty("Frequency") && monthlyPayState.hasOwnProperty("Amount")) {
                
                let pay = new BigNumber(monthlyPayState.Amount);
 
-               switch (monthlyPayState.Frequenct) {
+               switch (monthlyPayState.Frequency) {
                     case "Weekly":
                          monthlypay = pay.multipliedBy(52).dividedBy(12).toFixed(2);
                     break;
@@ -178,7 +181,7 @@ export default function AddMonthlyIncomeModal() {
 
                          <div className="monthlyTotalDiv">
                               <span>You income is approximately</span>
-                              <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyPayCalculator())}</h2>
+                              <h2>{moneyFormatter(monthlyPayCalculator())}</h2>
                               <span>per month</span>
                          </div>
                          
@@ -193,7 +196,7 @@ export default function AddMonthlyIncomeModal() {
                          </Button>
 
                          <Button variant="success" onClick={() => submitMonthlyPay()}
-                         disabled={!(monthlyPayState.hasOwnProperty("Name")) || !(monthlyPayState.hasOwnProperty("Frequenct")) || !(monthlyPayState.hasOwnProperty("Amount")) ? true : false}>
+                         disabled={!(monthlyPayState.hasOwnProperty("Name")) || !(monthlyPayState.hasOwnProperty("Frequency")) || !(monthlyPayState.hasOwnProperty("Amount")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>
