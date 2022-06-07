@@ -9,12 +9,24 @@ import { BigNumber } from "bignumber.js"
 import { ipcRenderer } from "electron";
 
 
+// import actions from deductions slice
+import { addDeduction } from "../../Redux/features/DeductionsSlice";
+
+import { useSelector, useDispatch } from "react-redux";
 
 
 
 
 
 export default function AddMonthlyExpenseModal() {
+
+     const dispatch = useDispatch();
+
+     // get data from redux store
+     const deductionsState = useSelector((state) => state.deductions);
+
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
@@ -23,11 +35,8 @@ export default function AddMonthlyExpenseModal() {
      // state to keep track of user entered data
      const [monthlyBillState, setMonthlyBillState] = useState({});
 
-
-
      // functions to show or hide the modal
      const showModalFunc = () => {setShowModal(true)};
-     
      
      const hideAddMonthlyBillFunc = () => {
           // clear the value state
@@ -41,22 +50,57 @@ export default function AddMonthlyExpenseModal() {
           setMonthlyBillState({ ...monthlyBillState, [name]: value })
      }
 
+     // read and generate unique GUIDS
+     function guidGenerator() {
+          
+          // create empty array to be populated by all guids currently in the file
+          let guidArray = [];
+
+          // for each loan item
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               guidArray.push(deductionsState.deductions[i].GUID);
+          }
+
+          // generate 20 digit GUID for album and album art
+          let randomGUID = (length = 20) => {
+               let str = "";
+               // create a GUID within a while loop. this will loop infinitely until a GUID is not already being used
+               while (true) {
+                    // Declare all characters
+                    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    // Pick characers randomly and add them to "str" variable to create random string
+                    for (let i = 0; i < length; i++) {
+                         str += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    // if str is not being used as a GUID already, break the while loop
+                    if (!(guidArray.includes(str))) {
+                         break;
+                    }
+               }
+               return str;
+          };
+          return randomGUID();
+     }
+
 
      
-
      // function to submit entered data from "adjust monthly payment modal"
      function submitMonthlyBill() {
           // get the calculated monthly bill
           let calculatedMonthlyBill = monthlyBillCalculator();
 
+          let newGuid = guidGenerator();
+
           // create an bill object with the state and calculated monthly bill
           let billObject = {
                ...monthlyBillState,
                Type: "bill",
-               MonthlyAmount: calculatedMonthlyBill
+               MonthlyAmount: calculatedMonthlyBill,
+               GUID: newGuid
           }
 
-          ipcRenderer.invoke('submitMonthlydeduction', (billObject));
+          // dispatch action to reducer
+          dispatch(addDeduction(billObject));
 
           // clear the value state
           setMonthlyBillState({});
@@ -106,10 +150,10 @@ export default function AddMonthlyExpenseModal() {
      
 
      const popover = (
-          <Popover id="popover-basic">
-               <Popover.Header as="h3">Add Monthly Bill</Popover.Header>
+          <Popover id="popover-basic" className="customPopover">
+               <Popover.Header as="h3" className="customPopoverHeader">Add Monthly Bill</Popover.Header>
                
-               <Popover.Body>
+               <Popover.Body className="customPopoverBody">
                     Add any sort of regular bills you recieve to be incorporated into your monthly budget. While very similar to expenses, these tend to be more consistent in amount and are paid at regular intervals.
                     <br></br>
                     Some Examples:
@@ -140,7 +184,8 @@ export default function AddMonthlyExpenseModal() {
                     onHide={hideAddMonthlyBillFunc}
                     backdrop="static"
                     keyboard={false}
-                    centered>
+                    centered
+                    dialogClassName="customModal">
 
                     <Modal.Header closeButton>
                          <Modal.Title>Add a Recurring bill</Modal.Title>
@@ -185,7 +230,7 @@ export default function AddMonthlyExpenseModal() {
 
                          <div className="monthlyTotalDiv">
                               <span>Your bill is approximately</span>
-                              <h2>{new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(monthlyBillCalculator())}</h2>
+                              <h2>{moneyFormatter(monthlyBillCalculator())}</h2>
                               <span>per month</span>
                          </div>
 

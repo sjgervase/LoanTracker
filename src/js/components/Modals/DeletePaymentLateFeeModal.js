@@ -2,9 +2,17 @@ import React, { useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { ipcRenderer } from "electron";
 
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
+// import store actions
+import { deletePaymentOrLateFee } from "../../Redux/features/LoansSlice";
+
+
+
 export default function DeletePaymentLateFeeModal(props) {
 
-     
+     const dispatch = useDispatch();
 
      // state to show delete modal
      const [showModal, setShowModal] = useState(false);
@@ -15,27 +23,29 @@ export default function DeletePaymentLateFeeModal(props) {
      
      // function to format date to MM-DD-YYYY
      function formatDate (input) {
-          
           var datePart = input.match(/\d+/g),
           year = datePart[0].substring(2), // get only two digits
           month = datePart[1], day = datePart[2];
 
-          return month+'/'+day+'/'+year;
-     
+          return month+'/'+day+'/'+year;     
      }
+
 
      function deletePaymentLateFee() {
 
-          let GUIDAndTimestampType = {
+          let GUIDTimestampTypeAmount = {
                GUID: props.item.loanGUID,
                TimeStamp: props.item.dateRecorded,
-               type: (props.item.type == "payment" ? "PaymentHistory" : "LateFees")
+               Type: (props.item.type == "payment" ? "PaymentHistory" : "LateFees"),
+               Amount: props.item.amount
           }
 
-          console.log(GUIDAndTimestampType);
+          // dispatch action to the store
+          dispatch(deletePaymentOrLateFee(GUIDTimestampTypeAmount));
 
-          ipcRenderer.invoke('deletePaymentLateFee', (GUIDAndTimestampType));
+          // ipcRenderer.invoke('deletePaymentLateFee', (GUIDAndTimestampType));
 
+          // hide the modal
           setShowModal(false)
      }
 

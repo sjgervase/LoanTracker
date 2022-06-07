@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { ipcRenderer } from "electron";
 
+// import action from store
+import { deleteLoan } from "../../Redux/features/LoansSlice";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
 export default function DeleteLoanModal(props) {
+
+     const dispatch = useDispatch();
 
      // state to show delete modal
      const [showModal, setShowModal] = useState(false);
@@ -11,9 +19,13 @@ export default function DeleteLoanModal(props) {
      const handleDeleteModalShow = () => setShowModal(true);
 
 
-     function deleteLoan() {
-          ipcRenderer.invoke('deleteLoan', (props.loan.GUID));
+     function deleteLoanFunc() {
+          // ipcRenderer.invoke('deleteLoan', (props.loan.GUID));
 
+          // dispatch the action to delete the loan
+          dispatch(deleteLoan(props.loan.GUID));
+
+          // hide the modal
           setShowModal(false)
      }
 
@@ -48,7 +60,7 @@ export default function DeleteLoanModal(props) {
                               Cancel
                          </Button>
 
-                         <Button variant="danger" onClick={deleteLoan}>
+                         <Button variant="danger" onClick={()=>deleteLoanFunc()}>
                               Yes
                          </Button>
                     </Modal.Footer>

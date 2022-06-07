@@ -3,6 +3,12 @@ import React, { useState } from "react";
 // import from electron
 import { ipcRenderer } from "electron";
 
+// import store actions
+import { addPaymentOrLateFeeToLoan } from "../../Redux/features/LoansSlice";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
 // import from react bootstrap
 import { Button, Modal, Popover, OverlayTrigger, Form } from "react-bootstrap";
 
@@ -12,8 +18,19 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function RecordALateFeeModal(props) {
 
+     const dispatch = useDispatch();
+
+     let thisGUID = props.loan?.loan.GUID;
+
      // state for showing or hiding the record LateFee modal
      const [showModal, setShowModal] = useState(false);
+
+     // state for capturing record a LateFee function
+     const [recordLateFeeState, setRecordLateFeeState] = useState({
+          GUID: thisGUID,
+          Type: "lateFee",
+          Date: dateDefaultToday()
+     });
 
 
      // functions to show or hide the record LateFee modal
@@ -21,7 +38,9 @@ export default function RecordALateFeeModal(props) {
      const hideLateFeeModalFunc = () => {
           // clear the state 
           setRecordLateFeeState({
-               GUID: props.loan?.loan.GUID
+               GUID: thisGUID,
+               Type: "lateFee",
+               Date: dateDefaultToday()
           });
           // hide the modal
           setShowModal(false);
@@ -33,14 +52,6 @@ export default function RecordALateFeeModal(props) {
           setRecordLateFeeState({ ...recordLateFeeState, [name]: value })
      }
 
-
-     // function to submit entered data from "record a Late Fee modal"
-     function submitRecordedLateFee() {
-          ipcRenderer.invoke('newLateFeeSubmission', (recordLateFeeState));
-          // hide the modal
-          setShowModal(false);
-     }
-
      // set the default date picker value to today
      function dateDefaultToday() {
           let today = new Date();
@@ -49,24 +60,23 @@ export default function RecordALateFeeModal(props) {
      }
 
 
-     // state for capturing record a LateFee function
-     const [recordLateFeeState, setRecordLateFeeState] = useState({
-          GUID: props.loan?.loan.GUID,
-          Date: dateDefaultToday()
-     });
-     
+     // function to submit entered data from "record a Late Fee modal"
+     function submitRecordedLateFee() {
+          // dispatch the action to the store
+          dispatch(addPaymentOrLateFeeToLoan(recordLateFeeState));
 
-// conditional classnames on button:
-// className="btn-sm btn-custom btn-light py0" if parent is loanitem
-
+          // hide the modal
+          setShowModal(false);
+     }
 
 
      return(
           <>
           
                <Button
-                    variant="outline-danger"
-                    onClick={showLateFeeModalFunc}>
+                    variant="danger"
+                    onClick={showLateFeeModalFunc}
+                    size="lg">
                     
                     Record a Late Fee
                </Button>
@@ -89,7 +99,7 @@ export default function RecordALateFeeModal(props) {
                                    <Form.Label>Fee Amount</Form.Label>
                                    <CurrencyInput
                                         prefix="$"
-                                        name="LateFee"
+                                        name="Amount"
                                         placeholder="ex $100"
                                         decimalScale={2}
                                         decimalsLimit={2}
@@ -101,7 +111,7 @@ export default function RecordALateFeeModal(props) {
                               
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Issued</Form.Label>
-                                   <Form.Control type="date" name="Date"
+                                   <Form.Control type="Date" name="Date"
                                    defaultValue={dateDefaultToday()}
                                    onChange={e => recordLateFeeStateFunc(e.target.value, e.target.name)} />
                               </Form.Group>
@@ -117,7 +127,7 @@ export default function RecordALateFeeModal(props) {
                          </Button>
 
                          <Button variant="success" onClick={() => submitRecordedLateFee()}
-                         disabled={!(recordLateFeeState.hasOwnProperty("LateFee")) || !(recordLateFeeState.hasOwnProperty("Date")) ? true : false}>
+                         disabled={!(recordLateFeeState.hasOwnProperty("Amount")) || !(recordLateFeeState.hasOwnProperty("Date")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

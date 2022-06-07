@@ -8,6 +8,11 @@ import { BigNumber } from "bignumber.js"
 
 import { ipcRenderer } from "electron";
 
+// import action from store
+import { adjustMonthlyPayment } from "../../Redux/features/LoansSlice";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -15,6 +20,11 @@ import { ipcRenderer } from "electron";
 
 
 export default function AdjustMonthlyPaymentModal(props) {
+
+     const dispatch = useDispatch();
+
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
@@ -109,7 +119,10 @@ export default function AdjustMonthlyPaymentModal(props) {
                value: rangeValueState
           }
 
-          ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
+          // dispatch the action
+          dispatch(adjustMonthlyPayment(monthlyPaymentSubmission));
+
+          // ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
           // hide the modal
           setShowModal(false);
      }
@@ -120,9 +133,9 @@ export default function AdjustMonthlyPaymentModal(props) {
 
      return(
           <>
-               <Button variant="success" size="lg"
+               <Button variant="primary" size="lg"
                onClick={showAdjustMonthlyPaymentFunc}>
-                    Adjust Monthly Payment
+                    Adjust Monthly Amount
                </Button>
 
 
@@ -200,7 +213,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                                    <thead>
                                         <tr>
                                              <th></th>
-                                             <th>New Payment: {"$" + new Intl.NumberFormat().format(rangeValueState)}</th>
+                                             <th>New Payment: {moneyFormatter(rangeValueState)}</th>
                                              <th>Old Payment: ${parseFloat(props.loan?.loan?.MonthlyPayment)}</th> 
                                         </tr>
                                    </thead>
@@ -218,15 +231,11 @@ export default function AdjustMonthlyPaymentModal(props) {
                                              <td>Total Interest Paid</td>
                                              
                                              <td>
-                                                  {"$" + new Intl.NumberFormat().format(
-                                                       repaymentInterestCalculator(rangeValueState)
-                                                  )}
+                                                  {moneyFormatter(repaymentInterestCalculator(rangeValueState))}
                                              </td>
                                              
                                              <td>
-                                                  {"$" + new Intl.NumberFormat().format(
-                                                       repaymentInterestCalculator(props.loan?.loan.MonthlyPayment)
-                                                  )}
+                                                  {moneyFormatter(repaymentInterestCalculator(props.loan?.loan.MonthlyPayment))}
                                              </td>
                                         
                                         </tr>

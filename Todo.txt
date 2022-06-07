@@ -1,23 +1,16 @@
 TODO:
 
+React Modals:
+- autofocus
+
+Add A Loan:
+- option to enter total amount and total terms OR current amount and remaining terms
+
 simple budget:
-- similar to dashboard, add a button to simple budget where nothing else shows if an income hasnt been added.
-
-- budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
-
-
-
-- print option: create a printable sheet? to put on a wall?
-
-
-
+- budget lists: force one line, full info in overlay
 
 More overlays everywhere
 
-new intl formatter function, a single function and send all values that need to be formatted to it?
-
-Record a payment modal
-- acknowledge desired payment
 
 Settings
 - all of settings
@@ -34,7 +27,6 @@ Tidy up all imports
 
 Standard spacing:
 - 2 lines between functions
-- props and attrs indented
 
 Organize scss
 
@@ -55,3 +47,17 @@ add a loan:
 ensure buttons across app are consistent
 
 comment code everywhere
+
+ensure everything looks as expected in fullscreen
+     - loan item view : components dont resize veritcally
+
+
+"LoanTracker" in navbar should be draggable
+
+switch all "if(data){}" statements to "data?"
+
+additional notes field on the add a loan
+
+maximize and minimize on mac
+
+record a payment: mass payments? Like if i have a 5 year loan do i really want to enter all of this data?

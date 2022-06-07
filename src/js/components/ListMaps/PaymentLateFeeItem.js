@@ -9,9 +9,8 @@ export default function PaymentLateFeeItem(props) {
 
      // note: all payment/late fee items will have a unique dateRecorded property as two cannot be made at the same time
 
-     // console.log(props);
-
-     
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      // function to set border style
      function borderStyle(color) {
@@ -30,14 +29,14 @@ export default function PaymentLateFeeItem(props) {
                return(
                     <>
                          <span>payment: </span>
-                         <span className="payment">-{amount}</span>
+                         <span className="payment">-{moneyFormatter(amount)}</span>
                     </>
                )
           } else {
                return(
                     <>
                          <span>fee: </span>
-                         <span className="lateFee">+{amount}</span>
+                         <span className="lateFee">+{moneyFormatter(amount)}</span>
                     </>
                )
           }

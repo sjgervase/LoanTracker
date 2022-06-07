@@ -1,40 +1,52 @@
 import React from "react";
 
+// import from react-redux
+import { useSelector } from "react-redux";
 
 // import components
 import PaidOffLoanItem from "./PaidOffLoanItem"
 
 export default function PaidOffLoanList(props) {
 
-     let loans;
-     
-     // for each element, remove if paid off
-     if (props.loans) {
+     // get data from redux store
+     // only loans are needed
+     const loansState = useSelector((state) => state.loans);
 
-          // create a deep copy of the item 
-          loans = JSON.parse(JSON.stringify(props.loans));
+     // function to generate an array of loans that have been designated as "paid off"
+     function paidOffLoansFunction() {
+          // create an empty array
+          let paidOffLoans = [];
 
-          for (let i = 0; i < loans.length; i++) {
-               // if paid off
-               if (!loans[i].loan.PaidOff) {
-                    // remove it
-                   loans.splice(i, 1)
+          // default data is an empty array
+          if (loansState.loans.length > 0) {
+               // for each loan
+               for (let i = 0; i < loansState.loans.length; i++) {
+                    // if the loan has not been marked as paid off
+                    if (loansState.loans[i].loan.PaidOff) {
+                         // push to array
+                         paidOffLoans.push(loansState.loans[i].loan);
+                    }
                }
           }
+          
+          return paidOffLoans;
      }
 
-     return(               
+     // run above function
+     const paidOffLoans = paidOffLoansFunction();
+
+
+
+     return(
           <>
-               {/* Sort by interest rate of the loan THEN map. */}
-
-               {loans?.sort((first, second) => {
-                    return first.InterestRate < second.InterestRate ? -1 : 1;
-               }).map(loan =>
-
+               {paidOffLoans.map(loan =>
+                    
                     <PaidOffLoanItem
-                    key={loan.loan.GUID}
-                    loan={loan.loan}
+                    key={loan.GUID}
+                    loan={loan}
+                    parent={props.parent}
                     />
+               
                )}
           </>
      );

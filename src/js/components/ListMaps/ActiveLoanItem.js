@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // import from electron
 import { ipcRenderer } from "electron";
@@ -26,8 +26,12 @@ import DeleteLoanModal from "../Modals/DeleteLoanModal";
 
 
 export default function ActiveLoanItem(props) {
-    
+
+     // create a loan equal to the prop.loan for ease of use 
      let loan = props.loan;
+
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
@@ -56,10 +60,14 @@ export default function ActiveLoanItem(props) {
           let today = new Date();
           let dd = String(today.getDate()).padStart(2, '0'); // gets the day
 
+          // subtract date values
           let dateDiff = parseInt(paymentDate) - parseInt(dd);
 
+          // if greater than 0, the loan is due this month
           if (dateDiff > 0) {
                return dateDiff
+          
+          // the loan is due next month
           } else {
                // get next month
                var nextMonthDate = new Date(today.setMonth(today.getMonth()+1));
@@ -87,6 +95,7 @@ export default function ActiveLoanItem(props) {
           }
      }
 
+     // function to return the selected user color
      function borderStyle(color) {
           if (color !="") {
                return {
@@ -101,13 +110,15 @@ export default function ActiveLoanItem(props) {
      let navigate = useNavigate();
 
      // functionality for more info button
-     function loanItemView(seeThisLoan) {
+     // pass the guid of the selected loan
+     function loanItemView(GUID) {
           // console.log(seeThisLoan);
-          navigate('/loanitemview', {state:seeThisLoan});
+          navigate('/loanitemview', {state:GUID});
           
      }
 
 
+     // function to show the "delete" button on the loan item only if the end user is in the "All Loans" view
      function showDeleteButton() {
           if (props.parent == "AllLoans") {
                return(
@@ -142,13 +153,13 @@ export default function ActiveLoanItem(props) {
 
                               <div className="paymentsAndButtons">
                                    
-                                   <h3 className="paymentAndDate">{"$" + new Intl.NumberFormat().format(loan.MonthlyPayment) + " due in " + dateCalculator(loan.PaymentDate) + " days"}</h3>
+                                   <h3 className="paymentAndDate">{moneyFormatter(loan.MonthlyPayment) + " due in " + dateCalculator(loan.PaymentDate) + " days"}</h3>
                                    
                                    {showDeleteButton()}
 
                                    {/* make button only exist if link was entered */}
                                    <Button variant="success" className="btn-sm btn-custom py0" onClick={() => openLinkInBrowser(loan.LoanLink)}>Link to Loan</Button>
-                                   <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan)}>More Info</Button>
+                                   <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan.GUID)}>More Info</Button>
                                    
                                    <RecordAPaymentModal className="btn-sm" loan={loan} parent={ActiveLoanItem}/>
                               </div>
@@ -157,11 +168,8 @@ export default function ActiveLoanItem(props) {
                     </div>
 
                </div>
-
-
-               
           </div>
-     );          
+     );
 }
 
 
