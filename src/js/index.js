@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import App from "./App";
 
+import { Root } from './App';
+
 // import css, with custom css below bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss';
@@ -19,6 +21,6 @@ import store from './Redux/store';
 
 ReactDOM.render(
      <Provider store={store}>
-          <App/>
+          <Root/>
      </Provider>, document.getElementById("loanTracker_Container")
 );

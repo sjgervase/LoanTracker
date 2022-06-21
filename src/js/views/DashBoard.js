@@ -50,26 +50,40 @@ export default function DashBoard() {
 
      return(
           <div className="componentContainer">
-               <h1 className="componentTitle">DashBoard</h1>
-               <div className="dashboardModules">
+               <h1 className="componentTitle">Overview</h1>
+               <div className="dashboardModulesContainer">
                     
                     <div className="activeLoans dashboardModule">
-                         <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
-                         <div className="loanListContainer">
+                         <div className="moduleHeader">
+                              <h2>Active Loans</h2>
+                         </div>
+
+                         <div className="moduleContent">
                               {/* if the end user has no loans */}
                               {noData()}
                               <ActiveLoanList parent={"DashBoard"}/>
                          </div>
                     </div>
 
+
                     <div className="activeLoansGraphs dashboardModule">
-                         <div className="moduleHeader"><span>TOTAL LOANS</span></div>
-                         <LoansPieChart/>
+                         <div className="moduleHeader">
+                              <h2>Loan Totals</h2>
+                         </div>
+
+                         <div className="moduleContent">
+                              <LoansPieChart/>
+                         </div>
                     </div>
 
                     <div className="recentTrackedPayments dashboardModule">
-                         <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
-                         <RecentRecordedPayments/>
+                         <div className="moduleHeader">
+                              <h2>Recently Recorded Payments & Fees</h2>
+                         </div>
+
+                         <div className="moduleContent">
+                              <RecentRecordedPayments/>
+                         </div>
                     </div>
                </div>
           </div>

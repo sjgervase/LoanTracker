@@ -2,10 +2,14 @@ $red:#c40d0d;
 $cream:#fffffd;
 
 
+
+
 body {
      -webkit-user-select: none;
      overflow-y: hidden;
      color: var(--text-color);
+
+     transition: color 0.3s ease-in;
 }
 
 body.green {
@@ -19,6 +23,8 @@ body.green {
 
      --text-color: #212529;
      --text-color-theme: #36733F;
+
+
 }
 
 body.dark-green {
@@ -50,6 +56,7 @@ body.dark-green {
 /* Handle */
 ::-webkit-scrollbar-thumb {
      background: var(--text-color-theme);
+     border-radius: 5px;
 }
 
 /* Handle on hover */
@@ -74,6 +81,14 @@ body.dark-green {
 // ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar -----
 .navbar-custom {
      background-color: var(--bg-color-theme);
+}
+
+.navbarLogo {
+     height: 30px;
+     position: relative;
+     left: -5px;
+     margin-right: 5px;
+     image-rendering: crisp-edges;
 }
 
 .navbar-brand {
@@ -137,94 +152,12 @@ body.dark-green {
           var(--bg-color-general) 100%
      );
      background-size: 50.91px 50.91px;
+
+     overflow-x: hidden;
+     overflow-y: hidden;
 }
 
-.viewsContainerChild {
-     border: 1px solid var(--text-color-theme);
-     overflow-y: auto;
-     height: 100%;
-}
-
-.componentContainer {
-     background-color: var(--bg-color-general);
-     min-height: 100%;
-     padding: 10px;
-}
-
-.componentTitle {
-     margin-bottom: 20px;
-}
-
-
-
-// ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan -----
-.loanInfoForm {
-     margin: 10px;
-}
-
-form button {
-     margin: 5px;
-}
-
-.loanInfoForm div {
-     margin-bottom: 10px;
-}
-
-.loanTypes {
-     display: none;
-}
-
-.showLoanTypes {
-     display: block;
-}
-
-.formGroupLegend {
-     position: relative;
-     font-size: xx-small;
-     top: 11px;
-     color: var(--theme-color);
-     left: 10px;
-     background-color: white;
-     padding-left: 2px;
-     padding-right: 2px;
-}
-
-.totalLoanAmountDiv {
-     width: 33%;
-}
-
-.formGroupDiv {
-     border: 1px solid var(--theme-color);
-     padding: 20px;
-}
-
-.loanNameDiv {
-     flex-basis: 90%;
-}
-
-.formGroupRow {
-     display: flex;
-     flex-wrap: nowrap;
-     align-items: flex-start;
-     padding: 0;
-     margin: 0;
-}
-
-.formGroupRow div {
-     margin: 5px;
-}
-
-.mathSymbol {
-     padding-top: 34px;
-     flex-basis: 2.5%;
-}
-
-.mathSymbol svg {
-     width: max-content;
-     color: var(--theme-color);
-}
-
-input {
+input[type=text], input[type=number], input[type=password] {
      width: 99%;
      border-radius: 2px;
      border: 1px solid var(--text-color-theme);
@@ -232,87 +165,349 @@ input {
      padding: 6px 12px 6px 12px;
 }
 
-.loanLinkDiv {
+.viewsContainerChild {
+     border: 1px solid var(--text-color-theme);
+     overflow-y: auto;
+     height: 100%;
+     border-radius: 5px;
+     overflow-x: hidden;
+     
+}
+
+.componentContainer {
+     min-height: 100%;
+     padding: 10px;
+     background-color: var(--bg-contrast-light);
+}
+
+.componentTitle {
+     font-size: 3em;
+     margin-bottom: 10px;
+     height: 60px;
+}
+
+.dashboardModulesContainer {
+     width: 100%;
+     height: calc(100vh - 168px);
+     display: flex;
+     flex-direction: row;
+     flex-wrap: wrap;
+     justify-content: space-between;
+     align-content: space-between;
+}
+
+.dashboardModule {
+     border: 1px solid var(--theme-color);
+     padding: 5px;
+     background-color: var(--bg-color-general);
+     border-radius: 5px;
+
+}
+
+.moduleHeader {
+     height: 40px;
+     margin-bottom: 5px;
+     padding-left: 5px;
+}
+
+.moduleContent {
+     height: calc(100% - 45px);
+}
+
+
+// ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan -----
+.AddALoanForm {
+     height: fit-content;
+}
+
+.AddALoanForm > .dashboardModule {
+     margin-bottom: 1%;
+}
+
+.typeOfLoan {
      flex-basis: 100%;
+}
+
+.typeOfLoanContent {
+     margin-top: 10px;
+     display: flex;
+     flex-direction: row;
+     justify-content: space-evenly;
+}
+
+.loanTypeButtonGroup {
+     flex-basis: 19%;
+}
+
+.loanTypeButton {
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+}
+
+.loanTypeIMG {
+     flex-basis: 100%;
+}
+
+.loanTypeIMG > svg {
+     height: 100px;
+     width: 100px;
+}
+
+
+
+.addALoanRequiredInfo {
+     flex-basis: 100%;
+}
+
+.formGroupRow {
+     display: flex;
+     flex-wrap: nowrap;
+     align-items: flex-start;
+     padding-left: 20px;
+     padding-right: 20px;
+     width: 100%;
+     margin-bottom: 20px;
+}
+
+.addALoanFormLabel {
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+}
+
+
+.addALoanHelpOverlay {
+     position: relative;
+     top: -2px;
+     margin-left: 5px;
+     cursor: help;
+     color: var(--theme-color);
+}
+
+.loanNameDiv {
+     flex-basis: 60%;
+}
+
+.colorPickerDiv {
+     flex-basis: 30%;
+     margin-left: 1%;
+}
+
+.interestRateDiv {
+     flex-basis: 30%;
+}
+
+.disbursementDateDiv {
+     margin-left: 1%;
+     flex-basis: 30%;
+
+}
+
+.paymentDateDiv {
+     flex-basis: 35%;
+}
+
+.nextDateGeneratorDiv {
+     margin-left: 1%;
+     margin-top: 9px;
+}
+
+.nextPaymentReturn {
+     border: 1px solid var(--theme-color);
+     padding: 5px;
+     border-radius: 5px;
+}
+
+.paybackChoiceDiv {
+     flex-basis: 100%;
+     flex-wrap: wrap;
+     flex-direction: row;
+     justify-content: space-evenly;
+     align-items: flex-start;
+}
+
+.paybackChoiceHeader {
+     flex-basis: 100%;
+     margin-top: 10px;
+     margin-bottom: 10px;
+     text-align: center;
+}
+
+.paybackRadioDiv {
+     flex-basis: 45%;
+     border: 1px solid var(--theme-color);
+     background-color: var(--bg-color-general);
+     border-radius: 5px;
+     padding: 7px;
+}
+
+.paybackChoiceDesc {
+     position: relative;
+}
+
+
+.paybackVariablesGroup {
+     align-items: center;
+}
+
+
+.repaymentOptions {
+     flex-basis: 45%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+}
+
+
+.monthlyPaymentDiv {
+     width: 100%;
+}
+
+.mathSymbol {
+     display: flex;
+     justify-content: center;
+}
+
+.mathSymbolMultiply {
+     width: 100%;
+     margin-top: 10px;
+     margin-bottom: 10px;
+}
+
+.mathSymbolMultiply svg {
+     width: 20px;
+     color: var(--theme-color);
+}
+
+.termLengthDiv {
+     width: 100%;
+}
+
+
+
+.mathSymbolEquals {
+     flex-basis: 10%;
+}
+
+.mathSymbolEquals svg {
+     width: 20px;
+     color: var(--theme-color);
+}
+
+
+.totalLoanAmountDiv {
+     flex-basis: 45%;
+     border: 1px solid var(--theme-color);
+     border-radius: 5px;
+     text-align: center;
+     padding: 10px;
+     height: 100%;
+}
+
+.totalLoanAmountTitle * {
+     display: inline;
+}
+
+
+.presentValueDiv {
+     width: 100%;
+}
+
+.mathSymbolCalc {
+     width: 100%;
+     margin-top: 10px;
+     margin-bottom: 10px;
+}
+
+.mathSymbolCalc svg {
+     width: 20px;
+     color: var(--theme-color);
+}
+
+.loanEquation {
+     padding: 5px;
+     margin: 5px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+
+.loanEquation * {
+     text-align: center;
+}
+
+.loanEquationEquals {
+     margin-right: 2px;
+}
+
+.loanEquationNumerator {
+     border-bottom: 1px solid var(--theme-color);
+}
+
+.addALoanOptionalInfo {
+     flex-basis: 100%;
+}
+
+.optionalInfoDesc {
+     padding-top: 5px;
+     padding-bottom: 5px;
+     padding-left: 10px;
+     padding-right: 10px;
+}
+
+.loanLinkDiv {
+     flex-basis: 95%;
+}
+
+.additionalNotesDiv {
+     flex-basis: 95%;
+}
+
+.addALoanSubmitCancel {
+     flex-basis: 100%;
+     display: flex;
+     justify-content: space-evenly;
+}
+
+.addALoanSubmitCancel button {
+     width: 30%;
+}
+
+
+// these should always be on the bottom
+.hideThisFormBlock {
+     display: none;
 }
 
 
 
 // ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard -----
-.dashboardModules {
-     width: 100%;
-     display: flex;
-     flex-direction: row;
-     flex-wrap: wrap;
-}
-
-.moduleHeader {
-     color: var(--theme-color);
-     font-size: 16px;
-     position: relative;
-     top: -13px;
-     left: 10px;
-     background-color: var(--bg-color-general);
-     border: 1px solid var(--theme-color);
-     padding: 0 3px 0px 3px;
-     width: max-content;
-}
-
 .noLoansDiv {
      width: 90%;
-     margin: 5%;
-     margin-top: 15%;
      text-align: center;
      padding: 20px;
+     position: relative;
+     top: 25%;
+     left: 5%;
      border: 1px solid var(--theme-color);
-     background-color: $cream;
-}
-
-.dashboardModule {
-     border: 1px solid var(--theme-color);
-     padding: 0px 5px 0px 5px;
-     background-color: var(--bg-contrast-light);
+     background-color: var(--bg-color-general);
 }
 
 .activeLoans {
-     flex-basis: 63%;
-     height: 48vh;
-}
-
-.loanListContainer {
-     width: 100%;
-     height: calc(100% - 26px);
-     overflow-y: auto;
+     flex-basis: 60%;
+     height: 55%;
 }
 
 .activeLoansGraphs {
-     flex-basis: 36%;
-     margin-left: auto;
-     height: 48vh;
-}
-
-.recharts-responsive-container {
-     position: relative;
-     margin-top: 5px;
-     top: -30px;
-     height: calc(100% - 4px);
+     flex-basis: 39%;
+     height: 55%;
 }
 
 .recentTrackedPayments {
-     margin-top: 20px;
-     height: 29vh;
      flex-basis: 100%;
-}
-
-
-
-// ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments -----
-.paymentFeeList {
-     width: 100%;
-     height: calc(100% - 20px);
-     position: relative;
-     top: -13px;
-     overflow-y: auto;
+     height: 44%;
 }
 
 
@@ -320,13 +515,12 @@ input {
 // ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem -----
 .loanItem {
      height: 115px;
+     margin: 5px;
      padding: 10px;
-     margin-right: 5px;
      background-color: var(--bg-color-general);
      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+     transition: all 0.3s ease-out;
      border-radius: 5px;
-     margin-bottom: 5px;
 }
 
 .paidOffLoan {
@@ -439,11 +633,6 @@ input {
 .loanItemType {
      display: flex;
      align-items: baseline;
-     margin-bottom: 10px;
-}
-
-.loanTypeInfoDiv {
-     margin-left: 5px;
 }
 
 .loanTypeInfoDiv {
@@ -463,7 +652,8 @@ input {
      width: 26px;
      padding: 4px;
      position: relative;
-     top: -2px;
+     top: -3px;
+     background-color: var(--bg-color-general);
 }
 
 .loanInfoTypeHelp {
@@ -472,78 +662,43 @@ input {
      color: var(--text-color-theme);
 }
 
-.loanInfoBox {
-     background-color: rgba(255, 0, 0, 0.144);
-}
-
 .loanInfoHeader {
      padding-left: 5px;
      padding-right: 5px;
-     margin-bottom: 30px;
 }
 
 .loanInfoHeader > span {
      display: block;
 }
 
-.buttonsDiv button {
-     margin: 5px;
+.loanQuickInfo {
+     flex-basis: 70%;
+     height: 37%;
 }
 
-.loanItemViewGraph {
-     background-color: var(--bg-contrast-light);
-     height: 300px;
+.paymentsOverTime {
+     flex-basis: 60%;
+     height: 62%;
 }
 
-.loanItemViewGraph .recharts-responsive-container {
-     margin-top: 25px;
-}
-
-.accordion-body {
-     border: 1px solid var(--theme-color);
-     background-color: var(--bg-contrast-light);
-}
-
-.accordion-body > .recharts-responsive-container {
-     top: 0;
+.recentlyRecordedPayments {
+     flex-basis: 39%;
 }
 
 .loanTools {
      flex-basis: 29%;
      display: flex;
-     flex-wrap: wrap;
+     flex-wrap: no-wrap;
      flex-direction: column;
-     padding-bottom: 15px;
+     height: 37%;
 }
 
-.loanTools > button {
+.loanTools > .moduleContent > button {
      margin: 2px;
+     width: 100%;
 }
 
-.loanQuickInfo {
-     margin-left: 1%;
-     flex-basis: 70%;
-}
 
-.paymentsOverTime {
-     margin-top: 2%;
-     flex-basis: 60%;
-}
-
-.paymentsOverTimeDirections {
-     margin-left: 12px;
-}
-
-.paymentsOverTiemChart > .recharts-responsive-container{
-     position: relative;
-     top: 0;
-}
-
-.recentlyRecordedPayments {
-     margin-left: 1%;
-     margin-top: 2%;
-     flex-basis: 39%;
-}
 
 
 
@@ -558,19 +713,23 @@ input {
      display: block;
 }
 
+.recharts-responsive-container {
+     position: relative;
+     height: 100%
+}
 
 
 // ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem -----
 .paymentOrFeeItem {
      background-color: var(--bg-color-general);
      border: 1px solid;
-     margin: 0.5%;
+     margin: 5px;
      padding: 7px;
      display: flex;
      border-radius: 5px;
      align-items: center;
      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+     transition: all 0.3s ease-out;
 }
 
 .paymentOrFeeItem:hover {
@@ -755,15 +914,78 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 
+// ----- List Maps -----
+.listContainer {
+     border-top: 1px solid var(--bg-contrast-high);
+     height: 100%;
+}
+
+.list {
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     height: 100%;
+     overflow-y: auto;
+     padding-top: 5px;
+     padding-bottom: 5px;
+     
+}
+
+
+
 // ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans -----
+.allLoansModuleContent {
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: space-between;
+     align-items: flex-start;
+}
+
+.tableContainer {
+     flex-basis: 66%;
+     background-color: red;
+     height: 100%;
+}
+
+.allLoansTable {
+     display: block;
+     width: 100%;
+}
+
+.allLoansTable * {
+     display: block;
+}
+
+
+
+
+
+
+
+
+.allLoansGrandTotal {
+     flex-basis: 33%;
+     text-align: center;
+     padding: 10px;
+     border: 1px solid var(--theme-color);
+     border-radius: 5px;
+}
+
+.totalLoanAmount {
+     flex-basis: 100%;
+     background-color: var(--bg-color-general);
+     height: 25%;
+}
+
 .activeLoansAllLoans {
-     height: 33vh;
-     margin-bottom: 3vh;
-     margin-top: 3vh;
+     flex-basis: 100%;
+     height: 37%;
 }
 
 .paidOffLoansAllLoans {
-     height: 33vh;
+     flex-basis: 100%;
+     height: 37%;
 }
 
 
@@ -785,35 +1007,13 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 // ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget -----
-.budgetTopRow {
-     display: flex;
-     flex-direction: row;
-     flex-wrap: nowrap;
-     justify-content: space-evenly;
-     margin-top: 20px;
-}
-
-.budgetBottomRow {
-     margin: 0.5%;
-     margin-top: 20px;
-     width: 99%;
-}
-
-.budgetQuickLook {
-     padding-left: 10px;
-     padding-right: 10px;
-     padding-bottom: 10px;
-     flex-basis: 74%;
-}
-
 .budgetTools {
-     flex-basis: 24%;
-     display: flex;
-     flex-direction: column;
+     flex-basis: 25%;
 }
 
 .budgetTools button {
      margin: 2px;
+     width: 100%;
 }
 
 .btn-AddALoan {
@@ -836,18 +1036,16 @@ input[type=range]:focus::-ms-fill-upper {
      background-color: #3FB559;
 }
 
-.budgetTotals {
-     width: 100%;
-     display: flex;
-     flex-direction: row;
-     flex-wrap: nowrap;
-     justify-content: space-evenly;
+.incomesAndDeductions {
+     flex-basis: 74%;
+     width: 74%;
 }
 
+.budgetListsGrid {
+     width: auto;
+}
 
-
-// ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists -----
-.budgetLists {
+.budgetList {
      border: 1px solid var(--bg-contrast-high);
      padding: 7px;
      text-align: center;
@@ -855,31 +1053,102 @@ input[type=range]:focus::-ms-fill-upper {
      flex-direction: column;
      background-color: var(--bg-color-general);
      margin: 3px;
-     flex-grow: 100;
 }
 
-.minus {
-     margin: auto;
+.incomesBudgetList {
+     width: calc(100% - 6px);
 }
 
-.verticalLine {
-     background-color: black;
-     padding-bottom: 10px;
-     width: 1px;
-     margin: auto;
-     flex-grow: 500;
+.budgetTotals {
+     width: 100%;
+     display: flex;
 }
 
+.budgetListsDeductions {
+     flex-basis: 25%;
+     width: 24%;
+}
+
+.budgetListGrandTotal {
+     white-space: nowrap;
+     text-overflow: ellipsis;
+     display: block;
+     overflow: hidden;
+     margin-top: auto;
+}
+
+.totalRemainingIncome {
+     width: calc(100% - 6px);
+}
+
+.totalsBreakdown {
+     margin-top: 20px;
+}
+
+
+
+// ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists -----
 .budgetLists h3 {
      margin-top: auto;
 }
 
+.budgetListTooltipTableRow {
+     width: 100%;
+     border-bottom: 1px solid white;
+}
+
+.budgetListTooltipTableData {
+     width: 50%;
+     position: relative;
+     float: left;
+}
+
+.budgetTable {
+     min-width: 0;
+}
+
+.budgetTableRow {
+     width: auto;
+     min-width: 0;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: space-between;
+     
+     padding-left: 3px;
+     padding-right: 3px;
+     padding-top: 2px;
+     padding-bottom: 2px;
+
+     border-top: 1px solid var(--bg-contrast-lighter);
+
+     transition: all 0.2s ease-out;
+}
+
+.budgetTableRow:last-child {
+     border-bottom: 1px solid var(--bg-contrast-lighter);
+}
+
+.budgetTableRow:hover {
+     background-color: var(--bg-contrast-lighter);
+}
+
 .budgetTableFloatLeft {
      text-align: left;
+     width: 50%;
 }
 
 .budgetTableFloatRight {
      text-align: right;
+     width: 50%;
+}
+
+.budgetTableRow span {
+     white-space: nowrap;
+     text-overflow: ellipsis;
+     width: auto;
+     display: block;
+     overflow: hidden;
 }
 
 
@@ -887,6 +1156,8 @@ input[type=range]:focus::-ms-fill-upper {
 // ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList -----
 .editDeleteItemTable {
      text-align: center;
+     max-width: 100%;
+     word-wrap: break-word;
 }
 
 .editDeleteTableButtons button{
@@ -901,11 +1172,13 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 
-// Popover
+
+// ----- Popover ----- Popover ----- Popover ----- Popover ----- Popover ----- Popover ----- Popover ----- Popover -----
 .customPopover {
      background-color: var(--bg-color-general);
      border: 1px solid var(--bg-contrast-high);
      color: var(--text-color);
+     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .customPopoverHeader {
@@ -915,4 +1188,137 @@ input[type=range]:focus::-ms-fill-upper {
 
 .customPopoverBody {
      color: var(--text-color);
+}
+
+
+
+// ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal ----- PasscodeModal -----
+.passwordInput {
+     height: 120px;
+     background-color: var(--bg-color-general);
+     color: var(--text-color-theme);
+     font-size: 120px;
+     border: none;
+     box-shadow: none;
+     text-align: center;
+     border-bottom: 1px solid var(--bg-contrast-lighter);
+}
+
+.passwordInput:focus {
+     background-color: var(--bg-color-general);
+     color: var(--text-color-theme);
+     border: none;
+     box-shadow: none;
+     border-bottom: 1px solid var(--bg-contrast-lighter);
+}
+
+
+
+// ----- Settings ----- Settings ----- Settings ----- Settings ----- Settings ----- Settings ----- Settings ----- Settings -----
+.themeButtonIcon {
+     position: relative;
+     top: -2px;
+     margin-right: 10px;
+}
+
+
+
+
+
+// React Transition Group Animations
+// simple fade in / grow animation
+// .amortizedLoanForm-enter {
+     // opacity: 0;
+     // transform: scale(0.9);
+// }
+
+// .amortizedLoanForm-enter-active {
+//      opacity: 1;
+//      transform: scale(1);
+//      transition: opacity 300ms, transform 300ms;
+// }
+
+// .amortizedLoanForm-exit {
+//      opacity: 1;
+// }
+
+// .amortizedLoanForm-exit-active {
+     // opacity: 0;
+     // transform: scale(0.9);
+     // transition: opacity 300ms, transform 300ms;
+// }
+
+
+
+// Router / All Views
+// .routerFade-enter {
+//      opacity: 0;
+//      transform: translate(50%, 0);
+// }
+
+// .routerFade-enter-active {
+//      opacity: 1;
+//      transform: translate(0, 0);
+//      transition: opacity 250ms ease-out, transform 300ms ease;
+// }
+
+// .routerFade-exit {
+     // opacity: 1;
+     // transform: translate(0, 0);
+// }
+
+// .routerFade-exit-active {
+//      opacity: 0;
+//      transform: translate(50%, 0);
+//      transition: opacity 250ms ease-out, transform 300ms ease;
+// }
+
+.routerFade-enter {
+     opacity: 0;
+     transform: scale(0.9);
+}
+
+.routerFade-enter-active {
+     opacity: 1;
+     transform: scale(1);
+     transition: opacity 300ms, transform 300ms;
+}
+
+.routerFade-exit {
+     opacity: 1;
+}
+
+.routerFade-exit-active {
+     opacity: 0;
+     transform: scale(0.9);
+     transition: opacity 300ms, transform 300ms;
+}
+
+
+
+// AddALoan View
+.amortizedLoanForm-enter {
+     opacity: 0;
+     transform: translate(0, 200%);
+     
+}
+
+.amortizedLoanForm-enter-active {
+     opacity: 1;
+     transform: translate(0, 0);
+     
+     transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.amortizedLoanForm-exit {
+     opacity: 1;
+     transform: translate(0, 0);
+     
+}
+
+.amortizedLoanForm-exit-active {
+     opacity: 0;
+     transform: translate(0, 200%);
+     
+     transition: opacity 300ms ease-in, transform 300ms ease-in;
 }

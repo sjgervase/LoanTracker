@@ -6,7 +6,7 @@ import { ipcRenderer } from "electron";
 // import from react bootstrap
 import { Navbar, Nav, Button } from 'react-bootstrap';
 
-
+import Icon from "../../../../assets/images/LoanTrackerIconSmall.png";
 
 export default function NavigationBar() {
 
@@ -30,11 +30,13 @@ export default function NavigationBar() {
 
           <Navbar sticky="top" className="navbar-custom" variant="dark">
      
-               <Navbar.Brand>Loan Tracker</Navbar.Brand>
+               <Navbar.Brand className="navbarDraggable">
+                    <img src={Icon} className="navbarLogo"/>
+                    Loan Tracker
+               </Navbar.Brand>
 
                <Nav>
-     
-                    <Nav.Link href="#/">DashBoard</Nav.Link>
+                    <Nav.Link href="#/">Overview</Nav.Link>
      
                     <Nav.Link href="#/addaloan">Add A Loan</Nav.Link>
                     
@@ -65,12 +67,7 @@ export default function NavigationBar() {
                               </svg>
                          </Button>
                     </div>
-
                </Nav>
-
           </Navbar>
-         
-
-
      );
 }

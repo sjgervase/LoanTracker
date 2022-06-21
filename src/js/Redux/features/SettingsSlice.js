@@ -37,19 +37,21 @@ export const SettingsSlice = createSlice({
                state.settings[0].UserSelectedTheme = newTheme;
 
                // finally, send data to main process to write to file
-               ipcRenderer.invoke('writeSettings', (["toggleTheme", newTheme]));
+               ipcRenderer.invoke('writeSettings', (["setUserTheme", newTheme]));
           },
 
           // reducer to set the user font size
           setUserFontSize: (state, action) => {
                // TBD
-               // state.loans = action.payload;
           },
 
           // reducer to set the user pin
           setUserPIN: (state, action) => {
-               // TBD
-               // state.loans = action.payload;
+               // set the user pin
+               state.settings[0].UserPIN = action.payload;
+
+               // finally, send data to main process to write to file
+               ipcRenderer.invoke('writeSettings', (["setUserPIN", action.payload]));
           }
      },
 
@@ -77,7 +79,7 @@ export const SettingsSlice = createSlice({
 export const { 
      setUserTheme,
      userFontSize,
-     userPIN
+     setUserPIN
 } = SettingsSlice.actions;
 
 // export slice

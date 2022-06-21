@@ -1,9 +1,15 @@
 // Main Process
 
 // DONT FORGET TO RUN NPM WATCH
-const { app, BrowserWindow, session, ipcMain, Notification, getCurrentWindow, shell } = require('electron');
+const { app, BrowserWindow, session, ipcMain, Notification, getCurrentWindow, shell, Tray } = require('electron');
 const path = require('path');
 const isDevelopmentMode = !app.isPackaged;
+
+
+// icons
+// dock icon is 1070px x 1070px
+const dockIcon = path.join(__dirname, "assets", "images", "LoanTrackerIconLarge.png");
+const trayIcon = path.join(__dirname, "assets", "images", "LoanTrackerIconSmall.png");
 
 const fs = require('fs');
 const {dialog, remote} = require('electron');
@@ -16,6 +22,8 @@ function createWindow() {
           minHeight: 100,
           width: 1600,
           height: 870,
+          icon: trayIcon,
+          backgroundColor: "#36733F",
           frame: false,
           webPreferences: {
                nodeIntegration: true,
@@ -71,10 +79,34 @@ if (isDevelopmentMode) {
      })
 }
 
+
+// desktop icon setting
+// if mac
+if(process.platform === 'darwin') {
+     app.dock.setIcon(dockIcon);
+}
+
+let tray = null;
+
+
+
+
+
+
+
+
+
+
 // create window when ready
-app.whenReady().then(createWindow);
+app.whenReady()
+     .then(() => {
+          // create the window
+          createWindow()
+});
 
 
+
+// App Processes
 
 // ensure library files exist in the userData folder and if not, create them
 function dataFileVerifier() {
@@ -90,19 +122,13 @@ function dataFileVerifier() {
      } else {
           console.log("file DOES NOT exist:");
 
-          // var data = {data:[]}
-
           var data = {
                "data":[
                     {"loans":[]},
                     {"deductions":[]},
                     {"incomes":[]},
                     {"settings":[
-                         {
-                              "UserSelectedTheme": "light",
-                              "UserSelectedFontSize": "medium",
-                              "UserPin": "NOPIN"
-                         }
+                         {UserPIN: "NOPIN"}
                     ]}
                ]
           }
@@ -126,11 +152,8 @@ function dataFileVerifier() {
      }
 }
 
-
-
 // when app is ready, run above function to ensure library files exist in the userData folder and if not, create them
 app.whenReady().then(dataFileVerifier());
-
 
 
 // get data currently in file
@@ -148,7 +171,7 @@ async function dataGrabber() {
      async function fileReader(){
           data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
-          // return album object
+          // return data object
           return data;
      }
 
@@ -163,15 +186,13 @@ ipcMain.handle('dataRequest', async (event, arg) => {
      // get the objects from the file
      const dataReturn = await dataGrabber();
      return dataReturn;
- })
-
+})
 
 
 // open url for bank
 ipcMain.handle("openLinkToPaymentURL", (event, url) => {
      shell.openExternal(url);
 })
-
 
 
 // read the current data. this function is called in all functions for adding data to datafile
@@ -184,7 +205,7 @@ function fileReader(){
      
      data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
-     // return album object
+     // return data object
      return data;
 }
 
@@ -242,227 +263,8 @@ function guidGenerator() {
           }
           return str;
      };
-
      return randomGUID();
-    
 }
-
-
-
-
-
-
-
-
-// add the data recieved in the ipc message below to the file
-async function addDesiredMonthlyPayment(desiredMonthlyPayment) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // find the loan to update based on the guid
-     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === desiredMonthlyPayment.GUID);
-
-     loanToUpdate.loan.DesiredMonthlyPayment = desiredMonthlyPayment.value;
-
-     fileWriter(filedata);
-}
-
-
-//  add desired monthly payment to form
-ipcMain.handle('desiredMonthlyPaymentSubmission', async (event, desiredMonthlyPayment) => {
-     const result = await addDesiredMonthlyPayment(desiredMonthlyPayment);
-     return result
-})
-
-
-
-
-
-
-
-
-
-
-
-// Add monthly pay
-async function monthlyPay(incomeObject) {
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     let newGUID = guidGenerator();
-
-     incomeObject.GUID = newGUID;
-
-     filedata.data[2].incomes.push(incomeObject);
-
-     fileWriter(filedata);
-}
-
-
-//  add monthly pay
-ipcMain.handle('submitMonthlyIncome', async (event, incomeObject) => {
-     const result = await monthlyPay(incomeObject);
-     return result
-})
-
-
-
-// Add monthly deduction
-async function monthlyDeduction(deductionObject) {
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     let newGUID = guidGenerator();
-
-     deductionObject.GUID = newGUID;
-
-     filedata.data[1].deductions.push(deductionObject);
-
-     fileWriter(filedata);
-}
-
-
-//  add monthly pay
-ipcMain.handle('submitMonthlydeduction', async (event, deductionObject) => {
-     const result = await monthlyDeduction(deductionObject);
-     return result
-})
-
-
-
-
-
-
-
-// edit budget item
-async function editBudgetItem(itemObject) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // delete the item, rewrite with new data
-     // search for items in deduction by guid
-
-     // search in the 2nd array, deductions
-     let itemToDeleteIndex = filedata.data[1].deductions.findIndex(item => item.GUID === itemObject.GUID);
-
-     // if find index does not return an index, it returns -1
-     if (itemToDeleteIndex == -1) {
-          // search in incomes
-          itemToDeleteIndex = filedata.data[2].incomes.findIndex(item => item.GUID === itemObject.GUID);
-
-          // delete the item
-          filedata.data[2].incomes.splice(itemToDeleteIndex, 1);
-
-          // add the recieved data
-          filedata.data[2].incomes.push(itemObject);
-     
-     // the item is in deductions
-     } else {
-          // delete the item
-          filedata.data[1].deductions.splice(itemToDeleteIndex, 1);
-
-          // add the recieved data
-          filedata.data[1].deductions.push(itemObject);
-     }
-
-     fileWriter(filedata);
-}
-
-// edit budget item
-ipcMain.handle('submitBudgetItemChange', async (event, itemObject) => {
-     const result = await editBudgetItem(itemObject);
-     return result
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-// delete budget item
-async function deleteBudgetItem(GUID) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // search in the 2nd array, deductions
-     let itemToDeleteIndex = filedata.data[1].deductions.findIndex(item => item.GUID === GUID);
-
-     // if find index does not return an index, it returns -1
-     if (itemToDeleteIndex == -1) {
-          // search in incomes
-          itemToDeleteIndex = filedata.data[2].incomes.findIndex(item => item.GUID === GUID);
-
-          // delete the item
-          filedata.data[2].incomes.splice(itemToDeleteIndex, 1);
-     
-     // the item is in deductions
-     } else {
-          // delete the item
-          filedata.data[1].deductions.splice(itemToDeleteIndex, 1);
-     }
-
-     fileWriter(filedata);
-}
-
-
-// Delete budget item
-ipcMain.handle('deleteBudgetItem', async (event, GUID) => {
-     const result = await deleteBudgetItem(GUID);
-     return result
-})
-
-
-
-
-
-
-
-// function to toggle the theme
-function toggleTheme() {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     let currentTheme = filedata.data[3].settings[0].theme;
-
-     // if current theme is light
-     if (currentTheme == "light") {
-          // set to dark
-          filedata.data[3].settings[0].theme = "dark";
-     } else {
-          // else, set to light
-          filedata.data[3].settings[0].theme = "light";
-     }
-
-     fileWriter(filedata);
-}
-
-// toggle color theme
-ipcMain.handle('toggleTheme', async (event) => {
-     toggleTheme();
-})
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -478,7 +280,6 @@ ipcMain.handle('writeLoans', async (event, data) => {
 
      // create variable for loans array for neater code
      let loansData = filedata.data[0].loans;
-
      
      // switch for different recieved actions
      switch (action) {
@@ -590,9 +391,6 @@ ipcMain.handle('writeIncomes', async (event, data) => {
 
 
 
-
-
-
 ipcMain.handle('writeDeductions', async (event, data) => {
      // recieves an array, with [0] being the action and [1] being the data
      let action = data[0];
@@ -652,21 +450,19 @@ ipcMain.handle('writeSettings', async (event, data) => {
 
 
      switch (action) {
-          case "toggleTheme":
-               // get the opposite theme of whatever was recieved
-               
-
+          case "setUserTheme":
                // set the new theme
                settingsData[0].UserSelectedTheme = recievedData;
+          break;
+
+          case "setUserPIN":
+               // set the user pin
+               settingsData[0].UserPIN = recievedData;
           break;
      
           default:
           break;
      }
-
-
-
-
 
      // write to file
      fileWriter(filedata);

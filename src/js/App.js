@@ -17,7 +17,8 @@ import { fetchDeductions } from './Redux/features/DeductionsSlice';
 import {
      HashRouter as Router,
      Routes,
-     Route
+     Route,
+     useLocation
 } from "react-router-dom"
 
 
@@ -36,10 +37,15 @@ import LoanItemView from './views/LoanItemView';
 // import navbar
 import NavigationBar from "./components/NavigationBar/NavigationBar";
 
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 
 
-export default function App() {
+
+
+export function App() {
+     // location for animation key
+     const location = useLocation();
 
      const dispatch = useDispatch();
 
@@ -62,7 +68,7 @@ export default function App() {
      
      // set current theme based on saved settings
      useEffect(() => {
-          // if dark, remove dark
+          // if settings is dark, add dark mode
           if (currentTheme == 'dark') {
                document.body.classList.add("dark-green");
           } else {
@@ -70,9 +76,6 @@ export default function App() {
           }
      }, [currentTheme])
 
-
-
-     
 
      // LOANS SLICE
      // loans request status
@@ -87,8 +90,6 @@ export default function App() {
                dispatch(fetchLoans())
           }
      }, [loansStatus, dispatch])
-
-
 
 
      // INCOMES SLICE
@@ -106,8 +107,6 @@ export default function App() {
      }, [incomesStatus, dispatch])
 
 
-
-     
      // DEDUCTIONS SLICE
      // deductions request status
      const deductionsStatus = useSelector(state => state.deductions.status);
@@ -123,80 +122,69 @@ export default function App() {
      }, [deductionsStatus, dispatch])
 
 
-
-
-
-
-     // // to write to the file
-     // useEffect(() => {
-     //      let dataObject = {
-     //           ...loansState,
-     //           ...deductionsState,
-     //           ...incomesState,
-     //           ...settingsState
-     //      }
-
-     //      console.log(dataObject);
-
-     // }, [settingsState, loansState, incomesState, deductionsState])
-
-
-
-
      
-     return(
 
-          
-               <Router>
+
+
+
+     return(
+          <>
                <NavigationBar />
 
-                    {/* The two viewContainer divs are used for aesthectic purposes */}
-                    <div className="viewsContainerParent">
-                         <div className="viewsContainerChild">
+               {/* The two viewContainer divs are used for aesthectic purposes */}
+               <div className="viewsContainerParent">
+               
+                    <TransitionGroup component={null}>
+                         
+                              <CSSTransition key={location.pathname} classNames="routerFade" timeout={300}>
 
-                              <Routes>
+                                   <div className="viewsContainerChild">
 
-                                   <Route path="/settings" element={<Settings/>}/>
-                                   
-                                   <Route 
-                                   path="/simplebudget"
-                                   element={
-                                        <SimpleBudget />
-                                   }/>
+                                        <Routes location={location}>
+                                             <Route path="/settings" element={<Settings/>}/>
+                         
+                                             
+                                             <Route 
+                                             path="/simplebudget"
+                                             element={
+                                                  <SimpleBudget />
+                                             }/>
 
-                                   <Route
-                                   path="/allloans"
-                                   element={
-                                        <AllLoans/>
-                                   }/>
-                                   
-                                   <Route
-                                   path="/addaloan"
-                                   element={
-                                        <AddALoan/>
-                                   }/>
+                                             <Route
+                                             path="/allloans"
+                                             element={
+                                                  <AllLoans/>
+                                             }/>
+                                             
+                                             <Route
+                                             path="/addaloan"
+                                             element={
+                                                  <AddALoan/>
+                                             }/>
 
-                                   {/* dynamic view for closer look at an individual loan */}
-                                   <Route
-                                   path="/loanitemview"
-                                   element={
-                                        <LoanItemView/>
-                                   }/>
+                                             {/* dynamic view for closer look at an individual loan */}
+                                             <Route
+                                             path="/loanitemview"
+                                             element={
+                                                  <LoanItemView/>
+                                             }/>
 
-                                   <Route
-                                   path="/"
-                                   element={
-                                        <DashBoard/>
-                                   }/>
-                                   
-                              </Routes>
+                                             <Route
+                                             path="/"
+                                             element={
+                                                  <DashBoard/>
+                                             }/>
+                                             
+                                        </Routes>
+                                   </div>
 
-                              
-                         </div>
-                    </div>
-
-               </Router>
-
-          
+                              </CSSTransition>
+                         
+                    </TransitionGroup>
+               </div>
+          </>
      )
 }
+
+// Placed the context provider here so that <App/> can call useLocation()
+export const Root = () => <Router><App/></Router>;

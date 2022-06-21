@@ -236,7 +236,7 @@ export default function EditOrDeleteBudgetItemList(props) {
           <>
                <h4>{props.name}s</h4>
                
-               <Table striped bordered hover size="sm" className="editDeleteItemTable" variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}>
+               <Table striped bordered hover responsive size="sm" className="editDeleteItemTable" variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}>
                     <thead>
                          <tr>
                               <td>Edit Item</td>
@@ -270,7 +270,6 @@ export default function EditOrDeleteBudgetItemList(props) {
                                              Delete {item.Name}
                                         </Button>
                                    </td>
-
 
 
                                    {/* Edit Modal */}

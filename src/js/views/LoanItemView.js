@@ -85,7 +85,7 @@ export default function LoanItemView() {
                     useThisLoanInfo.Info = amortizingLoanInfo;
                break;
 
-               case 'Auto Loan':
+               case 'Vehicle Loan':
                     // populate object based on type
                     useThisLoanInfo.type = 'AMORTIZED LOAN';
                     useThisLoanInfo.Info = amortizingLoanInfo;
@@ -203,7 +203,7 @@ export default function LoanItemView() {
 
           return(
                <span>
-                    {returnObjStrings.daysTilPayment} days on {returnObjStrings.dayName}, {returnObjStrings.monthName} {paymentDate}{ordinal}
+                    {returnObjStrings.daysTilPayment} {returnObjStrings.daysTilPayment === 1 ? "day" : "days"} on {returnObjStrings.dayName}, {returnObjStrings.monthName} {paymentDate}{ordinal}
                </span>
           );
 
@@ -226,49 +226,68 @@ export default function LoanItemView() {
 
      return(
           <div className="componentContainer">
-
                <h1 className="componentTitle">{currentLoan?.loan.LoanName}</h1>
-               <div className="loanItemType">
-                    <h3>{loanTypeIcon(currentLoan?.loan.LoanCategory)} {currentLoan?.loan.LoanCategory}</h3>
-                    
-                    <div className="loanTypeInfoDiv">
-                         {loanTypeInfo(currentLoan?.loan.LoanCategory)}
-                    </div>
-               </div>
 
-               <div className="dashboardModules">
+               <div className="dashboardModulesContainer">
+
                     <div className="loanTools dashboardModule">
-                         <div className="moduleHeader"><span>TOOLS</span></div>
+                         <div className="moduleHeader">
+                              <h2>Loan Tools</h2>
+                         </div>
 
-                         <Button variant="success" className="btn-custom" size="lg" onClick={() => openLinkInBrowser(currentLoan?.loan.LoanLink)}>Link to Loan</Button>
-                         <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
-                         <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>
-                         <AdjustMonthlyPaymentModal loan={currentLoan}/>
+                         <div className="moduleContent">
+                              <Button variant="success" className="btn-custom" size="lg" onClick={() => openLinkInBrowser(currentLoan?.loan.LoanLink)}>Link to Loan</Button>
+                              <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
+                              <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>
+                              <AdjustMonthlyPaymentModal loan={currentLoan}/>
+                         </div>
                     </div>
 
                     <div className="loanQuickInfo dashboardModule">
-                         <div className="moduleHeader"><span>LOAN INFO</span></div>
-                         <div className="loanInfoHeader">
-                              <span className="display-4">{moneyFormatter(currentLoan?.loan.CalculatedRemainingAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</span>
+                         <div className="moduleHeader">
+                              <h2>General Info</h2>
+                         </div>
+
+                         <div className="moduleContent">
                               
-                              <h5> Next Payment of {moneyFormatter(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</h5>
+                              <div className="loanItemType">
+                                   <h3>{loanTypeIcon(currentLoan?.loan.LoanCategory)} {currentLoan?.loan.LoanCategory}</h3>
+                                   
+                                   <div className="loanTypeInfoDiv">
+                                        {loanTypeInfo(currentLoan?.loan.LoanCategory)}
+                                   </div>
+                              </div>
+
+                              <div className="loanInfoHeader">
+                                   <h1>{moneyFormatter(currentLoan?.loan.CalculatedRemainingAmount)} remaining at {currentLoan?.loan.InterestRate}% interest</h1>
+                                   
+                                   <h5> Next Payment of {moneyFormatter(currentLoan?.loan.MonthlyPayment)} due in {dateCalculator(currentLoan?.loan.PaymentDate)}</h5>
+                              </div>
                          </div>
                     </div>
 
                     <div className="paymentsOverTime dashboardModule">
-                         <div className="moduleHeader"><span>PAYMENTS OVER TIME</span></div>
+                         <div className="moduleHeader">
+                              <h2>Payments Over Time</h2>
+                         </div>
 
-                         <p className="lead paymentsOverTimeDirections">Click "Record a Payment" or "Record a Late Fee" in the Tools module above to add more data points to this graph</p>
+                         <div className="moduleContent">
+                              <h6 className="paymentsOverTimeDirections">Click "Record a Payment" or "Record a Late Fee" in the Tools module above to add more data points to this graph</h6>
 
-                         <div className="paymentsOverTiemChart">
-                              <LoansLineChart data={currentLoan}/>
+                              <div className="paymentsOverTiemChart">
+                                   <LoansLineChart data={currentLoan}/>
+                              </div>
                          </div>
                     </div>
 
                     <div className="recentlyRecordedPayments dashboardModule">
-                         <div className="moduleHeader"><span>RECENTLY RECORDED PAYMENTS</span></div>
+                         <div className="moduleHeader">
+                              <h2>Recently Payments</h2>
+                         </div>
 
-                         <RecentlyRecordedPayments thisLoan={currentLoan?.loan.GUID}/>
+                         <div className="moduleContent">
+                              <RecentlyRecordedPayments thisLoan={currentLoan?.loan.GUID}/>
+                         </div>
                     </div>
                </div>              
           </div>

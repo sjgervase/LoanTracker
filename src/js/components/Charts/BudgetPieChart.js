@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
 
-import { 
+import {
      ResponsiveContainer,
      PieChart,
      Pie,
@@ -21,7 +21,7 @@ export default function BudgetPieChart() {
      const loansState = useSelector((state) => state.loans);
      const incomesState = useSelector((state) => state.incomes);
      const deductionsState = useSelector((state) => state.deductions);
-     
+
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -73,7 +73,7 @@ export default function BudgetPieChart() {
                     });
                }
           }
-          
+
           // savings
           for (let i = 0; i < deductionsState.deductions.length; i++) {
                if (deductionsState.deductions[i].Type == "savings") {
@@ -98,7 +98,7 @@ export default function BudgetPieChart() {
           // subtract all bills and loans from incomeTotal;
           for (let i = 0; i < dataArray.length; i++) {
                let currentReduction = new BigNumber(dataArray[i].value);
-               incomeTotal = incomeTotal.minus(currentReduction);               
+               incomeTotal = incomeTotal.minus(currentReduction);
           }
 
           // if the remaining income total is greater than zero, add it, otherwise the chart breaks
@@ -108,7 +108,7 @@ export default function BudgetPieChart() {
                     "name": "Remaining Income",
                     "value": parseFloat(incomeTotal.toFixed(2)),
                     "color": incomeColor
-               })     
+               })
           }
 
           return dataArray
@@ -128,7 +128,7 @@ export default function BudgetPieChart() {
      let colors = rechartColors();
 
 
-      
+
      // function to generate custom piechart label ----- courtesy of https://celiaongsl.medium.com/2-secret-pie-chart-hacks-to-up-your-recharts-game-hack-recharts-1-9fa62ff9416a
      const CustomLabel = ({ viewBox}) => {
           const { cx, cy } = viewBox;
@@ -140,7 +140,7 @@ export default function BudgetPieChart() {
           for (let i = 0; i < loansState.loans.length; i++) {
                // if not paid off
                if (!(loansState.loans[i].loan.PaidOff)) {
-                    vals.push(parseFloat(loansState.loans[i].loan.MonthlyPayment));     
+                    vals.push(parseFloat(loansState.loans[i].loan.MonthlyPayment));
                }
           }
 
@@ -151,7 +151,7 @@ export default function BudgetPieChart() {
 
           // add all remaining values up and utilize javascript's number formating
           let sum = moneyFormatter(vals.reduce((partialSum, a) => partialSum + a, 0));
-          
+
           return (
                <React.Fragment>
                     <text x={cx} y={cy}>
@@ -177,7 +177,7 @@ export default function BudgetPieChart() {
                return (
                     <div className="customChartTooltip">
                          <span>{e.payload[0].payload["name"]}</span>
-                         
+
                          <span>
                               {moneyFormatter(parseFloat(
                                         e.payload[0].payload["value"]
@@ -193,11 +193,11 @@ export default function BudgetPieChart() {
 
      return(
           <ResponsiveContainer width="99%" height={500}>
-               
+
                <PieChart>
                <Tooltip content={customTooltip} />
-               
-                    <Pie 
+
+                    <Pie
                     data={pieData}
                     dataKey="value"
                     nameKey="name"
@@ -211,7 +211,7 @@ export default function BudgetPieChart() {
                          position="center"
                          align="center"
                          />
-                        
+
                          {pieData.map((entry, index) => (
                          <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                          ))}
@@ -219,8 +219,8 @@ export default function BudgetPieChart() {
                     </Pie>
 
                </PieChart>
-     
+
           </ResponsiveContainer>
-                   
+
      );
 }

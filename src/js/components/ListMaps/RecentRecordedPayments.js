@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import components
-import PaymentLateFeeItem from "./PaymentLateFeeItem";
+import DeletePaymentLateFeeModal from "../Modals/DeletePaymentLateFeeModal";
 
 export default function RecentlyRecordedPayments(props) {
 
@@ -97,15 +97,97 @@ export default function RecentlyRecordedPayments(props) {
 
      let paymentHistoryArray = paymentHistoryData();
 
+
+
+
+
+
+     // note: all payment/late fee items will have a unique dateRecorded property as two cannot be made at the same time
+
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
+
+     // function to set border style
+     function borderStyle(color) {
+          if (color !="") {
+               return {
+                    border: "1px solid" + color,
+                    borderLeft: "5px solid" + color
+               }
+          }
+     }
+
+
+     // function to format if the item is a payment or a latefee
+     function paymentFormatType(amount, type) {
+          if (type == "payment") {
+               return(
+                    <>
+                         <span>payment: </span>
+                         <span className="payment">-{moneyFormatter(amount)}</span>
+                    </>
+               )
+          } else {
+               return(
+                    <>
+                         <span>fee: </span>
+                         <span className="lateFee">+{moneyFormatter(amount)}</span>
+                    </>
+               )
+          }
+     }
+
+     function datesFormat(dateMade) {
+          var months = {"Jan":"January", "Feb":"February", "Mar":"March", "Apr":"April", "May":"May", "Jun":"June", "Jul":"July", "Aug":"August", "Sep":"September", "Oct":"October", "Nov":"November", "Dec":"December"};
+
+          var yearMade = dateMade.substring(0,4);
+          var monthMade = dateMade.substring(5,7);
+          var dayMade = dateMade.substring(8,10);
+
+          var dateMadeFormatted = new Date(yearMade, monthMade-1, dayMade).toDateString();
+
+          // get full month
+          for (var prop in months) {
+               if (new RegExp(prop).test(dateMadeFormatted)) {
+                    // replace abbreviated month with full month name
+                    dateMadeFormatted = dateMadeFormatted.replace(prop, months[prop]);    
+                    // replace day with day followed by comma `,` character
+                    dateMadeFormatted = dateMadeFormatted.replace(/(\d{2})(?=\s)/, "$1,");
+               }
+          }
+
+          return(
+               <span>made on: {dateMadeFormatted}</span>
+          )
+     }
+
      // map for each payment history array, sorting by dateRecorded
      return(
-          <div className="paymentFeeList">
+          
+          <div className="listContainer">
+
+               <div className="list">
                {paymentHistoryArray.map((paymentORfee, index) => 
-                    <PaymentLateFeeItem 
-                         key={index}
-                         item={paymentORfee}
-                    />
+                    
+                    <div className="paymentOrFeeItem" style={borderStyle(paymentORfee.loanColor)} key={index}>
+
+                         <div className="paymentOrFeeItemName">
+                              <span>{paymentORfee.loanName}</span>
+                         </div>
+                         
+
+                         <div className="paymentOrFeeItemAmount">
+                              <span>{paymentFormatType(paymentORfee.amount, paymentORfee.type)}</span>
+                         </div>
+
+                         <div className="paymentOrFeeItemAmountDates">
+                              <span>{datesFormat(paymentORfee.dateMade)}</span>
+                         </div>
+
+                         <DeletePaymentLateFeeModal item={paymentORfee}/>
+                    </div>
                )}
+               </div>
           </div>
      );
 }

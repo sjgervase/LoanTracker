@@ -1,16 +1,13 @@
 TODO:
 
-React Modals:
-- autofocus
 
-Add A Loan:
-- option to enter total amount and total terms OR current amount and remaining terms
+
+*** ensure forms do not try to submit on enter button
 
 simple budget:
-- budget lists: force one line, full info in overlay
+- budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
 
 More overlays everywhere
-
 
 Settings
 - all of settings
@@ -18,8 +15,6 @@ Settings
 Splash Screen
 - create splash Screen
 
-Icon
-- get icon
 
 Add a loan: Credit Card?
 
@@ -27,6 +22,7 @@ Tidy up all imports
 
 Standard spacing:
 - 2 lines between functions
+- props and attrs indented
 
 Organize scss
 
@@ -52,12 +48,4 @@ ensure everything looks as expected in fullscreen
      - loan item view : components dont resize veritcally
 
 
-"LoanTracker" in navbar should be draggable
-
-switch all "if(data){}" statements to "data?"
-
-additional notes field on the add a loan
-
-maximize and minimize on mac
-
-record a payment: mass payments? Like if i have a 5 year loan do i really want to enter all of this data?
+nightmode transition

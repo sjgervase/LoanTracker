@@ -82,7 +82,7 @@ export default function RecordAPaymentModal(props) {
                <Button
                     variant="light"
                     // conditional classname depending on the parent of the button
-                    className={`${props.parent.name == "ActiveLoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
+                    className={`${props.parent == "ActiveLoanItem" ? "btn-sm btn-custom btn-light py0": "btn-custom btn-light"}`}
                     size="lg"
                     onClick={showPaymentModalFunc}>
                     Record a Payment
@@ -101,7 +101,7 @@ export default function RecordAPaymentModal(props) {
 
                     <Modal.Body>
                          
-                    <p>Your Monthly Payment is: {moneyFormatter(thisMonthlyPayment)}</p>
+                    <p>Your Minimum Monthly Payment is: {moneyFormatter(thisMonthlyPayment)}</p>
 
                     {/* conditional to show desired monthly payment if it is not the default value of 0 */}
                     {thisDesiredMonthlyPayment > 0 ?  <p>Your Desired Monthly Payment is: {moneyFormatter(thisDesiredMonthlyPayment)}</p> : ""}
@@ -109,7 +109,7 @@ export default function RecordAPaymentModal(props) {
 
                          <Form>
                               {/* Amount Paid */}
-                              <Form.Group className="mb-3">
+                              <Form.Group controlId="AmountPaid" className="mb-3">
                                    <Form.Label>Amount Paid</Form.Label>
                                    <CurrencyInput
                                         prefix="$"
@@ -119,6 +119,7 @@ export default function RecordAPaymentModal(props) {
                                         decimalsLimit={2}
                                         defaultValue={thisDesiredMonthlyPayment == 0 ? thisMonthlyPayment : thisDesiredMonthlyPayment}
                                         onValueChange={(value, name) => recordPaymentStateFunc(value, name)}
+                                        className="addALoanInput"
                                         autoFocus
                                    />
                               </Form.Group>
@@ -127,6 +128,7 @@ export default function RecordAPaymentModal(props) {
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Paid</Form.Label>
                                    <Form.Control type="date" name="Date"
+                                   className="addALoanInput"
                                    defaultValue={dateDefaultToday()}
                                    onChange={e => recordPaymentStateFunc(e.target.value, e.target.name)} />
                               </Form.Group>

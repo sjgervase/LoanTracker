@@ -19,12 +19,13 @@ import BudgetPieChart from "../components/Charts/BudgetPieChart";
 import BudgetLists from "../components/ListMaps/BudgetLists";
 
 
-export default function SimpleBudget(props) {
+export default function SimpleBudget() {
 
      // get data from redux store
      const loansState = useSelector((state) => state.loans);
      const incomesState = useSelector((state) => state.incomes);
      const deductionsState = useSelector((state) => state.deductions);
+     // console.log(deductionsState);
 
 
      // function for total monthly loans
@@ -134,6 +135,7 @@ export default function SimpleBudget(props) {
                if (deductionsState.deductions[i].Type == "bill") {
                     billsArray.push({
                          "name": deductionsState.deductions[i].Name,
+                         "frequency": deductionsState.deductions[i].Frequency,
                          "value": parseFloat(deductionsState.deductions[i].MonthlyAmount)
                     })
 
@@ -141,6 +143,7 @@ export default function SimpleBudget(props) {
                } else if(deductionsState.deductions[i].Type == "expense") {
                     expensesArray.push({
                          "name": deductionsState.deductions[i].Name,
+                         "frequency": deductionsState.deductions[i].Frequency,
                          "value": parseFloat(deductionsState.deductions[i].MonthlyAmount)
                     })
 
@@ -148,6 +151,7 @@ export default function SimpleBudget(props) {
                } else {
                     savingsArray.push({
                          "name": deductionsState.deductions[i].Name,
+                         "frequency": deductionsState.deductions[i].Frequency,
                          "value": parseFloat(deductionsState.deductions[i].MonthlyAmount)
                     })
                }
@@ -157,6 +161,7 @@ export default function SimpleBudget(props) {
           for (let i = 0; i < incomesState.incomes.length; i++) {
                incomesArray.push({
                     "name": incomesState.incomes[i].Name,
+                    "frequency": incomesState.incomes[i].Frequency,
                     "value": parseFloat(incomesState.incomes[i].MonthlyAmount)
                })
           }
@@ -198,94 +203,115 @@ export default function SimpleBudget(props) {
      return(
           <div className="componentContainer">
                <h1 className="componentTitle">Simple Budgeting Tool</h1>
-               <p>Use this simply budgeting tool to help prepare your finances on a month by month basis</p>
+               <h5>Use this simply budgeting tool to help prepare your finances on a month by month basis</h5>
                
-               
-               <div className="budgetTopRow">
+               <div className="dashboardModulesContainer">
+
+
+
+
+                    
+
                     <div className="budgetTools dashboardModule">
-                         <div className="moduleHeader"><span>BUDGET TOOLS</span></div>
+                         <div className="moduleHeader">
+                              <h2>Budget Tools</h2>
+                         </div>
 
-                         <AddMonthlyPayModal/>
+                         <div className="moduleContent">
+                              <AddMonthlyPayModal/>
 
-                         <AddMonthlySavingsModal/>
+                              <AddMonthlySavingsModal/>
 
-                         <AddMonthlyBillModal/>
+                              <AddMonthlyBillModal/>
 
-                         <AddMonthlyExpenseModal/>
+                              <AddMonthlyExpenseModal/>
 
-                         <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={addALoanPopover}>
-                              <Button onClick={() => addALoanButton()} size="lg"  variant="danger" className="btn-AddALoan shadow-none">
-                                   Add A loan
-                              </Button>
-                         </OverlayTrigger>
+                              <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={addALoanPopover}>
+                                   <Button onClick={() => addALoanButton()} size="lg"  variant="danger" className="btn-AddALoan shadow-none">
+                                        Add A loan
+                                   </Button>
+                              </OverlayTrigger>
 
-                         <EditOrDeleteBudgetItem/>
+                              <EditOrDeleteBudgetItem/>
+                         </div>
                     </div>
 
-                    <div className="budgetQuickLook dashboardModule">
-                         <div className="moduleHeader"><span>QUICK LOOK</span></div>
 
-                         <div className="budgetLists">
-                              <h4>Monthly Incomes Total</h4>
-                              <BudgetLists array={incomesArray}/>
-                              <h3>{moneyFormatter(monthlyIncomesTotal())}</h3>
+                    <div className="incomesAndDeductions dashboardModule">
+                         <div className="moduleHeader">
+                              <h2>Incomes, Bills, Loans, & Expenses</h2>
                          </div>
 
-                         <div className="budgetTotals">
+                         <div className="moduleContent">
+                              <div className="budgetListsGrid">
 
-                              <div className="budgetLists">
-                                   <h4>Monthly Savings Total</h4>
-                                   <BudgetLists array={savingsArray}/>
-                                   <h3>{moneyFormatter(monthlySavingsTotal())}</h3>
-                              </div>
-                              
+                                   <div className="incomesBudgetList budgetList">
+                                        <h5>Monthly Incomes Total</h5>
+                                        <BudgetLists array={incomesArray}/>
+                                        <h3>{moneyFormatter(monthlyIncomesTotal())}</h3>
+                                   </div>
 
-                              <div className="budgetLists">
-                                   <h4>Monthly Loans Total</h4>
-                                   <BudgetLists array={loansArray}/>
-                                   <h3>{moneyFormatter(monthlyLoansTotal())}</h3>
+                                   <div className="budgetTotals">
+                                        <div className="budgetList budgetListsDeductions">
+                                             <h5>Monthly Savings Total</h5>
+                                             <BudgetLists array={savingsArray}/>
+                                             <h3 className="budgetListGrandTotal">{moneyFormatter(monthlySavingsTotal())}</h3>
+                                        </div>
+
+                                        <div className="budgetList budgetListsDeductions">
+                                             <h5>Monthly Loans Total</h5>
+                                             <BudgetLists array={loansArray}/>
+                                             <h3 className="budgetListGrandTotal">{moneyFormatter(monthlyLoansTotal())}</h3>
+                                        </div>
+
+                                        <div className="budgetList budgetListsDeductions">
+                                             <h5>Monthly Bills Total</h5>
+                                             <BudgetLists array={billsArray}/>
+                                             <h3 className="budgetListGrandTotal">{moneyFormatter(monthlyBillsTotal())}</h3>
+                                        </div>
+
+                                        <div className="budgetList budgetListsDeductions">
+                                             <h5>Monthly Expenses Total</h5>
+                                             <BudgetLists array={expensesArray}/>
+                                             <h3 className="budgetListGrandTotal">{moneyFormatter(monthlyExpensesTotal())}</h3>
+                                        </div>
+                                   </div>
+
+                                   <div className="totalRemainingIncome budgetList">
+                                        <h5>Total Remaining Income</h5>
+                                        <h3 className="budgetListGrandTotal">{moneyFormatter(remainderTotal())}</h3>
+                                   </div>
+
+
                               </div>
 
-                              <div className="budgetLists">
-                                   <h4>Monthly Bills Total</h4>
-                                   <BudgetLists array={billsArray}/>
-                                   <h3>{moneyFormatter(monthlyBillsTotal())}</h3>
-                              </div>
-
-                              <div className="budgetLists">
-                                   <h4>Monthly Expenses Total</h4>
-                                   <BudgetLists array={expensesArray}/>
-                                   <h3>{moneyFormatter(monthlyExpensesTotal())}</h3>
-                              </div>
                          </div>
-
-                         <div className="budgetLists">
-
-                              <h4>Total Remaining Income</h4>
-                              <h3>
-                                   {moneyFormatter(remainderTotal())}
-                              </h3>
-
-                         </div>
-
                     </div>
+
+
+
+
+
+
+
+
+                    <div className="totalsBreakdown dashboardModule">
+                         <div className="moduleHeader">
+                              <h2>Totals Breakdown</h2>
+                         </div>
+
+                         <div className="moduleContent">
+                              <p>The pie chart below is a representation of your loans and bills compared to your incomes. The entire pie represents your average monthly income. The less green you in chart, the less disposable income you have after paying all of your monthly bills, expenses, and loans.</p>
+
+                              <BudgetPieChart/>
+                         </div>
+                    </div>
+
+
+
+
+
                </div>
-
-
-               <div className="budgetBottomRow">
-
-                    <div className="pieChart dashboardModule">
-                         
-                         <div className="moduleHeader"><span>TOTALS BREAKDOWN</span></div>
-
-                         <p>The pie chart below is a representation of your loans and bills compared to your incomes. The entire pie represents your average monthly income. The less green you in chart, the less disposable income you have after paying all of your monthly bills, expenses, and loans.</p>
-
-
-                         <BudgetPieChart/>
-
-
-                    </div>
-               </div> 
           </div>
      )
 }

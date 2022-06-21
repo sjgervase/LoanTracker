@@ -20,7 +20,7 @@ import EditOrDeleteBudgetItemList from "../ListMaps/EditDeleteBudgetItemList";
 
 
 
-export default function EditOrDeleteBudgetItem(props) {
+export default function EditOrDeleteBudgetItem() {
 
      // get data from redux store
      const incomesState = useSelector((state) => state.incomes);
