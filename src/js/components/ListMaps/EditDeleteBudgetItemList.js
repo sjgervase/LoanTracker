@@ -8,8 +8,20 @@ import BigNumber from "bignumber.js";
 
 import { ipcRenderer } from "electron";
 
+// import actions from store
+import { editIncome, deleteIncome } from "../../Redux/features/IncomesSlice";
+import { editDeduction, deleteDeduction } from "../../Redux/features/DeductionsSlice";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
 
 export default function EditOrDeleteBudgetItemList(props) {
+
+     const dispatch = useDispatch();
+
+     // get all settings from redux store for dynamic dark mode of the table
+     const settingsState = useSelector((state) => state.settings);
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -168,12 +180,18 @@ export default function EditOrDeleteBudgetItemList(props) {
           // // create an item object with the state and calculated monthly amount
           let itemObject = {
                ...editState,
-               Type: props.name.toLowerCase(),
                MonthlyAmount: calculatedMonthlyAmount,
           }
 
-          // send to main process to write to file
-          ipcRenderer.invoke('submitBudgetItemChange', (itemObject));
+          // if income
+          if (props.name == "Income") {
+               // dispatch action to reducer
+               dispatch(editIncome(itemObject));
+          // else deduction
+          } else {
+               // dispatch action to reducer
+               dispatch(editDeduction(itemObject));
+          }
 
           // clear the value state
           setEditState({});
@@ -199,8 +217,16 @@ export default function EditOrDeleteBudgetItemList(props) {
 
      // function to delete the budget item
      function deleteThisBudgetItem(GUID) {
-          // send to main process to write to file
-          ipcRenderer.invoke('deleteBudgetItem', (GUID));
+
+          // if income
+          if (props.name == "Income") {
+               // dispatch action to reducer
+               dispatch(deleteIncome(GUID));
+          // else deduction
+          } else {
+               // dispatch action to reducer
+               dispatch(deleteDeduction(GUID));
+          }
 
           // hide the modal
           hideDeleteModalFunc();
@@ -210,7 +236,7 @@ export default function EditOrDeleteBudgetItemList(props) {
           <>
                <h4>{props.name}s</h4>
                
-               <Table striped bordered hover size="sm" className="editDeleteItemTable">
+               <Table striped bordered hover size="sm" className="editDeleteItemTable" variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}>
                     <thead>
                          <tr>
                               <td>Edit Item</td>

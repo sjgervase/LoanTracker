@@ -98,7 +98,11 @@ function dataFileVerifier() {
                     {"deductions":[]},
                     {"incomes":[]},
                     {"settings":[
-                         {"theme": "light"}
+                         {
+                              "UserSelectedTheme": "light",
+                              "UserSelectedFontSize": "medium",
+                              "UserPin": "NOPIN"
+                         }
                     ]}
                ]
           }
@@ -127,11 +131,6 @@ function dataFileVerifier() {
 // when app is ready, run above function to ensure library files exist in the userData folder and if not, create them
 app.whenReady().then(dataFileVerifier());
 
-
-const reduxDevToolsPath = 'C:/Users/sjger/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.0.11_0/';
-app.whenReady().then(async () => {
-     await session.defaultSession.loadExtension(reduxDevToolsPath)
-})
 
 
 // get data currently in file
@@ -250,139 +249,8 @@ function guidGenerator() {
 
 
 
-// add the data recieved in the ipc message below to the file
-async function addFormDataToFile(formData) {
-    
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     
-
-     var newGuid = guidGenerator();
-
-     // the new loan object to be added
-     let loanObject = {
-          loan: {
-               GUID: newGuid,
-               PaymentHistory: [], 
-               LateFees:[],
-               DesiredMonthlyPayment: 0,
-               TotalLoanAmount: formData.MonthlyPayment * formData.TotalTermLength
-          }
-     }
-
-     // add the recieved formdata to the above loan object
-     Object.assign(loanObject.loan, formData);
-
-     filedata.data[0].loans.push(loanObject);
-     
-     // write to file
-     fileWriter(filedata);
-}
-
-//  New Loan Item Submission
-ipcMain.handle('newLoanSubmission', async (event, formData) => {
-     const result = await addFormDataToFile(formData);
-     return result
-})
 
 
-
-// add the data recieved in the ipc message below to the file
-async function addPaymentToLoan(recordPaymentState) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // find the loan to update based on the guid
-     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === recordPaymentState.GUID);
-
-     let paymentHistory = loanToUpdate.loan.PaymentHistory;
-     
-     // create empty payment object
-     let paymentObject = {
-          amount: recordPaymentState.Payment,
-          dateMade: recordPaymentState.Date,
-          dateRecorded: new Date()
-     }
-
-     paymentHistory.push(paymentObject);
-
-     // write to file
-     fileWriter(filedata);
-     
-}
-
-//  New Payment Record Submission
-ipcMain.handle('newPaymentSubmission', async (event, recordPaymentState) => {
-     const result = await addPaymentToLoan(recordPaymentState);
-     return result
-})
-
-
-
-// add the data recieved in the ipc message below to the file
-async function addLateFeeToLoan(recordLateFeeState) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // find the loan to update based on the guid
-     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === recordLateFeeState.GUID);
-
-     let LateFees = loanToUpdate.loan.LateFees;
-
-     let LateFeeObject = {
-          amount: recordLateFeeState.LateFee,
-          dateMade: recordLateFeeState.Date,
-          dateRecorded: new Date()
-     }
-
-     LateFees.push(LateFeeObject);
-     
-     // write to file
-     fileWriter(filedata);
-}
-
-//  New Late Fee Submission
-ipcMain.handle('newLateFeeSubmission', async (event, recordLateFeeState) => {
-     const result = await addLateFeeToLoan(recordLateFeeState);
-     return result
-})
-
-
-
-
-
-// add the data recieved in the ipc message below to the file
-async function deletePaymentLateFee(GUIDAndTimestampType) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // find the loan to update based on the guid
-     let loanToUpdate = filedata.data[0].loans.find(loan => loan.loan.GUID === GUIDAndTimestampType.GUID);
-
-     let propertyName = GUIDAndTimestampType.type;
-
-     // determine payment history / late fee based on recieved type
-     let listToUpdate = loanToUpdate.loan[propertyName];
-
-     // get the index
-     let removeThisIndex = listToUpdate.findIndex(item => item.dateRecorded === GUIDAndTimestampType.TimeStamp);
-
-     // remove that item
-     listToUpdate.splice(removeThisIndex, 1);
-
-     // write to file
-     fileWriter(filedata);
-}
-
-//  Delete Payment / late fee from history
-ipcMain.handle('deletePaymentLateFee', async (event, GUIDAndTimestampType) => {
-     const result = await deletePaymentLateFee(GUIDAndTimestampType);
-     return result
-})
 
 
 
@@ -412,31 +280,6 @@ ipcMain.handle('desiredMonthlyPaymentSubmission', async (event, desiredMonthlyPa
 
 
 
-
-
-
-
-
-// delete loan
-async function deleteLoan(GUID) {
-
-     // run above fileReader function to get a variable with all data
-     let filedata = fileReader();
-
-     // find the loan to update based on the guid
-     let loanToDeleteIndex = filedata.data[0].loans.findIndex(loan => loan.loan.GUID === GUID);
-
-     filedata.data[0].loans.splice(loanToDeleteIndex, 1);
-
-     fileWriter(filedata);
-}
-
-
-//  delete specified loan
-ipcMain.handle('deleteLoan', async (event, GUID) => {
-     const result = await deleteLoan(GUID);
-     return result
-})
 
 
 
@@ -543,6 +386,8 @@ ipcMain.handle('submitBudgetItemChange', async (event, itemObject) => {
 
 
 
+
+
 // delete budget item
 async function deleteBudgetItem(GUID) {
 
@@ -602,11 +447,227 @@ function toggleTheme() {
      fileWriter(filedata);
 }
 
-
-
-
-
 // toggle color theme
 ipcMain.handle('toggleTheme', async (event) => {
      toggleTheme();
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// handle loans from redux slice
+ipcMain.handle('writeLoans', async (event, data) => {
+
+     // recieves an array, with [0] being the action and [1] being the data
+     let action = data[0];
+     let recievedData = data[1];
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // create variable for loans array for neater code
+     let loansData = filedata.data[0].loans;
+
+     
+     // switch for different recieved actions
+     switch (action) {
+          case "addLoan":
+               // add the loan object to the array of loans
+               loansData.push(recievedData);
+          break;
+
+          case "addPaymentLateFee":
+               // find the loan that the payment needs to be added to by the payload's GUID
+               var thisLoan = loansData.find(loan => loan.loan.GUID === recievedData.parentLoan);
+
+               // if type is payment
+               if (recievedData.type == 'payment') {
+                    thisLoan.loan.PaymentHistory.push(recievedData);
+               // else is a late fee
+               } else {
+                    thisLoan.loan.LateFees.push(recievedData);
+               }
+          break;
+
+          case "deletePaymentLateFee":
+               // find the loan to update based on the guid
+               let loanToUpdate = loansData.find(loan => loan.loan.GUID === recievedData.GUID);
+
+               let propertyName = recievedData.Type;
+
+               // determine payment history / late fee based on recieved type
+               let listToUpdate = loanToUpdate.loan[propertyName];
+
+               // get the index
+               let removeThisIndex = listToUpdate.findIndex(item => item.dateRecorded === recievedData.TimeStamp);
+
+               // remove that item
+               listToUpdate.splice(removeThisIndex, 1);
+          break
+
+          case "deleteLoan":
+               // find the index of the loan that the payment needs to be added to by the payload's GUID
+               let thisLoanIndex = loansData.findIndex(loan => loan.loan.GUID === recievedData);
+
+               // remove that item
+               loansData.splice(thisLoanIndex, 1);
+          break;
+
+          case "adjustMonthlyPayment":
+               // find the loan that the adjusted amount needs to be added to by the payload's GUID
+               var thisLoan = loansData.find(loan => loan.loan.GUID === recievedData.GUID);
+
+               // set the desired monthly payment
+               thisLoan.loan.DesiredMonthlyPayment = recievedData.value;
+          break;
+     
+          default:
+          break;
+     }
+
+     // write to file
+     fileWriter(filedata);
+})
+
+
+
+
+
+ipcMain.handle('writeIncomes', async (event, data) => {
+     // recieves an array, with [0] being the action and [1] being the data
+     let action = data[0];
+     let recievedData = data[1];
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+     
+     // create variable for incomes array for neater code
+     let incomesData = filedata.data[2].incomes;
+
+     switch (action) {
+          case "addIncome":
+               incomesData.push(recievedData);
+          break;
+
+          case "editIncome":
+               // find the income in the array based on the recieved GUID
+               let thisIncome = incomesData.find(income => income.GUID === recievedData.GUID);
+
+               // set all the properties of this income equal to the payload values
+               thisIncome.Amount = recievedData.Amount;
+               thisIncome.Frequency = recievedData.Frequency;
+               thisIncome.MonthlyAmount = recievedData.MonthlyAmount;
+               thisIncome.Name = recievedData.Name;
+          break;
+
+          case "deleteIncome":
+               // find the income that needs to be deleted based on GUID
+               let thisIncomeIndex = incomesData.findIndex(income => income.GUID === recievedData);
+
+               // splice item from array
+               incomesData.splice(thisIncomeIndex, 1);
+          break;
+     
+          default:
+          break;
+     }
+
+     // write to file
+     fileWriter(filedata);
+})
+
+
+
+
+
+
+
+ipcMain.handle('writeDeductions', async (event, data) => {
+     // recieves an array, with [0] being the action and [1] being the data
+     let action = data[0];
+     let recievedData = data[1];
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // create variable for incomes array for neater code
+     let deductionsData = filedata.data[1].deductions;
+
+     switch (action) {
+          case "addDeduction":
+               deductionsData.push(recievedData);
+          break;
+
+          case "deleteDeduction":
+               // find the deduction that needs to be deleted based on GUID
+               let thisDeductionIndex = deductionsData.findIndex(deduction => deduction.GUID === recievedData);
+
+               // splice item from array
+               deductionsData.splice(thisDeductionIndex, 1);
+          break;
+
+          case "editDeduction":
+               // find the income that needs to be editted based on GUID
+               let thisDeduction = deductionsData.find(deduction => deduction.GUID === recievedData.GUID);
+
+               // set all the properties of this income equal to the payload values
+               thisDeduction.Amount = recievedData.Amount;
+               thisDeduction.Frequency = recievedData.Frequency;
+               thisDeduction.MonthlyAmount = recievedData.MonthlyAmount;
+               thisDeduction.Name = recievedData.Name;
+          break;
+     
+          default:
+          break;
+     }
+
+     // write to file
+     fileWriter(filedata);
+})
+
+
+
+
+ipcMain.handle('writeSettings', async (event, data) => {
+     // recieves an array, with [0] being the action and [1] being the data
+     let action = data[0];
+     let recievedData = data[1];
+
+     // run above fileReader function to get a variable with all data
+     let filedata = fileReader();
+
+     // create variable for incomes array for neater code
+     let settingsData = filedata.data[3].settings;
+
+
+     switch (action) {
+          case "toggleTheme":
+               // get the opposite theme of whatever was recieved
+               
+
+               // set the new theme
+               settingsData[0].UserSelectedTheme = recievedData;
+          break;
+     
+          default:
+          break;
+     }
+
+
+
+
+
+     // write to file
+     fileWriter(filedata);
 })

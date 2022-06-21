@@ -11,10 +11,10 @@ import './index.scss';
 // for from react redux
 import { Provider, useDispatch } from "react-redux";
 // import store
-import { store } from './reduxStore/store';
+import store from './Redux/store';
 
 
-
+     
 
 
 ReactDOM.render(

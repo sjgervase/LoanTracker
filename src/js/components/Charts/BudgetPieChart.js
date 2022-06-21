@@ -1,20 +1,27 @@
-import BigNumber from "bignumber.js";
 import React from "react";
+import BigNumber from "bignumber.js";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
 
 import { 
      ResponsiveContainer,
      PieChart,
      Pie,
      Cell,
-     Tooltip, 
-     Legend,
+     Tooltip,
      Label
-
 } from "recharts";
 
 
 
-export default function BudgetPieChart(props) {
+export default function BudgetPieChart() {
+
+     // get data from redux store
+     const loansState = useSelector((state) => state.loans);
+     const incomesState = useSelector((state) => state.incomes);
+     const deductionsState = useSelector((state) => state.deductions);
+     
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -32,45 +39,47 @@ export default function BudgetPieChart(props) {
           let savingsColor = "#3FB559";
 
           // loans
-          for (let i = 0; i < props.loans?.length; i++) {
+          for (let i = 0; i < loansState.loans.length; i++) {
                // ensure it is not labeled as paid off
-               if (!props.loans[i].loan.PaidOff) {
+               if (!(loansState.loans[i].loan.PaidOff)) {
                     dataArray.push({
-                         "name": props.loans[i].loan.LoanName,
-                         "value": parseFloat(props.loans[i].loan.MonthlyPayment),
+                         "name": loansState.loans[i].loan.LoanName,
+                         "value": parseFloat(loansState.loans[i].loan.MonthlyPayment),
                          "color": loanColor
                     });
                }
           }
 
           // deductions
-          for (let i = 0; i < props.deductions?.length; i++) {
-
-               // if bill
-               if (props.deductions[i].Type == "bill") {
+          // seperate these so the colors are next to each other
+          // expense
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               if(deductionsState.deductions[i].Type == "expense") {
                     dataArray.push({
-                         "name": props.deductions[i].Name,
-                         "value": parseFloat(props.deductions[i].MonthlyAmount),
-                         "color": billColor
-                    });
-
-               // expense
-               } else if(props.deductions[i].Type == "expense") {
-                    dataArray.push({
-                         "name": props.deductions[i].Name,
-                         "value": parseFloat(props.deductions[i].MonthlyAmount),
+                         "name": deductionsState.deductions[i].Name,
+                         "value": parseFloat(deductionsState.deductions[i].MonthlyAmount),
                          "color": expenseColor
                     });
                }
           }
-          
-          // do savings in a seperate loop to ensure expenses and bills are next to each other on the chart
-          for (let i = 0; i < props.deductions?.length; i++) {
-                // else savings
-               if (props.deductions[i].Type == "savings") {
+
+          // bill
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               if (deductionsState.deductions[i].Type == "bill") {
                     dataArray.push({
-                         "name": props.deductions[i].Name,
-                         "value": parseFloat(props.deductions[i].MonthlyAmount),
+                         "name": deductionsState.deductions[i].Name,
+                         "value": parseFloat(deductionsState.deductions[i].MonthlyAmount),
+                         "color": billColor
+                    });
+               }
+          }
+          
+          // savings
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               if (deductionsState.deductions[i].Type == "savings") {
+                    dataArray.push({
+                         "name": deductionsState.deductions[i].Name,
+                         "value": parseFloat(deductionsState.deductions[i].MonthlyAmount),
                          "color": savingsColor
                     });
                }
@@ -80,8 +89,8 @@ export default function BudgetPieChart(props) {
           // income should be a singular item, calculated by adding all incomes and subtracting all bills and loans
           // then push "remaining income" if available
           let incomeTotal = new BigNumber(0);
-          for (let i = 0; i < props.incomes?.length; i++) {
-               let currentIncome = new BigNumber(props.incomes[i].MonthlyAmount);
+          for (let i = 0; i < incomesState.incomes.length; i++) {
+               let currentIncome = new BigNumber(incomesState.incomes[i].MonthlyAmount);
                incomeTotal = incomeTotal.plus(currentIncome);
           }
 
@@ -128,13 +137,16 @@ export default function BudgetPieChart(props) {
           let vals = [];
 
           // get all values from loans
-          for (let i = 0; i < props.loans?.length; i++) {
-               vals.push(parseFloat(props.loans[i].loan.MonthlyPayment));
+          for (let i = 0; i < loansState.loans.length; i++) {
+               // if not paid off
+               if (!(loansState.loans[i].loan.PaidOff)) {
+                    vals.push(parseFloat(loansState.loans[i].loan.MonthlyPayment));     
+               }
           }
 
           // get all values from deductions
-          for (let i = 0; i < props.deductions?.length; i++) {
-               vals.push(parseFloat(props.deductions[i].MonthlyAmount));
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               vals.push(parseFloat(deductionsState.deductions[i].MonthlyAmount));
           }
 
           // add all remaining values up and utilize javascript's number formating
@@ -143,29 +155,14 @@ export default function BudgetPieChart(props) {
           return (
                <React.Fragment>
                     <text x={cx} y={cy}>
-                         <tspan
-                         style={{
-                              fontWeight: 700,
-                              fontSize: "1.5em",
-                              fill: "#212529",
-                              textAnchor: 'middle' 
-                         }}>
-
+                         <tspan className="pieChartCenterTextTop">
                               {sum}
-
                          </tspan>
                     </text>
 
                     <text x={cx} y={cy + 16}>
-                         <tspan
-                         style={{
-                              fontSize: "0.8em",
-                              fill: "#36733F",
-                              textAnchor: 'middle' 
-                         }}>
-
+                         <tspan className="pieChartCenterTextBottom">
                               total nondisposable amount
-
                          </tspan>
                     </text>
                </React.Fragment>
@@ -178,7 +175,7 @@ export default function BudgetPieChart(props) {
           if (e.active && e.payload!=null && e.payload[0]!=null) {
 
                return (
-                    <div className="customLineChartTooltip">
+                    <div className="customChartTooltip">
                          <span>{e.payload[0].payload["name"]}</span>
                          
                          <span>

@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 // import from electron
 import { ipcRenderer } from "electron";
 
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
+// import store actions
+import { addPaymentOrLateFeeToLoan } from "../../Redux/features/LoansSlice";
+
 // import from react bootstrap
 import { Button, Modal, Form } from "react-bootstrap";
 
@@ -12,8 +18,15 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function RecordAPaymentModal(props) {
 
-     // get the guid. this has passed differently based on the view, so its an if
+     const dispatch = useDispatch();
+
+     // get some data from props. these are passed differently so the value is a ternary if
      let thisGUID = (props.parent.name == "LoanItemView" ? props.loan?.loan.GUID : props.loan?.GUID);
+     let thisMonthlyPayment = (props.parent.name == "LoanItemView" ? props.loan?.loan.MonthlyPayment : props.loan?.MonthlyPayment);
+     let thisDesiredMonthlyPayment = (props.parent.name == "LoanItemView" ? props.loan?.loan.DesiredMonthlyPayment : props.loan?.DesiredMonthlyPayment);
+
+     // money formatter function
+     let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
      // state for showing or hiding the record payment modal
      const [showModal, setShowModal] = useState(false);
@@ -21,6 +34,7 @@ export default function RecordAPaymentModal(props) {
      // state for capturing record a payment function
      const [recordPaymentState, setRecordPaymentState] = useState({
           GUID: thisGUID,
+          Type: "payment",
           Date: dateDefaultToday()
      });
 
@@ -28,7 +42,11 @@ export default function RecordAPaymentModal(props) {
      const showPaymentModalFunc = () => setShowModal(true);
      const hidePaymentModalFunc = () => {
           // clear the state 
-          setRecordPaymentState({GUID: thisGUID});
+          setRecordPaymentState({
+               GUID: thisGUID,
+               Type: "payment",
+               Date: dateDefaultToday()
+          });
           // hide the modal
           setShowModal(false);
      }
@@ -37,19 +55,25 @@ export default function RecordAPaymentModal(props) {
      const recordPaymentStateFunc = (value, name) => {
           setRecordPaymentState({ ...recordPaymentState, [name]: value })
      }
-
-     // function to submit entered data from "record a payment modal"
-     function submitRecordedPayment() {
-          ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
-          // hide the modal
-          setShowModal(false);
-     }
      
      // set the default date picker value to today
      function dateDefaultToday() {
           let today = new Date();
           let formattedToday = today.toISOString().split('T')[0]
           return formattedToday;
+     }
+
+
+     // function to submit entered data from "record a payment modal"
+     function submitRecordedPayment() {
+          console.log(recordPaymentState);
+
+          // dispatch the action to the store
+          dispatch(addPaymentOrLateFeeToLoan(recordPaymentState));
+          
+          // ipcRenderer.invoke('newPaymentSubmission', (recordPaymentState));
+          // hide the modal
+          setShowModal(false);
      }
 
      return(
@@ -76,23 +100,30 @@ export default function RecordAPaymentModal(props) {
                     </Modal.Header>
 
                     <Modal.Body>
-                         <Form>
+                         
+                    <p>Your Monthly Payment is: {moneyFormatter(thisMonthlyPayment)}</p>
 
-                              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    {/* conditional to show desired monthly payment if it is not the default value of 0 */}
+                    {thisDesiredMonthlyPayment > 0 ?  <p>Your Desired Monthly Payment is: {moneyFormatter(thisDesiredMonthlyPayment)}</p> : ""}
+                    
+
+                         <Form>
+                              {/* Amount Paid */}
+                              <Form.Group className="mb-3">
                                    <Form.Label>Amount Paid</Form.Label>
                                    <CurrencyInput
                                         prefix="$"
-                                        name="Payment"
+                                        name="Amount"
                                         placeholder="ex $10,000"
                                         decimalScale={2}
                                         decimalsLimit={2}
-                                        defaultValue={props.loan?.loan?.MonthlyPayment}
+                                        defaultValue={thisDesiredMonthlyPayment == 0 ? thisMonthlyPayment : thisDesiredMonthlyPayment}
                                         onValueChange={(value, name) => recordPaymentStateFunc(value, name)}
                                         autoFocus
                                    />
                               </Form.Group>
 
-                              {/* Disbursement Date */}
+                              {/* Date Paid */}
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Paid</Form.Label>
                                    <Form.Control type="date" name="Date"
@@ -111,7 +142,7 @@ export default function RecordAPaymentModal(props) {
                          </Button>
 
                          <Button variant="success" onClick={() => submitRecordedPayment()}
-                         disabled={!(recordPaymentState.hasOwnProperty("Payment")) || !(recordPaymentState.hasOwnProperty("Date")) ? true : false}>
+                         disabled={!(recordPaymentState.hasOwnProperty("Amount")) || !(recordPaymentState.hasOwnProperty("Date")) ? true : false}>
                               Record
                          </Button>
                     </Modal.Footer>

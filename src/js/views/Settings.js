@@ -1,37 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
+// import slices
+import { setUserTheme } from "../Redux/features/SettingsSlice";
 
-// import actions
-import {
-     setUserTheme
-} from '../reduxStore/actions';
+// import components
+import LoginPIN from "../components/Modals/LoginPIN";
 
-
-
-import { ipcRenderer } from "electron";
 import { Button } from "react-bootstrap";
 
 export default function Settings() {
 
-     // get dispatch
      const dispatch = useDispatch();
 
-     // // get data from store
-     const data = useSelector((state) => state.data);
-     // console.log(data);
+     // get all settings from redux store
+     const settingsState = useSelector((state) => state.settings);
 
-     const UserSelectedTheme = data[3]?.settings[0].UserSelectedTheme;
-     console.log(UserSelectedTheme);
 
-     
+
+
+     // THEME FUNCTIONS
+
+     // get the current theme from the redux store
+     const currentTheme = (settingsState.settings[0] ? settingsState.settings[0].UserSelectedTheme : null)
 
      // function for toggling theme
-     function toggleTheme() {
-
+     function toggleTheme(currentTheme) {
           // dispatch action to change theme with param of current theme
-          dispatch(setUserTheme(UserSelectedTheme));
+          dispatch(setUserTheme(currentTheme));    
      }
 
      
@@ -43,11 +40,16 @@ export default function Settings() {
           <div className="componentContainer">
                <h1 className="componentTitle">Settings</h1>
 
-
-
-               <Button onClick={()=> toggleTheme()}>
-                    Dark Mode
+               <Button onClick={()=> toggleTheme(currentTheme)}>
+                    Switch to {currentTheme === 'dark' ? 'Light' : 'Dark'} Mode
                </Button>
+
+               <br></br>
+               <br></br>
+               <br></br>
+               <br></br>
+
+               {/* <LoginPIN/> */}
 
 
           </div>

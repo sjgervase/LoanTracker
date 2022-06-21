@@ -9,11 +9,11 @@ import { BigNumber } from "bignumber.js"
 import ActiveLoanList from "../components/ListMaps/ActiveLoanList";
 import PaidOffLoanList from "../components/ListMaps/PaidOffLoanList";
 
-export default function AllLoans(props) {
+export default function AllLoans() {
 
      // get data from redux store
      // only loans are needed
-     const data = useSelector((state) => state.data[0]);
+     const loansState = useSelector((state) => state.loans);
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -24,12 +24,12 @@ export default function AllLoans(props) {
           let runningTotal = new BigNumber(0);
           
           // for each loan
-          for (let i = 0; i < data?.loans.length; i++) {
+          for (let i = 0; i < loansState.loans.length; i++) {
 
                // if the loan has not been paid off
-               if (!(data?.loans[i].loan.PaidOff)) {
+               if (!(loansState.loans[i].loan.PaidOff)) {
                     // get the Calculated Remaining Amount of that loan
-                    let currentAmount = new BigNumber(data.loans[i].loan.CalculatedRemainingAmount);
+                    let currentAmount = new BigNumber(loansState.loans[i].loan.CalculatedRemainingAmount);
                     // add the amount to running total
                     runningTotal = runningTotal.plus(currentAmount);
                }
@@ -44,15 +44,19 @@ export default function AllLoans(props) {
                <h1 className="display-4">Total Loans Amount: {moneyFormatter(totalLoanAmount())}</h1>
 
                <div className="activeLoansAllLoans dashboardModule">
-                         <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
-                         
+                    <div className="moduleHeader"><span>ACTIVE LOANS</span></div>
+
+                    <div className="loanListContainer">
                          <ActiveLoanList parent={"AllLoans"}/>
+                    </div>
                </div>
 
                <div className="paidOffLoansAllLoans dashboardModule">
-                         <div className="moduleHeader"><span>PAID OFF LOANS</span></div>
-                         
-                         <PaidOffLoanList loans={props.loans}/>
+                    <div className="moduleHeader"><span>PAID OFF LOANS</span></div>
+
+                    <div className="loanListContainer">
+                         <PaidOffLoanList />
+                    </div>
                </div>
           </div>
      )

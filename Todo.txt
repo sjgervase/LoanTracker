@@ -1,23 +1,16 @@
 TODO:
 
+React Modals:
+- autofocus
 
-***** Get data object on load, change objects within scope of app, send data to be written every second, 
-     excellent video:
-     https://www.youtube.com/watch?v=poQXNp9ItL4
-     
-     // import from react-redux
-     import { useDispatch, useSelector } from "react-redux";
-     
-     const data = useSelector(({data}) => data.items); 
-
+Add A Loan:
+- option to enter total amount and total terms OR current amount and remaining terms
 
 simple budget:
-- budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
+- budget lists: force one line, full info in overlay
 
 More overlays everywhere
 
-Record a payment modal
-- acknowledge desired payment
 
 Settings
 - all of settings
@@ -34,7 +27,6 @@ Tidy up all imports
 
 Standard spacing:
 - 2 lines between functions
-- props and attrs indented
 
 Organize scss
 
@@ -63,3 +55,9 @@ ensure everything looks as expected in fullscreen
 "LoanTracker" in navbar should be draggable
 
 switch all "if(data){}" statements to "data?"
+
+additional notes field on the add a loan
+
+maximize and minimize on mac
+
+record a payment: mass payments? Like if i have a 5 year loan do i really want to enter all of this data?

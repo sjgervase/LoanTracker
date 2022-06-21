@@ -10,11 +10,20 @@ import { ipcRenderer } from "electron";
 
 
 
+// import actions from deductions slice
+import { addDeduction } from "../../Redux/features/DeductionsSlice";
+
+import { useSelector, useDispatch } from "react-redux";
 
 
 
 
 export default function AddMonthlyExpenseModal() {
+
+     const dispatch = useDispatch();
+
+     // get data from redux store
+     const deductionsState = useSelector((state) => state.deductions);
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -45,6 +54,39 @@ export default function AddMonthlyExpenseModal() {
      }
 
 
+     // read and generate unique GUIDS
+     function guidGenerator() {
+          
+          // create empty array to be populated by all guids currently in the file
+          let guidArray = [];
+
+          // for each loan item
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               guidArray.push(deductionsState.deductions[i].GUID);
+          }
+
+          // generate 20 digit GUID for album and album art
+          let randomGUID = (length = 20) => {
+               let str = "";
+               // create a GUID within a while loop. this will loop infinitely until a GUID is not already being used
+               while (true) {
+                    // Declare all characters
+                    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    // Pick characers randomly and add them to "str" variable to create random string
+                    for (let i = 0; i < length; i++) {
+                         str += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    // if str is not being used as a GUID already, break the while loop
+                    if (!(guidArray.includes(str))) {
+                         break;
+                    }
+               }
+               return str;
+          };
+          return randomGUID();
+     }
+
+
      
 
      // function to submit entered data from "adjust monthly payment modal"
@@ -52,15 +94,18 @@ export default function AddMonthlyExpenseModal() {
           // get the calculated monthly Expense
           let calculatedMonthlyExpense = monthlyExpenseCalculator();
 
+          let newGuid = guidGenerator();
+
           // create an expense object with the state and calculated monthly expense
           let expenseObject = {
                ...monthlyExpenseState,
                Type: "expense",
-               MonthlyAmount: calculatedMonthlyExpense
+               MonthlyAmount: calculatedMonthlyExpense,
+               GUID: newGuid
           }
 
-          // invoke the same as bills with an additional field. these are treated very similarly to the database
-          ipcRenderer.invoke('submitMonthlydeduction', (expenseObject));
+          // dispatch action to reducer
+          dispatch(addDeduction(expenseObject));
 
           // clear the value state
           setMonthlyExpenseState({});
@@ -111,10 +156,10 @@ export default function AddMonthlyExpenseModal() {
 
      
      const popover = (
-          <Popover id="popover-basic">
-               <Popover.Header as="h3">Add Monthly Expense</Popover.Header>
+          <Popover id="popover-basic" className="customPopover">
+               <Popover.Header as="h3" className="customPopoverHeader">Add Monthly Expense</Popover.Header>
                
-               <Popover.Body>
+               <Popover.Body className="customPopoverBody">
                     Add any sort of regular expenses incurred to be incorporated into your monthly budget. These can be tough to get accurate, but estimating will ensure your monthly budget is as realistic as possible.
                     <br></br>
                     Some Examples:

@@ -9,7 +9,8 @@ import ActiveLoanItem from "../ListMaps/ActiveLoanItem"
 export default function ActiveLoanList(props) {
 
      // get data from redux store
-     const {data} = useSelector((state) => state);
+     // only loans are needed
+     const loansState = useSelector((state) => state.loans);
 
 
      // function to generate an array of loans that have not been designated as "paid off" and sorted by interest rate
@@ -18,17 +19,17 @@ export default function ActiveLoanList(props) {
           let activeLoans = [];
 
           // default data is an empty array
-          if (data.length > 0) {
+          if (loansState.loans.length > 0) {
                // for each loan
-               for (let i = 0; i < data[0].loans.length; i++) {
+               for (let i = 0; i < loansState.loans.length; i++) {
                     // if the loan has not been marked as paid off
-                    if (!(data[0].loans[i].loan.PaidOff)) {
+                    if (!(loansState.loans[i].loan.PaidOff)) {
                          // push to array
-                         activeLoans.push(data[0].loans[i].loan);
+                         activeLoans.push(loansState.loans[i].loan);
                     }
                }
           }
-          
+
           // sort by interestRate
           activeLoans.sort((first, second) => {
                return first.InterestRate < second.InterestRate ? -1 : 1;
@@ -36,8 +37,7 @@ export default function ActiveLoanList(props) {
 
           return activeLoans;
      }
-
-     // run above function
+     // generate array of active loans
      const activeLoans = activeLoansFunction();
 
      return(

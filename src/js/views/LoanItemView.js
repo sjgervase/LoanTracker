@@ -33,23 +33,15 @@ export default function LoanItemView() {
      // only param is GUID
      const {state} = useLocation();
 
+     // get all settings from redux store for dynamic dark mode
+     const settingsState = useSelector((state) => state.settings);
+
      // get data from redux store
      // only loans are needed
-     const data = useSelector((data) => data.data[0]);
+     const loansState = useSelector((state) => state.loans);
 
-
-     // function to return the current loan
-     function getCurrentLoan() {
-          let currentLoan;
-          // if data exists
-          if (data) {
-               // find the clicked on loan based on the passed state out of all available loans
-               currentLoan = data.loans.find(obj => obj.loan.GUID === state);
-          }
-          return currentLoan;
-     }
-
-     const currentLoan = getCurrentLoan();
+     // the current loan that has been clicked on
+     const currentLoan = loansState.loans.find(obj => obj.loan.GUID === state);
 
      // returns the icon relating to whichever loan category was selected
      function loanTypeIcon(loanCategory) {
@@ -114,10 +106,10 @@ export default function LoanItemView() {
           }
 
           const popover = (
-               <Popover id="popover-basic">
-                    <Popover.Header as="h3">{useThisLoanInfo.type}</Popover.Header>
+               <Popover id="popover-basic" className="customPopover">
+                    <Popover.Header as="h3" className="customPopoverHeader">{useThisLoanInfo.type}</Popover.Header>
                     
-                    <Popover.Body>
+                    <Popover.Body className="customPopoverBody">
                          {useThisLoanInfo.Info}
                     </Popover.Body>
                </Popover>
@@ -130,7 +122,11 @@ export default function LoanItemView() {
                     <span className="text-muted">{useThisLoanInfo.type}</span>
                     
                     <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={popover}>
-                         <Button variant="light" className="btn-sm btn-overlay"><FaInfoCircle className="loanInfoTypeHelp"/></Button>
+                         <Button 
+                         variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}
+                         className="btn-sm btn-overlay">
+                              <FaInfoCircle className="loanInfoTypeHelp"/>
+                         </Button>
                     </OverlayTrigger>
                </>
           );

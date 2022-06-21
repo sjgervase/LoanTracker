@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// import from electron
-import { ipcRenderer } from "electron";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
+
+// import store actions
+import { addLoan } from "../Redux/features/LoansSlice";
 
 // import from react-bootstrap
 import { Form, Button, Alert } from "react-bootstrap";
@@ -16,6 +20,46 @@ import { TiEquals } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 
 export default function AddALoan() {
+
+     const dispatch = useDispatch();
+
+     // get data from redux store
+     // only loans are needed
+     const loansState = useSelector((state) => state.loans);
+
+     // read and generate unique GUIDS
+     function guidGenerator() {
+          
+          // create empty array to be populated by all guids currently in the file
+          let guidArray = [];
+
+          // for each loan item
+          for (let i = 0; i < loansState.loans.length; i++) {
+               guidArray.push(loansState.loans[i].loan.GUID);
+          }
+
+          // generate 20 digit GUID for album and album art
+          let randomGUID = (length = 20) => {
+               let str = "";
+               // create a GUID within a while loop. this will loop infinitely until a GUID is not already being used
+               while (true) {
+                    // Declare all characters
+                    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    // Pick characers randomly and add them to "str" variable to create random string
+                    for (let i = 0; i < length; i++) {
+                         str += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    // if str is not being used as a GUID already, break the while loop
+                    if (!(guidArray.includes(str))) {
+                         break;
+                    }
+               }
+               return str;
+          };
+          return randomGUID();
+     }
+
+
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -98,7 +142,7 @@ export default function AddALoan() {
 
 
      async function dataValidator() {
-          console.log("validating");
+          // console.log("validating");
 
           // if loan name is blank or spaces
           if (formState.LoanName == undefined || formState.LoanName.match(/^ *$/) !== null) {
@@ -167,9 +211,12 @@ export default function AddALoan() {
                     text: ""
                })
 
-               // invoke main process to write data to file
-               console.log("submit");
-               ipcRenderer.invoke('newLoanSubmission', (formState));
+               // get a GUID for this item
+               let newGUID = guidGenerator();
+
+               // dispatch the action with form state and GUID
+               dispatch(addLoan({formState, newGUID}));
+
 
                // spin wheel until its done, ensuring the new data appears on the overview          
                // return to overview
@@ -178,21 +225,11 @@ export default function AddALoan() {
      }
      
 
-
-     
-     
-     
-
-
-
-     
-
      function cancel() {
           // add "are you sure" popup   https://react-bootstrap.github.io/components/modal/
           // return to overview
           navigate('/');
      }
-
 
 
      return(
@@ -231,11 +268,11 @@ export default function AddALoan() {
                               </Alert.Heading>
                               {errorState.text}
                               </Alert>
+
+
+                              <div className="addALoanRequiredInfo dashboardModule">
+                                   <div className="moduleHeader"><span>REQUIRED INFO</span></div>
                               
-
-                              <span className="formGroupLegend">REQUIRED INFO</span>
-                              <div className="formGroupDiv">
-
                                    {/* First Row */}
                                    <div className="formGroupRow">
                                         {/* Loan Name */}
@@ -259,8 +296,6 @@ export default function AddALoan() {
                                              <Form.Text className="text-muted">This color is for color-coded lists and graphs</Form.Text>
                                         </Form.Group>
                                    </div>
-                                   
-
 
                                    {/* Second Row */}
                                    <div className="formGroupRow">
@@ -300,7 +335,6 @@ export default function AddALoan() {
                                              </svg>
                                         </div>
 
-
                                         {/* Principal Amount */}
                                         <Form.Group controlId="TotalLoanAmount" className="totalLoanAmountDiv">
                                              <Form.Label>Total Loan Amount</Form.Label>
@@ -308,7 +342,6 @@ export default function AddALoan() {
                                              <h3>{(isNaN(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))) ? "---" : moneyFormatter(parseFloat(formState.MonthlyPayment) * parseFloat(formState.TotalTermLength))}</h3>
                                         </Form.Group>
                                    </div>
-
 
                                    {/* Third Row */}
                                    <div className="formGroupRow">
@@ -338,15 +371,25 @@ export default function AddALoan() {
                                         {/* Payment Date */}
                                         <Form.Group controlId="PaymentDate" className="termLengthDiv">
                                              <Form.Label>Payment Due Date</Form.Label>
-                                             <Form.Control type="number" name="PaymentDate" placeholder="ex 18" className={`${errorState.field == "PaymentDate" ? "errorField": ""}`}
-                                             onChange={e => handleChange(e.target.value, e.target.name)} />
+
+                                             <CurrencyInput
+                                                  name="PaymentDate"
+                                                  placeholder="3"
+                                                  allowDecimals={false}
+                                                  allowNegativeValue={false}
+                                                  step={1}
+                                                  min={1}
+                                                  max={31}
+                                                  maxLength={2}
+                                                  onValueChange={(value, name) => handleChange(value, name)}
+                                                  className={`${errorState.field == "PaymentDate" ? "errorField": ""}`}
+                                             />
                                              <Form.Text className="text-muted">The day you pay the bill. If you pay on the 18th of each month, enter 18</Form.Text>
-                                        </Form.Group>
-
-                                       
+                                        </Form.Group> 
                                    </div>
-
                               </div>
+
+
 
                               <span className="formGroupLegend">OPTIONAL INFO</span>
                               <div className="formGroupDiv">

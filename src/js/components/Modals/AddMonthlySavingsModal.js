@@ -8,6 +8,10 @@ import { BigNumber } from "bignumber.js"
 
 import { ipcRenderer } from "electron";
 
+// import actions from deductions slice
+import { addDeduction } from "../../Redux/features/DeductionsSlice";
+
+import { useSelector, useDispatch } from "react-redux";
 
 
 
@@ -15,6 +19,11 @@ import { ipcRenderer } from "electron";
 
 
 export default function AddMonthlySavingsModal() {
+
+     const dispatch = useDispatch();
+
+     // get data from redux store
+     const deductionsState = useSelector((state) => state.deductions);
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -40,19 +49,57 @@ export default function AddMonthlySavingsModal() {
           setMonthlySavingsState({ ...monthlySavingsState, [name]: value })
      }
 
+
+     
+     // read and generate unique GUIDS
+     function guidGenerator() {
+          
+          // create empty array to be populated by all guids currently in the file
+          let guidArray = [];
+
+          // for each loan item
+          for (let i = 0; i < deductionsState.deductions.length; i++) {
+               guidArray.push(deductionsState.deductions[i].GUID);
+          }
+
+          // generate 20 digit GUID for album and album art
+          let randomGUID = (length = 20) => {
+               let str = "";
+               // create a GUID within a while loop. this will loop infinitely until a GUID is not already being used
+               while (true) {
+                    // Declare all characters
+                    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    // Pick characers randomly and add them to "str" variable to create random string
+                    for (let i = 0; i < length; i++) {
+                         str += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    // if str is not being used as a GUID already, break the while loop
+                    if (!(guidArray.includes(str))) {
+                         break;
+                    }
+               }
+               return str;
+          };
+          return randomGUID();
+     }
+
      // function to submit entered data from "adjust monthly savingsment modal"
      function submitMonthlySavings() {
           // get the calculated monthly savings
           let calculatedMonthlySavings = monthlySavingsCalculator();
+
+          let newGuid = guidGenerator();
 
           // create an savings object with the state and calculated monthly savings
           let savingsObject = {
                ...monthlySavingsState,
                Type:"savings",
                MonthlyAmount: calculatedMonthlySavings,
+               GUID: newGuid
           }
 
-          ipcRenderer.invoke('submitMonthlydeduction', (savingsObject));
+          // dispatch action to reducer
+          dispatch(addDeduction(savingsObject));
 
           // clear the value state
           setMonthlySavingsState({});
@@ -99,10 +146,10 @@ export default function AddMonthlySavingsModal() {
      }
      
      const popover = (
-          <Popover id="popover-basic">
-               <Popover.Header as="h3">Add Monthly Savings</Popover.Header>
+          <Popover id="popover-basic" className="customPopover">
+               <Popover.Header as="h3" className="customPopoverHeader">Add Monthly Savings</Popover.Header>
                
-               <Popover.Body>
+               <Popover.Body className="customPopoverBody">
                     Regularly saving money is an important step on the road to financial freedom. But ensuring regular saving decreases your total disposable income and thus should be reduced from your monthly net.
                     <br></br>
                     Some Examples:

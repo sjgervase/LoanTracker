@@ -119,7 +119,7 @@ export default function LoansLineChart(props) {
           if (e.active && e.payload!=null && e.payload[0]!=null) {
 
                return (
-                    <div className="customLineChartTooltip">
+                    <div className="customChartTooltip">
                          <span>Date: {e.payload[0].payload["date"]}</span>
                          
                          <span>

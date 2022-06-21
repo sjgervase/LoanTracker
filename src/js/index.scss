@@ -1,38 +1,42 @@
-$dark:#212529;
-$darkGreen:#022601;
-$green:#36733F;
 $red:#c40d0d;
-$lightGreen:#91BF8F;
-$lighterGreen:#B4D9B6;
-$greenWhite:#E7F2D5;
 $cream:#fffffd;
+
 
 body {
      -webkit-user-select: none;
      overflow-y: hidden;
-
-     --bg-color: #fffffd;
-     --text-color: #212529;
-     --nav-bg-color: #36733F;
-     --bg-green: #E7F2D5;
-
      color: var(--text-color);
 }
 
-body.dark-theme {
-     -webkit-user-select: none;
-     overflow-y: hidden;
+body.green {
+     --theme-color: #36733F;
 
-     --bg-color: #212529;
+     --bg-color-general: #fffffd;
+     --bg-contrast-light: #E7F2D5;
+     --bg-contrast-lighter: #B4D9B6;
+     --bg-contrast-high: #022601;
+     --bg-color-theme: #36733F;
+
+     --text-color: #212529;
+     --text-color-theme: #36733F;
+}
+
+body.dark-green {
+     --theme-color: #36733F;
+
+     --bg-color-general: #212529;
+     --bg-contrast-light: #022601;
+     --bg-contrast-lighter: #404f41;
+     --bg-contrast-high: #36733F;
+     --bg-color-theme: #022601;
+
      --text-color: #fffffd;
-     --nav-bg-color: #022601;
-     --bg-green: #022601;
+     --text-color-theme: #91BF8F;
 }
 
 
 
-// Scrollbar
-
+// ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar ----- Native Scrollbar -----
 /* width */
 ::-webkit-scrollbar {
      width: 8px;
@@ -40,17 +44,17 @@ body.dark-theme {
 
 /* Track */
 ::-webkit-scrollbar-track {
-     background: $greenWhite;
+     background: var(--bg-contrast-light);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-     background: $lightGreen;
+     background: var(--text-color-theme);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-     background: $lighterGreen;
+     background: --bg-contrast-lighter;
 }
 
 #flareMusicContainer {
@@ -66,10 +70,10 @@ body.dark-theme {
 }
 
 
-// Navbar stuff
 
+// ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar -----
 .navbar-custom {
-     background-color: var(--nav-bg-color);
+     background-color: var(--bg-color-theme);
 }
 
 .navbar-brand {
@@ -89,7 +93,7 @@ body.dark-theme {
 }
 
 .windowButtons > .btn-custom {
-     background-color: $lightGreen;
+     background-color: var(--text-color-theme);
      width: 40px;
      height: 40px;
      padding: 0;
@@ -99,7 +103,7 @@ body.dark-theme {
 }
 
 .windowButtons > .btn-custom:hover {
-     background-color: $lighterGreen;
+     background-color: --bg-contrast-lighter;
 }
 
 .windowButtons > .btn-custom:last-child {
@@ -113,7 +117,7 @@ body.dark-theme {
 
 
 
-// general classes 
+// ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes -----
 .viewsContainerParent {
      padding: 10px;
      height: -webkit-calc(100vh - 56px);
@@ -121,44 +125,46 @@ body.dark-theme {
      // from https://stripesgenerator.com/
      background-image: linear-gradient(
           45deg, #b4d9b6 1.39%,
-          var(--bg-color) 1.39%,
-          var(--bg-color) 29.17%,
-          var(--bg-color) 29.17%,
-          var(--bg-color) 50%,
-          $lighterGreen 50%,
-          $lighterGreen 51.39%,
-          var(--bg-color) 51.39%,
-          var(--bg-color) 79.17%,
-          var(--bg-color) 79.17%,
-          var(--bg-color) 100%
+          var(--bg-color-general) 1.39%,
+          var(--bg-color-general) 29.17%,
+          var(--bg-color-general) 29.17%,
+          var(--bg-color-general) 50%,
+          var(--bg-contrast-lighter) 50%,
+          var(--bg-contrast-lighter) 51.39%,
+          var(--bg-color-general) 51.39%,
+          var(--bg-color-general) 79.17%,
+          var(--bg-color-general) 79.17%,
+          var(--bg-color-general) 100%
      );
-
      background-size: 50.91px 50.91px;
 }
 
 .viewsContainerChild {
-     border: 1px solid $lightGreen;
+     border: 1px solid var(--text-color-theme);
      overflow-y: auto;
      height: 100%;
 }
 
 .componentContainer {
-     background-color: var(--bg-color);
+     background-color: var(--bg-color-general);
      min-height: 100%;
      padding: 10px;
 }
 
+.componentTitle {
+     margin-bottom: 20px;
+}
 
-// Add a loan
+
+
+// ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan ----- AddALoan -----
 .loanInfoForm {
      margin: 10px;
 }
 
-
 form button {
      margin: 5px;
 }
-
 
 .loanInfoForm div {
      margin-bottom: 10px;
@@ -176,21 +182,19 @@ form button {
      position: relative;
      font-size: xx-small;
      top: 11px;
-     color: $green;
+     color: var(--theme-color);
      left: 10px;
      background-color: white;
      padding-left: 2px;
      padding-right: 2px;
 }
 
-
 .totalLoanAmountDiv {
      width: 33%;
 }
 
-
 .formGroupDiv {
-     border: 1px solid $green;
+     border: 1px solid var(--theme-color);
      padding: 20px;
 }
 
@@ -217,24 +221,16 @@ form button {
 
 .mathSymbol svg {
      width: max-content;
-     color: $green;
+     color: var(--theme-color);
 }
-
-
-
-
-
-
 
 input {
      width: 99%;
      border-radius: 2px;
-     border: 1px solid $lightGreen;
+     border: 1px solid var(--text-color-theme);
      height: 36px;
      padding: 6px 12px 6px 12px;
 }
-
-
 
 .loanLinkDiv {
      flex-basis: 100%;
@@ -242,9 +238,8 @@ input {
 
 
 
-// Dashboard
+// ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard ----- DashBoard -----
 .dashboardModules {
-     margin-top: 20px;
      width: 100%;
      display: flex;
      flex-direction: row;
@@ -252,13 +247,13 @@ input {
 }
 
 .moduleHeader {
-     color: $green;
+     color: var(--theme-color);
      font-size: 16px;
      position: relative;
      top: -13px;
      left: 10px;
-     background-color: var(--bg-color);
-     border: 1px solid $green;
+     background-color: var(--bg-color-general);
+     border: 1px solid var(--theme-color);
      padding: 0 3px 0px 3px;
      width: max-content;
 }
@@ -269,19 +264,19 @@ input {
      margin-top: 15%;
      text-align: center;
      padding: 20px;
-     border: 1px solid $green;
+     border: 1px solid var(--theme-color);
      background-color: $cream;
 }
 
 .dashboardModule {
-     border: 1px solid $green;
+     border: 1px solid var(--theme-color);
      padding: 0px 5px 0px 5px;
-     background-color: var(--bg-green);
+     background-color: var(--bg-contrast-light);
 }
 
 .activeLoans {
      flex-basis: 63%;
-     height: 49vh;
+     height: 48vh;
 }
 
 .loanListContainer {
@@ -293,7 +288,7 @@ input {
 .activeLoansGraphs {
      flex-basis: 36%;
      margin-left: auto;
-     height: 49vh;
+     height: 48vh;
 }
 
 .recharts-responsive-container {
@@ -309,7 +304,9 @@ input {
      flex-basis: 100%;
 }
 
-// recently recorded payments
+
+
+// ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments ----- RecentlyRecordedPayments -----
 .paymentFeeList {
      width: 100%;
      height: calc(100% - 20px);
@@ -320,13 +317,12 @@ input {
 
 
 
-
-
-// loan item 
+// ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem ----- LoanItem -----
 .loanItem {
-     height: 120px;
+     height: 115px;
      padding: 10px;
-     background-color: var(--bg-color);
+     margin-right: 5px;
+     background-color: var(--bg-color-general);
      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
      border-radius: 5px;
@@ -337,8 +333,6 @@ input {
      opacity: 0.33;
 }
 
-
-
 .loanItem:hover {
      box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
@@ -347,8 +341,7 @@ input {
      height: 31px;
      width: 31px;
      margin-top: 30px;
-     margin-right: 5px;
-     
+     margin-right: 5px;    
 }
 
 .loanItemTable {
@@ -365,16 +358,13 @@ input {
      align-self: baseline;
 }
 
-
-
 .loanItemMainRow {
-     border-left: 1px solid $lightGreen;
+     border-left: 1px solid var(--text-color-theme);
      padding-left: 5px;
      display: flex;
      flex-wrap: wrap;
      justify-content: flex-start;
      width: 100%;
-
 }
 
 .loanItemTopRow {
@@ -382,9 +372,9 @@ input {
      flex-basis: 100%;
 }
 
-.loanItemTopRow span {
+.interestRateSpan {
      font-size: 13px;
-     color: $darkGreen;
+     color: var(--text-color-theme);
 }
 
 .textSeparatorbullet {
@@ -424,15 +414,32 @@ input {
 }
 
 .btn-light {
-     border: 1px solid $darkGreen;
+     border: 1px solid var(--bg-contrast-high);
 }
 
 
 
-// Loan Item View
+// ----- PieChart ----- PieChart ----- PieChart ----- PieChart ----- PieChart ----- PieChart ----- PieChart ----- PieChart -----
+.pieChartCenterTextTop {
+     font-weight: 700;
+     font-size: 1.5em;
+     fill: var(--text-color);
+     text-anchor: middle;
+}
+
+.pieChartCenterTextBottom {
+     font-size: 0.8em;
+     fill: var(--text-color-theme);
+     text-anchor: middle;
+}
+
+
+
+// ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView -----
 .loanItemType {
      display: flex;
      align-items: baseline;
+     margin-bottom: 10px;
 }
 
 .loanTypeInfoDiv {
@@ -450,7 +457,6 @@ input {
 
 .btn-overlay {
      border: none;
-     background-color: $cream;
      margin: 0;
      padding: 0;
      height: 26px;
@@ -463,7 +469,7 @@ input {
 .loanInfoTypeHelp {
      height: 18px;
      width: 18px;
-     color: $lightGreen;
+     color: var(--text-color-theme);
 }
 
 .loanInfoBox {
@@ -485,7 +491,7 @@ input {
 }
 
 .loanItemViewGraph {
-     background-color: $greenWhite;
+     background-color: var(--bg-contrast-light);
      height: 300px;
 }
 
@@ -494,14 +500,13 @@ input {
 }
 
 .accordion-body {
-     border: 1px solid $green;
-     background-color: $greenWhite;
+     border: 1px solid var(--theme-color);
+     background-color: var(--bg-contrast-light);
 }
 
 .accordion-body > .recharts-responsive-container {
      top: 0;
 }
-
 
 .loanTools {
      flex-basis: 29%;
@@ -519,7 +524,6 @@ input {
      margin-left: 1%;
      flex-basis: 70%;
 }
-
 
 .paymentsOverTime {
      margin-top: 2%;
@@ -543,32 +547,22 @@ input {
 
 
 
-
-
-
-
-
-
-
-// Line chart
-.customLineChartTooltip {
-     background-color: white;
+// ----- Rechart ----- Rechart ----- Rechart ----- Rechart ----- Rechart ----- Rechart ----- Rechart ----- Rechart -----
+.customChartTooltip {
+     background-color: var(--bg-color-general);
      padding: 5px;
-     border: 1px solid $darkGreen;
+     border: 1px solid var(--bg-contrast-high);
 }
 
-.customLineChartTooltip span {
+.customChartTooltip span {
      display: block;
-
 }
 
 
 
-
-
-// paymentLatefee item
+// ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem ----- PaymentLateFeeItem -----
 .paymentOrFeeItem {
-     background-color: $cream;
+     background-color: var(--bg-color-general);
      border: 1px solid;
      margin: 0.5%;
      padding: 7px;
@@ -589,12 +583,11 @@ input {
 }
 
 .paymentOrFeeItemName {
-     border-right: 1px solid $green;
+     border-right: 1px solid var(--theme-color);
 }
 
-
 .paymentOrFeeItemAmount {
-     border-right: 1px solid $green;
+     border-right: 1px solid var(--theme-color);
 }
 
 .paymentOrFeeItemAmount span {
@@ -602,8 +595,8 @@ input {
 }
 
 .paymentOrFeeItemAmount .payment {
-     color: $green;
-     border: 1px solid $green;
+     color: var(--theme-color);
+     border: 1px solid var(--theme-color);
      padding: 2px 4px 2px 4px;
 }
 
@@ -619,10 +612,7 @@ input {
 
 
 
-
-
-
-// adjust monthly payment modal
+// ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal ----- AdjustMonthlyPaymentModal -----
 .loanItemViewRangeSlider {
      text-align: center;
      display: flex;
@@ -637,7 +627,6 @@ input {
      text-align: center;
 }
 
-
 .rangeSelectorSmall {
      margin-top: 15px;
      flex-basis: 22.5%;
@@ -646,7 +635,6 @@ input {
 .rangeSelectorSmall label {
      font-size: 0.8em;
 }
-
 
 .rangeSelectorLarge {
      flex-basis: 55%;
@@ -668,11 +656,13 @@ input[type=range] {
      -webkit-appearance: none;
      margin: 10px 0;
      width: 100%;
-   }
-   input[type=range]:focus {
+}
+
+input[type=range]:focus {
      outline: none;
-   }
-   input[type=range]::-webkit-slider-runnable-track {
+}
+
+input[type=range]::-webkit-slider-runnable-track {
      width: 100%;
      height: 6px;
      cursor: pointer;
@@ -681,8 +671,9 @@ input[type=range] {
      background: #36733F;
      border-radius: 50px;
      border: 1px solid #000000;
-   }
-   input[type=range]::-webkit-slider-thumb {
+}
+
+input[type=range]::-webkit-slider-thumb {
      box-shadow: 0px 0px 0px #000000;
      border: 2px solid #0A0A0A;
      height: 50px;
@@ -692,11 +683,13 @@ input[type=range] {
      cursor: pointer;
      -webkit-appearance: none;
      margin-top: -23.5px;
-   }
-   input[type=range]:focus::-webkit-slider-runnable-track {
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
      background: #36733F;
-   }
-   input[type=range]::-moz-range-track {
+}
+
+input[type=range]::-moz-range-track {
      width: 100%;
      height: 6px;
      cursor: pointer;
@@ -705,8 +698,9 @@ input[type=range] {
      background: #36733F;
      border-radius: 50px;
      border: 1px solid #000000;
-   }
-   input[type=range]::-moz-range-thumb {
+}
+
+input[type=range]::-moz-range-thumb {
      box-shadow: 0px 0px 0px #000000;
      border: 2px solid #0A0A0A;
      height: 50px;
@@ -714,8 +708,9 @@ input[type=range] {
      border-radius: 4px;
      background: #FFFFFF;
      cursor: pointer;
-   }
-   input[type=range]::-ms-track {
+}
+
+input[type=range]::-ms-track {
      width: 100%;
      height: 6px;
      cursor: pointer;
@@ -723,20 +718,23 @@ input[type=range] {
      background: transparent;
      border-color: transparent;
      color: transparent;
-   }
-   input[type=range]::-ms-fill-lower {
+}
+
+input[type=range]::-ms-fill-lower {
      background: #36733F;
      border: 1px solid #000000;
      border-radius: 100px;
      box-shadow: 0px 0px 0px #000000;
-   }
-   input[type=range]::-ms-fill-upper {
+}
+
+input[type=range]::-ms-fill-upper {
      background: #36733F;
      border: 1px solid #000000;
      border-radius: 100px;
      box-shadow: 0px 0px 0px #000000;
-   }
-   input[type=range]::-ms-thumb {
+}
+
+input[type=range]::-ms-thumb {
      margin-top: 1px;
      box-shadow: 0px 0px 0px #000000;
      border: 2px solid #0A0A0A;
@@ -745,54 +743,48 @@ input[type=range] {
      border-radius: 4px;
      background: #FFFFFF;
      cursor: pointer;
-   }
-   input[type=range]:focus::-ms-fill-lower {
+}
+
+input[type=range]:focus::-ms-fill-lower {
      background: #36733F;
-   }
-   input[type=range]:focus::-ms-fill-upper {
+}
+
+input[type=range]:focus::-ms-fill-upper {
      background: #36733F;
-   }
+}
 
 
 
-
-
-
-
-
-
-
-
-
-// All Loans
+// ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans -----
 .activeLoansAllLoans {
-     background-color: $greenWhite;
      height: 33vh;
-     margin-bottom: 4vh;
-     margin-top: 4vh;
+     margin-bottom: 3vh;
+     margin-top: 3vh;
 }
 
 .paidOffLoansAllLoans {
-     background-color: $greenWhite;
      height: 33vh;
 }
 
 
-// Add monthly pay modal
+
+// ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal ----- AddMonthlyIncomeModal -----
 .monthlyPayDiv {
      text-align: center;
      padding: 5px;
 }
 
 
-// Add monthly bill modal
+
+// ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal ----- AddMonthlyBillModal -----
 .monthlyTotalDiv {
      text-align: center;
      padding: 5px;
 }
 
 
-// simple budget
+
+// ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget ----- SimpleBudget -----
 .budgetTopRow {
      display: flex;
      flex-direction: row;
@@ -807,7 +799,6 @@ input[type=range] {
      width: 99%;
 }
 
-
 .budgetQuickLook {
      padding-left: 10px;
      padding-right: 10px;
@@ -821,36 +812,29 @@ input[type=range] {
      flex-direction: column;
 }
 
-
-
 .budgetTools button {
      margin: 2px;
 }
 
-// let incomeColor = "#36733F";
-// let savingsColor = "#3FB559";
-
-
 .btn-AddALoan {
      background-color: #8F0E1D;
- }
+}
 
- .btn-AddMonthlyBill {
-      background-color: #FF4A5F;
- }
+.btn-AddMonthlyBill {
+     background-color: #FF4A5F;
+}
 
- .btn-AddMonthlyExpense {
-      background-color: #DB2A3F;
- }
+.btn-AddMonthlyExpense {
+     background-color: #DB2A3F;
+}
 
- .btn-AddMonthlyIncome {
-      background-color: #36733F;
- }
+.btn-AddMonthlyIncome {
+     background-color: #36733F;
+}
 
- .btn-AddMonthlySavings {
-      background-color: #3FB559;
- }
-
+.btn-AddMonthlySavings {
+     background-color: #3FB559;
+}
 
 .budgetTotals {
      width: 100%;
@@ -862,16 +846,14 @@ input[type=range] {
 
 
 
-
-
-
+// ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists ----- BudgetLists -----
 .budgetLists {
-     border: 1px solid $green;
+     border: 1px solid var(--bg-contrast-high);
      padding: 7px;
      text-align: center;
      display: flex;
      flex-direction: column;
-     background-color: $cream;
+     background-color: var(--bg-color-general);
      margin: 3px;
      flex-grow: 100;
 }
@@ -902,13 +884,35 @@ input[type=range] {
 
 
 
-
-// edit delete item
-
+// ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList ----- EditDeleteBudgetList -----
 .editDeleteItemTable {
      text-align: center;
 }
 
 .editDeleteTableButtons button{
      margin: 0 2px 0 2px;
+}
+
+
+
+// ----- Modal ----- Modal ----- Modal ----- Modal ----- Modal ----- Modal ----- Modal ----- Modal -----
+.modal-content {
+     background-color: var(--bg-color-general);
+}
+
+
+// Popover
+.customPopover {
+     background-color: var(--bg-color-general);
+     border: 1px solid var(--bg-contrast-high);
+     color: var(--text-color);
+}
+
+.customPopoverHeader {
+     background-color: var(--bg-contrast-light);
+     color: var(--text-color);
+}
+
+.customPopoverBody {
+     color: var(--text-color);
 }

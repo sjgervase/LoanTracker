@@ -4,11 +4,12 @@ import React, { useState, useEffect, useRef, useContext, createContext } from 'r
 // Redux
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
-// import actions
-import {
-     requestData
-} from './reduxStore/actions';
 
+// import fetch from slices
+import { fetchSettings } from './Redux/features/SettingsSlice';
+import { fetchLoans } from './Redux/features/LoansSlice';
+import { fetchIncomes } from './Redux/features/IncomesSlice';
+import { fetchDeductions } from './Redux/features/DeductionsSlice';
 
 
 
@@ -40,14 +41,109 @@ import NavigationBar from "./components/NavigationBar/NavigationBar";
 
 export default function App() {
 
-     // get dispatch
      const dispatch = useDispatch();
 
-     // run action to fetch local data on load
-     useEffect(() => {
-          dispatch(requestData())
-     },[])
+     // SETTINGS SLICE
+     // settings request status
+     const settingsStatus = useSelector(state => state.settings.status);
+     // get all settings from redux store
+     const settingsState = useSelector((state) => state.settings);
 
+     // fetch settings on load
+     useEffect(() =>{
+          // if idle
+          if (settingsStatus === 'idle') {
+               dispatch(fetchSettings())
+          }
+     }, [settingsStatus, dispatch])
+
+     // get the current theme from the redux store
+     const currentTheme = (settingsState.settings[0] ? settingsState.settings[0].UserSelectedTheme : null)
+     
+     // set current theme based on saved settings
+     useEffect(() => {
+          // if dark, remove dark
+          if (currentTheme == 'dark') {
+               document.body.classList.add("dark-green");
+          } else {
+               document.body.classList.remove("dark-green");
+          }
+     }, [currentTheme])
+
+
+
+     
+
+     // LOANS SLICE
+     // loans request status
+     const loansStatus = useSelector(state => state.loans.status);
+     // get all loans from the redux store
+     const loansState = useSelector(state => state.loans)
+
+     // fetch loans on load
+     useEffect(() =>{
+          // if idle
+          if (loansStatus === 'idle') {
+               dispatch(fetchLoans())
+          }
+     }, [loansStatus, dispatch])
+
+
+
+
+     // INCOMES SLICE
+     // incomes request status
+     const incomesStatus = useSelector(state => state.incomes.status);
+     // get all loans from the redux store
+     const incomesState = useSelector(state => state.incomes)
+
+     // fetch loans on load
+     useEffect(() =>{
+          // if idle
+          if (incomesStatus === 'idle') {
+               dispatch(fetchIncomes())
+          }
+     }, [incomesStatus, dispatch])
+
+
+
+     
+     // DEDUCTIONS SLICE
+     // deductions request status
+     const deductionsStatus = useSelector(state => state.deductions.status);
+     // get all loans from the redux store
+     const deductionsState = useSelector(state => state.deductions)
+
+     // fetch loans on load
+     useEffect(() =>{
+          // if idle
+          if (deductionsStatus === 'idle') {
+               dispatch(fetchDeductions())
+          }
+     }, [deductionsStatus, dispatch])
+
+
+
+
+
+
+     // // to write to the file
+     // useEffect(() => {
+     //      let dataObject = {
+     //           ...loansState,
+     //           ...deductionsState,
+     //           ...incomesState,
+     //           ...settingsState
+     //      }
+
+     //      console.log(dataObject);
+
+     // }, [settingsState, loansState, incomesState, deductionsState])
+
+
+
+
+     
      return(
 
           

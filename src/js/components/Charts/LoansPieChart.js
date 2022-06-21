@@ -19,7 +19,7 @@ export default function LoansPieChart() {
 
      // get data from redux store
      // only loans are needed
-     const data = useSelector((state) => state.data[0]);
+     const loansState = useSelector((state) => state.loans);
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -29,20 +29,18 @@ export default function LoansPieChart() {
           // create empty array to be populated
           let dataArray = [];
 
-          // if data exists
-          if (data) {
-               // for each loan
-               for (let i = 0; i < data.loans.length; i++) {
-                    // if not paid off
-                    if (!data.loans[i].loan.PaidOff) {
-                         dataArray.push({
-                              "name": data.loans[i].loan.LoanName,
-                              "value": parseFloat(data.loans[i].loan.CalculatedRemainingAmount),
-                              "color": data.loans[i].loan.LoanColor
-                         });     
-                    }
+          // for each loan
+          for (let i = 0; i < loansState.loans.length; i++) {
+               // if not paid off
+               if (!loansState.loans[i].loan.PaidOff) {
+                    dataArray.push({
+                         "name": loansState.loans[i].loan.LoanName,
+                         "value": parseFloat(loansState.loans[i].loan.CalculatedRemainingAmount),
+                         "color": loansState.loans[i].loan.LoanColor
+                    });     
                }
           }
+     
           return dataArray
      }
      // run above function to generate piechart data
@@ -79,22 +77,13 @@ export default function LoansPieChart() {
           return (
                <React.Fragment>
                     <text x={cx} y={cy}>
-                         <tspan
-                         style={{
-                              fontWeight: 700,
-                              fontSize: "1.5em",
-                              fill: "#212529",
-                              textAnchor: 'middle' }}>
+                         <tspan className="pieChartCenterTextTop">
                               {sum}
                          </tspan>
                     </text>
 
                     <text x={cx} y={cy + 16}>
-                         <tspan
-                         style={{
-                              fontSize: "0.8em",
-                              fill: "#36733F",
-                              textAnchor: 'middle'}}>
+                         <tspan className="pieChartCenterTextBottom">
                               current loans remaining
                          </tspan>
                     </text>
@@ -107,7 +96,7 @@ export default function LoansPieChart() {
      const customTooltip = (e) => {
           if (e.active && e.payload!=null && e.payload[0]!=null) {
                return (
-                    <div className="customLineChartTooltip">
+                    <div className="customChartTooltip">
                          <span>{e.payload[0].payload["name"]}</span>
                          
                          <span>

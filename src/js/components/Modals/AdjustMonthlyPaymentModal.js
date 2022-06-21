@@ -8,6 +8,11 @@ import { BigNumber } from "bignumber.js"
 
 import { ipcRenderer } from "electron";
 
+// import action from store
+import { adjustMonthlyPayment } from "../../Redux/features/LoansSlice";
+
+// import from react-redux
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -15,6 +20,8 @@ import { ipcRenderer } from "electron";
 
 
 export default function AdjustMonthlyPaymentModal(props) {
+
+     const dispatch = useDispatch();
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -112,7 +119,10 @@ export default function AdjustMonthlyPaymentModal(props) {
                value: rangeValueState
           }
 
-          ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
+          // dispatch the action
+          dispatch(adjustMonthlyPayment(monthlyPaymentSubmission));
+
+          // ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
           // hide the modal
           setShowModal(false);
      }

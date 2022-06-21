@@ -9,7 +9,8 @@ import PaidOffLoanItem from "./PaidOffLoanItem"
 export default function PaidOffLoanList(props) {
 
      // get data from redux store
-     const {data} = useSelector((state) => state);
+     // only loans are needed
+     const loansState = useSelector((state) => state.loans);
 
      // function to generate an array of loans that have been designated as "paid off"
      function paidOffLoansFunction() {
@@ -17,13 +18,13 @@ export default function PaidOffLoanList(props) {
           let paidOffLoans = [];
 
           // default data is an empty array
-          if (data.length > 0) {
+          if (loansState.loans.length > 0) {
                // for each loan
-               for (let i = 0; i < data[0].loans.length; i++) {
+               for (let i = 0; i < loansState.loans.length; i++) {
                     // if the loan has not been marked as paid off
-                    if (data[0].loans[i].loan.PaidOff) {
+                    if (loansState.loans[i].loan.PaidOff) {
                          // push to array
-                         paidOffLoans.push(data[0].loans[i].loan);
+                         paidOffLoans.push(loansState.loans[i].loan);
                     }
                }
           }
