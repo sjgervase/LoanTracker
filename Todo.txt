@@ -1,6 +1,8 @@
 TODO:
 
+ensure loan category is one word
 
+see what navbar dropdown does with a lot of items
 
 *** ensure forms do not try to submit on enter button
 

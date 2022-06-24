@@ -128,22 +128,21 @@ export function App() {
 
 
      return(
-          <>
+          <div className="appContainer">
                <NavigationBar />
 
-               {/* The two viewContainer divs are used for aesthectic purposes */}
                <div className="viewsContainerParent">
-               
-                    <TransitionGroup component={null}>
-                         
-                              <CSSTransition key={location.pathname} classNames="routerFade" timeout={300}>
 
-                                   <div className="viewsContainerChild">
-
+                    {/* The two viewContainer divs are used for aesthectic purposes */}
+                    <div className="viewsContainer">
+                    
+                         <TransitionGroup component={null}>
+                              
+                                   <CSSTransition key={location.pathname} classNames="routerFade" timeout={300}>
                                         <Routes location={location}>
+
                                              <Route path="/settings" element={<Settings/>}/>
                          
-                                             
                                              <Route 
                                              path="/simplebudget"
                                              element={
@@ -176,13 +175,12 @@ export function App() {
                                              }/>
                                              
                                         </Routes>
-                                   </div>
+                                   </CSSTransition>
+                         </TransitionGroup>
+                    </div>
 
-                              </CSSTransition>
-                         
-                    </TransitionGroup>
                </div>
-          </>
+          </div>
      )
 }
 

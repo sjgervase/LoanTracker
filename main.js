@@ -24,7 +24,6 @@ function createWindow() {
           height: 870,
           icon: trayIcon,
           backgroundColor: "#36733F",
-          frame: false,
           webPreferences: {
                nodeIntegration: true,
                worldSafeExecuteJavaScript: true,

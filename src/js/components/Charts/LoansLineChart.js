@@ -139,7 +139,7 @@ export default function LoansLineChart(props) {
 
 
      return(
-          <ResponsiveContainer width="98%" height={280}>
+          <ResponsiveContainer width="98%" height="98%">
 
                <AreaChart data={lineChartData}>
                     

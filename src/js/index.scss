@@ -2,7 +2,10 @@ $red:#c40d0d;
 $cream:#fffffd;
 
 
-
+html {
+     width: 100%;
+     height: 100%;
+}
 
 body {
      -webkit-user-select: none;
@@ -10,6 +13,14 @@ body {
      color: var(--text-color);
 
      transition: color 0.3s ease-in;
+
+     height: 100%;
+     width: 100%;
+}
+
+#loanTracker_Container {
+     height: 100%;
+     width: 100%;
 }
 
 body.green {
@@ -23,6 +34,8 @@ body.green {
 
      --text-color: #212529;
      --text-color-theme: #36733F;
+
+     --nav-bg: #f3f3f3;
 
 
 }
@@ -38,6 +51,8 @@ body.dark-green {
 
      --text-color: #fffffd;
      --text-color-theme: #91BF8F;
+
+     --nav-bg: #16191b;
 }
 
 
@@ -79,80 +94,236 @@ body.dark-green {
 
 
 // ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar -----
-.navbar-custom {
-     background-color: var(--bg-color-theme);
+.appContainer {
+     display: flex;
+     width: 100%;
+     height: 100%;
+     align-items: stretch;
+     background-color: var(--nav-bg);
 }
 
-.navbarLogo {
-     height: 30px;
-     position: relative;
-     left: -5px;
-     margin-right: 5px;
+.navigationBar {
+     width: 210px;
+     flex-grow: 0;
+     flex-shrink: 0;
+     align-items: flex-start;
+     background-color: var(--nav-bg);
+     overflow: hidden;
+}
+
+.navItemLogo {
+     padding-top: 20px;
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     height: 90px;
+     margin-bottom: 20px;
+}
+
+
+.navLogo {
+     height: 60px;
      image-rendering: crisp-edges;
 }
 
-.navbar-brand {
-     padding-left: 20px;
-     padding-right: 20px;
-     border-right: 1px solid $cream;
-}
-
-.navbar-nav {
+.navItem {
      width: 100%;
+     height: 60px;
 }
 
-.navbarIcon {
-     width: 20px;
-     height: 20px;
-     color: $cream;
+.navItem:hover {
+     background-color: var(--bg-contrast-lighter);
 }
 
-.windowButtons > .btn-custom {
-     background-color: var(--text-color-theme);
-     width: 40px;
+.activeNavItem:hover {
+     background-color: var(--bg-color-general);    
+}
+
+.navLink {
+     width: 100%;
+     height: 60px;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: flex-start;
+     align-items: center;
+}
+
+.navItem h6 {
+     padding-top: 10px;
+     text-align: left;
+     padding-left: 10px;
+     color: #999999;
+}
+
+.navIcon {
+     height: 25px;
+     width: 30px;
+     padding-left: 5px;
+     color: #999999;
+}
+
+.overviewNavIcon {
+     padding-left: 3px;
+}
+
+
+
+.allLoansDropDown {
+     max-height: 60px;
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-start;
+     align-items: center;
+     transition: all 0.3s ease-out;
+     overflow-y: hidden;
+     overflow-x: hidden;
+     color: #999999;
+     
+}
+
+.allLoansChevron {
+     margin-left: auto;
+     margin-right: 30px;
+}
+
+.allLoansChevron > svg {
+     height: 100%;
+     transition: all 0.3s ease-out;
+}
+
+.allLoansDropDown:hover {
+     max-height: 500px;
+}
+
+.allLoansDropDown:hover .allLoansChevron > svg {
+     transform: rotate(90deg);
+}
+
+.allLoansDropDownHeader {
+     flex-basis: 100%;
+     min-width: 100%;
+     min-height: 60px;
+     height: 60px;
+     padding-left: 17px;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     align-items: center;
+     justify-content: flex-start;     
+}
+
+.allLoansDropDownHeader:hover {
+     background-color: var(--bg-contrast-lighter);
+}
+
+.allLoansDropDownHeader > h6 {
+     padding-left: 10px;
+     padding-top: 10px;
+}
+
+.allLoansNavIcon {
+     position: relative;
+     float: left;
+}
+
+
+.allLoansDropDownList {
+     width: 210px;
+}
+
+.allLoansDropDownItem {
+     height: 50px;
+     padding-left: 15px;
+     display: flex;
+     align-items: center;
+     justify-content: flex-start;
+     cursor: pointer;
+}
+
+.allLoansDropDownItem:hover {
+     background-color: var(--bg-contrast-lighter);
+}
+
+.allLoansDropDownTitle {
+     padding-top: 10px;
+     color: #999999;
+}
+
+
+
+
+
+
+
+
+
+
+
+.activeNavItem {
+     background-color: var(--bg-color-general);
+}
+
+.activeNavItem h6 {
+     color: var(--text-color);
+}
+
+.activeNavItem .navIcon {
+     color: var(--theme-color);
+}
+
+.activNavIndicator {
+     width: 0;
+     height: 50px;
+     border-radius: 10px;
+     position: relative;
+     top: -55px;
+     left: 220px;
+     opacity: 0;
+     transition: all 0.35s ease-out;
+}
+
+.allLoansDropDownItem > .activNavIndicator {
+     position: relative;
      height: 40px;
-     padding: 0;
-     margin-left: 2px;
-     box-shadow: none;
-     border: none;
+     top: 0;
+     left: 20px;
 }
 
-.windowButtons > .btn-custom:hover {
-     background-color: --bg-contrast-lighter;
+.allLoansDropDownItem.activeNavItem > .activNavIndicator {
+     left: 10px;
 }
 
-.windowButtons > .btn-custom:last-child {
-     margin-right: 8px;
+.activeNavItem .activNavIndicator {
+     background-color: var(--theme-color);
+     width: 20px;
+     left: 202px;
+     opacity: 1;
 }
 
-.navbarDraggable {
-     -webkit-app-region: drag;
-     flex-grow: 500;
+.activeLoanDropdown {
+     background-color: var(--bg-contrast-light);
 }
 
 
 
 // ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes -----
 .viewsContainerParent {
-     padding: 10px;
-     height: -webkit-calc(100vh - 56px);
+     background-color: var(--bg-color-general);
+     z-index: 2;
+     flex-basis: calc(100% - 210px);
+     border-radius: 20px 0 0 20px;
+     overflow-x: hidden;
+     overflow-y: hidden;
+     border: 1px solid var(--theme-color);
 
-     // from https://stripesgenerator.com/
-     background-image: linear-gradient(
-          45deg, #b4d9b6 1.39%,
-          var(--bg-color-general) 1.39%,
-          var(--bg-color-general) 29.17%,
-          var(--bg-color-general) 29.17%,
-          var(--bg-color-general) 50%,
-          var(--bg-contrast-lighter) 50%,
-          var(--bg-contrast-lighter) 51.39%,
-          var(--bg-color-general) 51.39%,
-          var(--bg-color-general) 79.17%,
-          var(--bg-color-general) 79.17%,
-          var(--bg-color-general) 100%
-     );
-     background-size: 50.91px 50.91px;
+}
 
+.viewsContainer {
+     width: 100%;
+     height: 100%;
      overflow-x: hidden;
      overflow-y: hidden;
 }
@@ -165,18 +336,13 @@ input[type=text], input[type=number], input[type=password] {
      padding: 6px 12px 6px 12px;
 }
 
-.viewsContainerChild {
-     border: 1px solid var(--text-color-theme);
-     overflow-y: auto;
-     height: 100%;
-     border-radius: 5px;
-     overflow-x: hidden;
-     
-}
 
 .componentContainer {
-     min-height: 100%;
+     width: 100%;
+     height: 100vh;
+     overflow-y: auto;
      padding: 10px;
+     border-radius: 20px 0 0 20px;
      background-color: var(--bg-contrast-light);
 }
 
@@ -188,12 +354,14 @@ input[type=text], input[type=number], input[type=password] {
 
 .dashboardModulesContainer {
      width: 100%;
-     height: calc(100vh - 168px);
+     height: calc(100% - 70px);
+     background-color: red;
      display: flex;
      flex-direction: row;
      flex-wrap: wrap;
      justify-content: space-between;
      align-content: space-between;
+     overflow-y: auto;
 }
 
 .dashboardModule {
@@ -497,17 +665,17 @@ input[type=text], input[type=number], input[type=password] {
 
 .activeLoans {
      flex-basis: 60%;
-     height: 55%;
+     height: 59%;
 }
 
 .activeLoansGraphs {
      flex-basis: 39%;
-     height: 55%;
+     height: 59%;
 }
 
 .recentTrackedPayments {
      flex-basis: 100%;
-     height: 44%;
+     height: 40%;
 }
 
 
@@ -630,6 +798,26 @@ input[type=text], input[type=number], input[type=password] {
 
 
 // ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView ----- LoanItemView -----
+.loanTools {
+     flex-basis: 29%;
+     height: 37%;
+}
+
+.loanTools > .moduleContent {
+     display: flex;
+     flex-wrap: no-wrap;
+     flex-direction: column;
+     justify-content: space-evenly;
+     align-items: space-evenly;
+     overflow-y: auto;
+} 
+
+.loanTools > .moduleContent > button {
+     margin: 2px;
+     font-size: 1.1em;
+     padding: 8px;
+}
+
 .loanItemType {
      display: flex;
      align-items: baseline;
@@ -676,27 +864,51 @@ input[type=text], input[type=number], input[type=password] {
      height: 37%;
 }
 
-.paymentsOverTime {
-     flex-basis: 60%;
-     height: 62%;
-}
-
 .recentlyRecordedPayments {
+     margin-top: 1%;
+     flex-basis: 60%;
+     height: 43%;
+}
+
+.loanData {
+     margin-top: 1%;
      flex-basis: 39%;
+     height: 43%;
 }
 
-.loanTools {
-     flex-basis: 29%;
-     display: flex;
-     flex-wrap: no-wrap;
-     flex-direction: column;
-     height: 37%;
+.loanDataTable {
+     height: 100%;
+     overflow-y: auto;
 }
 
-.loanTools > .moduleContent > button {
-     margin: 2px;
+.loanDataAdditionalNotes {
+     position: relative;
+     top: -5px;
      width: 100%;
+     padding-left: 7px;
+     padding-right: 7px;
 }
+
+.loanDataAdditionalNotes > h6 {
+     border-bottom: 1px solid grey;
+}
+
+.paymentsOverTime {
+     margin-top: 1%;
+     flex-basis: 100%;
+     height: 40%;
+}
+
+.paymentsOverTiemChart {
+     width: 100%;
+     padding-top: 20px;
+     height: calc(100% - 50px);
+     border: 1px dashed var(--bg-color-theme);
+}
+
+
+
+
 
 
 
@@ -934,58 +1146,27 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 // ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans ----- AllLoans -----
-.allLoansModuleContent {
-     display: flex;
-     flex-direction: row;
-     flex-wrap: nowrap;
-     justify-content: space-between;
-     align-items: flex-start;
+.activeLoansAllLoans {
+     flex-basis: 100%;
+     height: 75%;
 }
 
-.tableContainer {
-     flex-basis: 66%;
-     background-color: red;
-     height: 100%;
+.totalLoanAmount {
+     flex-basis: 40%;
+     background-color: var(--bg-color-general);
+     height: 24%;
 }
-
-.allLoansTable {
-     display: block;
-     width: 100%;
-}
-
-.allLoansTable * {
-     display: block;
-}
-
-
-
-
-
-
-
 
 .allLoansGrandTotal {
-     flex-basis: 33%;
      text-align: center;
      padding: 10px;
      border: 1px solid var(--theme-color);
      border-radius: 5px;
 }
 
-.totalLoanAmount {
-     flex-basis: 100%;
-     background-color: var(--bg-color-general);
-     height: 25%;
-}
-
-.activeLoansAllLoans {
-     flex-basis: 100%;
-     height: 37%;
-}
-
 .paidOffLoansAllLoans {
-     flex-basis: 100%;
-     height: 37%;
+     flex-basis: 59%;
+     height: 24%;
 }
 
 
@@ -1082,7 +1263,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .totalsBreakdown {
-     margin-top: 20px;
+     margin-top: 1%;
 }
 
 
@@ -1275,7 +1456,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .routerFade-enter {
      opacity: 0;
-     transform: scale(0.9);
+     transform: scale(0.98);
 }
 
 .routerFade-enter-active {
@@ -1290,7 +1471,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .routerFade-exit-active {
      opacity: 0;
-     transform: scale(0.9);
+     transform: scale(0.98);
      transition: opacity 300ms, transform 300ms;
 }
 

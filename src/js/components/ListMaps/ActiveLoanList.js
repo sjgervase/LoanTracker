@@ -151,7 +151,7 @@ export default function ActiveLoanList(props) {
      function showDeleteButton(loan) {
           if (props.parent == "AllLoans") {
                return(
-                    <DeleteLoanModal loan={loan}/>
+                    <DeleteLoanModal loanName={loan.LoanName} loanGUID={loan.GUID}/>
                )
           }
      }
@@ -187,7 +187,7 @@ export default function ActiveLoanList(props) {
 
                                                   {/* make button only exist if link was entered */}
                                                   <Button variant="success" className="btn-sm btn-custom py0" onClick={() => openLinkInBrowser(loan.LoanLink)}>Link to Loan</Button>
-                                                  <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan.GUID)}>More Info</Button>
+                                                  <Button variant="secondary" className="btn-sm btn-custom py0 moreInfoButton" onClick={() => loanItemView(loan.GUID)}>View Loan</Button>
                                                   
                                                   <RecordAPaymentModal loan={loan} parent={"ActiveLoanItem"}/>
                                              </div>

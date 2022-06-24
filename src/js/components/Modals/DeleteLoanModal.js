@@ -7,9 +7,9 @@ import { deleteLoan } from "../../Redux/features/LoansSlice";
 
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function DeleteLoanModal(props) {
-
      const dispatch = useDispatch();
 
      // state to show delete modal
@@ -18,15 +18,21 @@ export default function DeleteLoanModal(props) {
      const handleDeleteModalClose = () => setShowModal(false);
      const handleDeleteModalShow = () => setShowModal(true);
 
+     const location = useLocation();
+
+     let navigate = useNavigate();
 
      function deleteLoanFunc() {
-          // ipcRenderer.invoke('deleteLoan', (props.loan.GUID));
+          // hide the modal
+          setShowModal(false);
+
+          // navigate to the dashboard if on loanItemView
+          if (location.pathname === "/loanitemview") {
+               navigate('/');
+          }
 
           // dispatch the action to delete the loan
-          dispatch(deleteLoan(props.loan.GUID));
-
-          // hide the modal
-          setShowModal(false)
+          dispatch(deleteLoan(props.loanGUID));
      }
 
 
@@ -50,7 +56,7 @@ export default function DeleteLoanModal(props) {
                     </Modal.Header>
 
                     <Modal.Body>
-                         <p>Are you sure you want to delete {props.loan.LoanName}? All data regarding this loan will be permanently deleted.</p>
+                         <p>Are you sure you want to delete {props.loanName}? All data regarding this loan will be permanently deleted.</p>
                          
                          <h6>This cannot be undone</h6>
                     </Modal.Body>

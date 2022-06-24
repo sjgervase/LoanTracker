@@ -46,43 +46,6 @@ export default function AllLoans() {
 
                <div className="dashboardModulesContainer">
 
-                    <div className="totalLoanAmount dashboardModule">
-                         <div className="moduleHeader">
-                              <h2>Total Loans Amount</h2>
-                         </div>
-
-                         <div className="moduleContent allLoansModuleContent">
-                              <div className="tableContainer">
-                                   <Table striped bordered hover size="sm" className="allLoansTable" variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}>
-                                        <thead className="allLoansTableHead">
-                                             <tr>
-                                                  <th>Loan Name</th>
-                                                  <th>Interest Rate</th>
-                                                  <th>Loan Amount</th>
-                                             </tr>
-                                        </thead>
-                                        
-
-                                        <tbody className="allLoansTableBody">
-                                             {loansState.loans.map(loan =>
-                                                  <tr key={loan.loan.GUID}>
-                                                       <td>{loan.loan.LoanName}</td>
-                                                       <td>{loan.loan.InterestRate}%</td>
-                                                       <td>{moneyFormatter(loan.loan.CalculatedRemainingAmount)}</td>
-                                                  </tr>
-                                             )}
-                                        </tbody>
-                                        
-                                   </Table>
-                              </div>
-                              
-                              <div className="allLoansGrandTotal">
-                                   <h5>Grand Total of all Active Loans</h5>
-                                   <h1>{moneyFormatter(totalLoanAmount())}</h1>
-                              </div>
-                         </div>
-                    </div>
-
                     <div className="activeLoansAllLoans dashboardModule">
                          <div className="moduleHeader">
                               <h2>Active Loans</h2>
@@ -90,6 +53,19 @@ export default function AllLoans() {
 
                          <div className="moduleContent">
                               <ActiveLoanList parent={"AllLoans"}/>
+                         </div>
+                    </div>
+
+                    <div className="totalLoanAmount dashboardModule">
+                         <div className="moduleHeader">
+                              <h2>Total Amount</h2>
+                         </div>
+
+                         <div className="moduleContent">     
+                              <div className="allLoansGrandTotal">
+                                   <h5>Grand Total of all Active Loans</h5>
+                                   <h1>{moneyFormatter(totalLoanAmount())}</h1>
+                              </div>
                          </div>
                     </div>
 

@@ -281,19 +281,10 @@ export default function SimpleBudget() {
                                         <h5>Total Remaining Income</h5>
                                         <h3 className="budgetListGrandTotal">{moneyFormatter(remainderTotal())}</h3>
                                    </div>
-
-
                               </div>
 
                          </div>
                     </div>
-
-
-
-
-
-
-
 
                     <div className="totalsBreakdown dashboardModule">
                          <div className="moduleHeader">
@@ -306,10 +297,6 @@ export default function SimpleBudget() {
                               <BudgetPieChart/>
                          </div>
                     </div>
-
-
-
-
 
                </div>
           </div>

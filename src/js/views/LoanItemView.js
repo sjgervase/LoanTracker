@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 
 
 // import from react-bootstrap
-import { Button, Popover, OverlayTrigger, Accordion } from "react-bootstrap";
+import { Button, Popover, OverlayTrigger, Accordion, Table } from "react-bootstrap";
 
 // icons from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
@@ -23,6 +23,7 @@ import LoansLineChart from "../components/Charts/LoansLineChart";
 import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
 import AdjustMonthlyPaymentModal from "../components/Modals/AdjustMonthlyPaymentModal";
 import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayments";
+import DeleteLoanModal from "../components/Modals/DeleteLoanModal";
 
 
 
@@ -121,7 +122,7 @@ export default function LoanItemView() {
                <>
                     <span className="text-muted">{useThisLoanInfo.type}</span>
                     
-                    <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={popover}>
+                    <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={popover}>
                          <Button 
                          variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}
                          className="btn-sm btn-overlay">
@@ -206,8 +207,22 @@ export default function LoanItemView() {
                     {returnObjStrings.daysTilPayment} {returnObjStrings.daysTilPayment === 1 ? "day" : "days"} on {returnObjStrings.dayName}, {returnObjStrings.monthName} {paymentDate}{ordinal}
                </span>
           );
+     }
 
+     const ordinal = (d) => {
+          let ordinal;
+          if (d > 3 && d < 21) {
+               ordinal = "th";
+          } else {
+               switch (d % 10) {
+                    case 1: ordinal = "st"; break;
+                    case 2: ordinal = "nd"; break;
+                    case 3: ordinal = "rd"; break;
+                    default: ordinal = "th"; break;
+               }
+          }
 
+          return ordinal
      }
      
      // tell main process to open the link in the default browser
@@ -222,7 +237,7 @@ export default function LoanItemView() {
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
-     
+     console.log(currentLoan);
 
      return(
           <div className="componentContainer">
@@ -240,6 +255,8 @@ export default function LoanItemView() {
                               <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
                               <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>
                               <AdjustMonthlyPaymentModal loan={currentLoan}/>
+                              <DeleteLoanModal loanName={currentLoan?.loan.LoanName} loanGUID={currentLoan?.loan.GUID}/>
+                              <span>Edit Loan</span>
                          </div>
                     </div>
 
@@ -266,27 +283,119 @@ export default function LoanItemView() {
                          </div>
                     </div>
 
+                    <div className="recentlyRecordedPayments dashboardModule">
+                         <div className="moduleHeader">
+                              <h2>Recent Payments</h2>
+                         </div>
+
+                         <div className="moduleContent">
+                              <RecentlyRecordedPayments thisLoan={currentLoan?.loan.GUID}/>
+                         </div>
+                    </div>
+
+                    <div className="loanData dashboardModule">
+                         <div className="moduleHeader">
+                              <h2>Loan Data</h2>
+                         </div>
+
+                         <div className="moduleContent">
+                              <div className="loanDataTable">
+                                   <Table striped bordered size="sm">
+                                        <thead>
+                                             <tr>
+                                                  <th>Field</th>
+                                                  <th>Data</th>
+                                             </tr>
+                                        </thead>
+
+                                        <tbody>
+                                             <tr>
+                                                  <td>Loan Name</td>
+                                                  <td>{currentLoan?.loan.LoanName}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Loan Type</td>
+                                                  <td>{currentLoan?.loan.LoanCategory}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Original Amount</td>
+                                                  <td>{moneyFormatter(currentLoan?.loan.TotalLoanAmount)}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Remaining Amount</td>
+                                                  <td>{moneyFormatter(currentLoan?.loan.CalculatedRemainingAmount)}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Interest Rate</td>
+                                                  <td>{currentLoan?.loan.InterestRate}%</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Monthly Payment</td>
+                                                  <td>{moneyFormatter(currentLoan?.loan.MonthlyPayment)}</td>
+                                             </tr>
+
+                                             {/* Only show desired monthly amount if it is not the default value */}
+                                             {currentLoan?.loan.DesiredMonthlyPayment !== 0 ?
+                                             <tr>
+                                                  <td>Desired Monthly Payment</td>
+                                                  <td>{currentLoan?.loan.DesiredMonthlyPayment}</td>
+                                             </tr>
+                                             : ""}
+
+                                             <tr>
+                                                  <td>Recorded Payments</td>
+                                                  <td>{currentLoan?.loan.PaymentHistory.length}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Payment Date</td>
+                                                  <td>{currentLoan?.loan.PaymentDate}{ordinal(currentLoan?.loan.PaymentDate)} of the month</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Disbursement Date</td>
+                                                  <td>{currentLoan?.loan.DisbursementDate}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Total Term Length</td>
+                                                  <td>{currentLoan?.loan.TotalTermLength}</td>
+                                             </tr>
+
+                                             <tr>
+                                                  <td>Estimated Remaing Payments</td>
+                                                  <td>{(parseInt(currentLoan?.loan.TotalTermLength) - currentLoan?.loan.PaymentHistory.length).toString()}</td>
+                                             </tr>
+                                        </tbody>
+                                   </Table>
+
+                                   {/* Only show loan link if exists as it is optional */}
+                                   {currentLoan?.loan.hasOwnProperty('AdditionalNotes') ? 
+                                        <div className="loanDataAdditionalNotes">
+                                             <h6>Additional Notes:</h6>
+                                             <p>{currentLoan?.loan.AdditionalNotes}</p>
+                                        </div>
+                                   : ""}
+                              </div>
+                         </div>
+                    </div>
+
                     <div className="paymentsOverTime dashboardModule">
                          <div className="moduleHeader">
                               <h2>Payments Over Time</h2>
                          </div>
 
                          <div className="moduleContent">
-                              <h6 className="paymentsOverTimeDirections">Click "Record a Payment" or "Record a Late Fee" in the Tools module above to add more data points to this graph</h6>
+                              <h6 className="paymentsOverTimeDirections">Click "Record a Payment" or "Record a Late Fee" in the Loan Tools module above to add more data points to this graph</h6>
 
                               <div className="paymentsOverTiemChart">
                                    <LoansLineChart data={currentLoan}/>
                               </div>
-                         </div>
-                    </div>
-
-                    <div className="recentlyRecordedPayments dashboardModule">
-                         <div className="moduleHeader">
-                              <h2>Recently Payments</h2>
-                         </div>
-
-                         <div className="moduleContent">
-                              <RecentlyRecordedPayments thisLoan={currentLoan?.loan.GUID}/>
                          </div>
                     </div>
                </div>              
