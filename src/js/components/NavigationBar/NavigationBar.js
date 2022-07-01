@@ -100,13 +100,13 @@ export default function NavigationBar() {
                case 'Mortgage':
                return(<AiFillHome/>);     
 
-               case 'Vehicle Loan':
+               case 'VehicleLoan':
                return(<AiFillCar/>);
 
                case 'PersonalLoan':
                return(<FaUser/>);
 
-               case 'Credit Card':
+               case 'CreditCard':
                return(<FaCreditCard/>);
           }
      }

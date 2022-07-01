@@ -51,7 +51,8 @@ export default function LoansLineChart(props) {
                dataArray.push({
                     "dateForShow": formatDate(props.data?.loan?.PaymentHistory[i].dateMade),
                     "dateForOrder": new Date(props.data?.loan?.PaymentHistory[i].dateMade.concat(' 00:00')),
-                    "amount": parseFloat(props.data?.loan?.PaymentHistory[i].amount)
+                    "amount": parseFloat(props.data?.loan?.PaymentHistory[i].amount),
+                    "type": "Payment"
                });
           }
 
@@ -61,7 +62,8 @@ export default function LoansLineChart(props) {
                     "dateForShow": formatDate(props.data?.loan?.LateFees[i].dateMade),
                     "dateForOrder": new Date(props.data?.loan?.LateFees[i].dateMade.concat(' 00:00')),
                     // dont forget to make this number negative
-                    "amount": (parseFloat(props.data?.loan?.LateFees[i].amount) * -1)
+                    "amount": (parseFloat(props.data?.loan?.LateFees[i].amount) * -1),
+                    "type": "Fee"
                });
           }
           return dataArray;
@@ -104,7 +106,9 @@ export default function LoansLineChart(props) {
 
                chartData.push({
                     "currentLoanAmount": runningTotalAmount,
-                    "date": array[i].dateForShow
+                    "date": array[i].dateForShow,
+                    "type": array[i].type,
+                    "amount": array[i].amount
                })
                
           }
@@ -118,19 +122,27 @@ export default function LoansLineChart(props) {
 
           if (e.active && e.payload!=null && e.payload[0]!=null) {
 
-               return (
-                    <div className="customChartTooltip">
-                         <span>Date: {e.payload[0].payload["date"]}</span>
-                         
-                         <span>
-                              {"Amount: " + moneyFormatter(
-                                   parseFloat(
-                                        e.payload[0].payload["currentLoanAmount"]
-                                   )
-                              )}
-                         </span>
-                    </div>
-               );
+               //if undefined, it is the initial value
+               if (e.payload[0].payload["type"] === undefined) {
+
+                    return (
+                         <div className="customChartTooltip">
+                              <span>Initial Loan Amount: {moneyFormatter(parseFloat(e.payload[0].payload["currentLoanAmount"]))}</span>
+                         </div>
+                    );
+                    
+               // return with payment / fee info
+               } else {
+                    return (
+                         <div className="customChartTooltip">
+                              <span>Date: {e.payload[0].payload["date"]}</span>
+     
+                              <span>{e.payload[0].payload["type"]}: {moneyFormatter(parseFloat(e.payload[0].payload["amount"]))}</span>
+     
+                              <span>{"Loan Amount: " + moneyFormatter(parseFloat(e.payload[0].payload["currentLoanAmount"]))}</span>
+                         </div>
+                    );
+               }
           }
           else {
                return "";

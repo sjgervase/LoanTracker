@@ -207,11 +207,6 @@ export default function SimpleBudget() {
                
                <div className="dashboardModulesContainer">
 
-
-
-
-                    
-
                     <div className="budgetTools dashboardModule">
                          <div className="moduleHeader">
                               <h2>Budget Tools</h2>

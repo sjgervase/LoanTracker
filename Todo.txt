@@ -1,5 +1,15 @@
 TODO:
 
+organize all files in components/AddALoanComponents/AmortizedLoans
+structure:
+     money formatter
+     states
+     functions
+     overlays
+     data validation
+     return
+
+
 ensure loan category is one word
 
 see what navbar dropdown does with a lot of items

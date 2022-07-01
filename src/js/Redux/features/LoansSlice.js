@@ -35,6 +35,8 @@ export const LoansSlice = createSlice({
                // additional function to add properties not recorded by user
                let newLoan = newLoanFunction(action.payload);
 
+               console.log(newLoan);
+
                // add to state
                state.loans.push(newLoan);
                
@@ -241,23 +243,59 @@ const loanAdditionalFields = (loans) => {
 // function for new loans to add additional properties that are not recorded by end user
 function newLoanFunction(newLoanData) {
      // calculate total amount
-     let monthlyAmount = new BigNumber(newLoanData.formState.MonthlyPayment);
-     let totalTermLimit = new BigNumber(newLoanData.formState.TotalTermLength);
-     let totalLoanAmount = monthlyAmount.multipliedBy(totalTermLimit);
-     
-     // create object with payload data and new fields
-     let newLoanObject = {
-          loan: {
-               ...newLoanData.formState,
-               GUID: newLoanData.newGUID,
-               PaymentHistory: [],
-               LateFees: [],
-               DesiredMonthlyPayment: 0,
-               TotalLoanAmount: totalLoanAmount.toFixed(2),
-               PaidOff: false,
-               CalculatedRemainingAmount: totalLoanAmount.toFixed(2)
+
+     console.log(newLoanData);
+
+
+
+     // if Amortized Loan (not a creditcard)
+     if (newLoanData.LoanCategory !== "CreditCard") {
+
+          // if payback from total
+          if (newLoanData.RepaymentOption === 'paybackFromTotal') {
+               let monthlyAmount = new BigNumber(newLoanData.MonthlyPayment);
+               let totalTermLimit = new BigNumber(newLoanData.TotalTermLength);
+               let totalLoanAmount = monthlyAmount.multipliedBy(totalTermLimit);
+
+               // create object with payload data and new fields
+               let newLoanObject = {
+                    loan: {
+                         ...newLoanData,
+                         PaymentHistory: [],
+                         LateFees: [],
+                         DesiredMonthlyPayment: 0,
+                         TotalLoanAmount: totalLoanAmount.toFixed(2),
+                         PaidOff: false,
+                         CalculatedRemainingAmount: totalLoanAmount.toFixed(2)
+                    }
+               }
+
+               return newLoanObject;
+          
+          // if payback from current
+          } else {
+
+               // create object with payload data and new fields
+               let newLoanObject = {
+                    loan: {
+                         ...newLoanData,
+                         PaymentHistory: [],
+                         LateFees: [],
+                         DesiredMonthlyPayment: 0,
+                         TotalLoanAmount: newLoanData.PresentValue,
+                         PaidOff: false,
+                         CalculatedRemainingAmount: newLoanData.PresentValue
+                    }
+               }
+
+               return newLoanObject;               
           }
+          
      }
 
-     return newLoanObject;
+     
+
+     
+     
+     
 }

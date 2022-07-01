@@ -2,8 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { ipcRenderer } from "electron";
 
-import BigNumber from "bignumber.js";
-
 
 // to fetch the deductions
 export const fetchDeductions = createAsyncThunk('fetchDeductions', async () => {

@@ -237,8 +237,6 @@ export default function LoanItemView() {
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
-     console.log(currentLoan);
-
      return(
           <div className="componentContainer">
                <h1 className="componentTitle">{currentLoan?.loan.LoanName}</h1>

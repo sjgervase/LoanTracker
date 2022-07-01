@@ -5,6 +5,7 @@ import LoansReducer from "./features/LoansSlice";
 import SettingsReducer from "./features/SettingsSlice";
 import IncomesReducer from "./features/IncomesSlice";
 import DeductionsReducer from "./features/DeductionsSlice";
+import AddALoanSlice from "./features/AddALoanSlice";
 
 // list reducers from slices
 export default configureStore({
@@ -12,6 +13,7 @@ export default configureStore({
           loans: LoansReducer,
           deductions: DeductionsReducer,
           incomes: IncomesReducer,
-          settings: SettingsReducer
+          settings: SettingsReducer,
+          addaloan: AddALoanSlice
      },
 })

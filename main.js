@@ -20,7 +20,7 @@ function createWindow() {
      const win = new BrowserWindow({
           minWidth: 545,
           minHeight: 100,
-          width: 1600,
+          width: 1800,
           height: 870,
           icon: trayIcon,
           backgroundColor: "#36733F",
