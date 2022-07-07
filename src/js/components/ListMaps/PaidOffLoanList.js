@@ -90,8 +90,8 @@ export default function PaidOffLoanList() {
      function borderStyle(color) {
           if (color !="") {
                return {
-                    border: "1px solid" + loan.LoanColor,
-                    borderRight: "5px solid" + loan.LoanColor
+                    border: "1px solid" + color,
+                    borderRight: "5px solid" + color
                }
           }
      }

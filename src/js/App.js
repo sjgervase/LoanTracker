@@ -11,7 +11,8 @@ import { fetchLoans } from './Redux/features/LoansSlice';
 import { fetchIncomes } from './Redux/features/IncomesSlice';
 import { fetchDeductions } from './Redux/features/DeductionsSlice';
 
-
+// import actions 
+import { clearFormData } from './Redux/features/AddALoanSlice';
 
 // for from react-router-dom
 import {
@@ -25,6 +26,8 @@ import {
 // import bigNumber
 import BigNumber from 'bignumber.js';
 
+import { Modal, Form } from 'react-bootstrap';
+
 
 // import views
 import DashBoard from "./views/DashBoard";
@@ -36,6 +39,7 @@ import LoanItemView from './views/LoanItemView';
 
 // import navbar
 import NavigationBar from "./components/NavigationBar/NavigationBar";
+import WindowButtons from './components/NavigationBar/WindowButtons';
 
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
@@ -82,6 +86,7 @@ export function App() {
      const loansStatus = useSelector(state => state.loans.status);
      // get all loans from the redux store
      const loansState = useSelector(state => state.loans)
+     // console.log(loansState);
 
      // fetch loans on load
      useEffect(() =>{
@@ -122,6 +127,21 @@ export function App() {
      }, [deductionsStatus, dispatch])
 
 
+
+
+
+
+
+     
+     // clear the formdata state if the addaloan page is navigated away from
+     useEffect(() => {
+          if (location.pathname !== '/addaloan') {
+               dispatch(clearFormData());
+          }
+     }, [location.pathname])
+
+
+
      
 
 
@@ -131,52 +151,57 @@ export function App() {
           <div className="appContainer">
                <NavigationBar />
 
-               <div className="viewsContainerParent">
+               
+               <div className="appAndwindowBar">
+                    <WindowButtons />
 
-                    {/* The two viewContainer divs are used for aesthectic purposes */}
-                    <div className="viewsContainer">
-                    
-                         <TransitionGroup component={null}>
-                              
-                                   <CSSTransition key={location.pathname} classNames="routerFade" timeout={300}>
-                                        <Routes location={location}>
+                    <div className="viewsContainerParent">
 
-                                             <Route path="/settings" element={<Settings/>}/>
+                         {/* The two viewContainer divs are used for aesthectic purposes */}
+                         <div className="viewsContainer">
                          
-                                             <Route 
-                                             path="/simplebudget"
-                                             element={
-                                                  <SimpleBudget />
-                                             }/>
+                              <TransitionGroup component={null}>
+                                   
+                                        <CSSTransition key={location.pathname} classNames="routerFade" timeout={300}>
+                                             <Routes location={location}>
 
-                                             <Route
-                                             path="/allloans"
-                                             element={
-                                                  <AllLoans/>
-                                             }/>
-                                             
-                                             <Route
-                                             path="/addaloan"
-                                             element={
-                                                  <AddALoan/>
-                                             }/>
+                                                  <Route path="/settings" element={<Settings/>}/>
+                              
+                                                  <Route 
+                                                  path="/simplebudget"
+                                                  element={
+                                                       <SimpleBudget />
+                                                  }/>
 
-                                             {/* dynamic view for closer look at an individual loan */}
-                                             <Route
-                                             path="/loanitemview"
-                                             element={
-                                                  <LoanItemView/>
-                                             }/>
+                                                  <Route
+                                                  path="/allloans"
+                                                  element={
+                                                       <AllLoans/>
+                                                  }/>
+                                                  
+                                                  <Route
+                                                  path="/addaloan"
+                                                  element={
+                                                       <AddALoan/>
+                                                  }/>
 
-                                             <Route
-                                             path="/"
-                                             element={
-                                                  <DashBoard/>
-                                             }/>
-                                             
-                                        </Routes>
-                                   </CSSTransition>
-                         </TransitionGroup>
+                                                  {/* dynamic view for closer look at an individual loan */}
+                                                  <Route
+                                                  path="/loanitemview"
+                                                  element={
+                                                       <LoanItemView/>
+                                                  }/>
+
+                                                  <Route
+                                                  path="/"
+                                                  element={
+                                                       <DashBoard/>
+                                                  }/>
+                                                  
+                                             </Routes>
+                                        </CSSTransition>
+                              </TransitionGroup>
+                         </div>
                     </div>
 
                </div>

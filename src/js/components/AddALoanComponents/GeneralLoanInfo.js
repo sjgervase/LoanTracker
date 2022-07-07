@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import store actions
-import { addFieldToFormData } from "../../Redux/features/AddALoanSlice";
+import { addFieldToFormData, errorsExist, validationMode } from "../../Redux/features/AddALoanSlice";
 
 // import from react-bootstrap
 import { Form, Row, Button, Alert, ButtonGroup, ToggleButton, OverlayTrigger, Popover, Col } from "react-bootstrap";
@@ -23,10 +23,36 @@ export default function RequiredLoanInfo(props) {
 
      const formState = useSelector(state => state.addaloan);
 
+     
+
+
+     // state and functionality for button to generate random color
+     const [colorState, setColorState] = useState("");
+
      // useEffect to dispatch action to add default color to form data 
      useEffect(() => {
-          dispatch(addFieldToFormData({LoanColor:"#36733F"}))
-     }, [])
+          // if color state is blank
+          if (colorState === "") {
+               // generate random color
+               randomColorGenerator();
+               
+          // color state is not blank
+          } else {
+               dispatch(addFieldToFormData({
+                    LoanColor:colorState
+               }))
+          }
+     }, [colorState])
+     
+     const randomColorGenerator = () => {
+          var result = '#';
+          var characters = 'ABCDEF0123456789';
+          var charactersLength = characters.length;
+          for ( var i = 0; i < 6; i++ ) {
+               result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          }
+          setColorState(result);
+     }
 
      // state to ensure the formatting of the payment date
      const [paymentDateState, setPaymentDateState] = useState("");
@@ -135,55 +161,52 @@ export default function RequiredLoanInfo(props) {
 
      // function to handle changes to form fields
      const handleChange = (name, value) => {
+          console.log(value);
           // dispatch the action to the store
           dispatch(addFieldToFormData({[name]:value}));
      }
 
 
-     
- 
-
      // error handling
      const [errorFields, setErrorFields] = useState([])
-
      // useEffect to watch the formstate.validate property. when true, all form components should validate their own fields
      useEffect(() => {
           // if true
           if (formState.validate) {
                console.log("validate now");
-
                // empty arrays to be populated if the fields are erroneous
                let errorFieldsArray = [];
-
                // if loan name is blank or spaces
                if (formState.formData.LoanName == undefined || formState.formData.LoanName.match(/^ *$/) !== null || formState.formData.LoanName == "") {
                     // push the erroneous field name to array
                     errorFieldsArray.push("LoanName");
                }
 
+               
                // if disbursement date is blank
-               if(formState.formData.DisbursementDate == undefined || formState.formData.DisbursementDate == "") {
-                    // push the erroneous field name to array
+               if (formState.formData.DisbursementDate == undefined || formState.formData.DisbursementDate == "") {
+               // push the erroneous field name to array
                     errorFieldsArray.push("DisbursementDate");
                }
                
+
                // if payment due date is blank (field forces positive integers)
                if(formState.formData.PaymentDate == undefined || formState.formData.PaymentDate == "") {
                     // push the erroneous field name to array
                     errorFieldsArray.push("PaymentDate");
                }
-
                // set the error fields state to the array
                setErrorFields(errorFieldsArray);
-          
-          // if false
-          } else {
-               console.log("dont validate now");
+               // if there are errors, dispatch action
+               if (errorFieldsArray.length > 0) {
+                    dispatch(errorsExist(true))
+               } else {
+                    dispatch(errorsExist(false))
+               }
+               // exit validation mode
+               dispatch(validationMode(false))
           }
-
      }, [formState.validate])
-
-
 
 
      // Overlay triggers listed as consts to keep return easier to read
@@ -211,7 +234,7 @@ export default function RequiredLoanInfo(props) {
                <Popover id="popover-basic" className="customPopover">
                     <Popover.Header as="h3" className="customPopoverHeader">Disbursement Date</Popover.Header>
                     <Popover.Body className="customPopoverBody">
-                         <span>The day the loan was given to you.</span>
+                         <span>The day the loan was given to you. If this is a credit card, this field can either be the day you recieved your credit card or simply today.</span>
                     </Popover.Body>
                </Popover>
           }>
@@ -239,7 +262,6 @@ export default function RequiredLoanInfo(props) {
      );
 
 
-
      return (
           <div className="addALoanRequiredInfo dashboardModule">
                <div className="moduleHeader">
@@ -256,7 +278,7 @@ export default function RequiredLoanInfo(props) {
                                    <Form.Control
                                         type="Text"
                                         name="LoanName"
-                                        isInvalid={formState.validate && errorFields.includes("LoanName")}
+                                        isInvalid={formState.errors && errorFields.includes("LoanName")}
                                         placeholder="You can name it whatever you'd like, it's just for you to keep track of it"
                                         onChange={e => handleChange(e.target.name, e.target.value)}
                                    />
@@ -273,17 +295,21 @@ export default function RequiredLoanInfo(props) {
                                         <Form.Label>Loan Color</Form.Label>
                                         {colorOverlay}
                                    </div>
-                                   <Form.Control
-                                        name="LoanColor"
-                                        type="color"
-                                        defaultValue="#36733F"
-                                        title="Choose your color"
-                                        onChange={e => handleChange(e.target.name, e.target.value)}
-                                   />
-                                   <Form.Control.Feedback type="invalid">
-                                        Ensure the entered Loan Name is not blank or comprised only of spaces
-                                   </Form.Control.Feedback>
-                              </Form.Group>     
+
+                                   <div className="colorControlAndButton">
+                                        <Form.Control
+                                             name="LoanColor"
+                                             type="color"
+                                             value={colorState}
+                                             title="Choose your color"
+                                             onChange={e => handleChange(e.target.name, e.target.value)}
+                                        />
+
+                                        <Button className="randomColorButton" onClick={()=> randomColorGenerator()}>
+                                             <span>Random Color!</span>
+                                        </Button>
+                                   </div>
+                              </Form.Group>
                          </Col>
                     </Row>
 
@@ -297,7 +323,7 @@ export default function RequiredLoanInfo(props) {
                                    </div>
                                    <Form.Control
                                         type="date"
-                                        isInvalid={formState.validate && errorFields.includes("DisbursementDate")}
+                                        isInvalid={formState.errors && errorFields.includes("DisbursementDate")}
                                         name="DisbursementDate"
                                         onChange={e => handleChange(e.target.name, e.target.value)}
                                    />
@@ -316,8 +342,8 @@ export default function RequiredLoanInfo(props) {
                                    </div>
                                    <Form.Control
                                         type="text"
-                                        placeholder="6"
-                                        isInvalid={formState.validate && errorFields.includes("PaymentDate")}
+                                        placeholder="ex 6"
+                                        isInvalid={formState.errors && errorFields.includes("PaymentDate")}
                                         value={paymentDateState}
                                         onChange={e => paymentDateVerifier(e.target.value)}
                                    />

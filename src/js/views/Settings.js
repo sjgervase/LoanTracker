@@ -11,6 +11,7 @@ import { FaMoon, FaSun, FaLock } from "react-icons/fa";
 // import components
 import NewPasscodeModal from "../components/Modals/NewPasscodeModal";
 import EditOrRemovePasscodeModal from "../components/Modals/EditOrRemovePasscodeModal";
+import AddBudgetItemModal from "../components/Modals/AddBudgetItemModal";
 
 import { Button } from "react-bootstrap";
 

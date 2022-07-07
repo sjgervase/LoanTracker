@@ -6,13 +6,17 @@ const path = require('path');
 const isDevelopmentMode = !app.isPackaged;
 
 
+
+
 // icons
 // dock icon is 1070px x 1070px
-const dockIcon = path.join(__dirname, "assets", "images", "LoanTrackerIconLarge.png");
+const dockIcon = path.join(__dirname, "assets", "images", "LoanTrackerIconSmall.png");
 const trayIcon = path.join(__dirname, "assets", "images", "LoanTrackerIconSmall.png");
 
 const fs = require('fs');
 const {dialog, remote} = require('electron');
+
+
 
 // Create Window function
 function createWindow() {
@@ -20,8 +24,10 @@ function createWindow() {
      const win = new BrowserWindow({
           minWidth: 545,
           minHeight: 100,
-          width: 1800,
+          width: 1200,
           height: 870,
+          transparent: true,
+          frame: false,
           icon: trayIcon,
           backgroundColor: "#36733F",
           webPreferences: {
@@ -31,12 +37,19 @@ function createWindow() {
           }
      })
 
+
+     win.once('ready-to-show', () => {
+          win.show()
+     })
+
+
+
      win.loadFile('index.html')
-     isDevelopmentMode && win.webContents.openDevTools();
+     // isDevelopmentMode && win.webContents.openDevTools();
 
      // custom close
      ipcMain.on('closeApp', () => {
-          app.quit();
+          win.close();
      })
 
      // custom minimize
@@ -44,11 +57,15 @@ function createWindow() {
           win.minimize();
      })
 
+
      // custom maximize
      ipcMain.on('maximizeRestoreApp', () => {
           if (win.isMaximized()) {
-               win.restore();
+               
+               win.unmaximize();
+               
           } else {
+
                win.maximize();
           }
      })    
@@ -84,15 +101,6 @@ if (isDevelopmentMode) {
 if(process.platform === 'darwin') {
      app.dock.setIcon(dockIcon);
 }
-
-let tray = null;
-
-
-
-
-
-
-
 
 
 

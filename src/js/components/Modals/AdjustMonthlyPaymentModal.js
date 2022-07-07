@@ -26,6 +26,9 @@ export default function AdjustMonthlyPaymentModal(props) {
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
 
+     // get all settings from redux store for dynamic dark mode
+     const settingsState = useSelector((state) => state.settings);
+
      // state for showing or hiding the modal
      const [showModal, setShowModal] = useState(false);
 
@@ -122,7 +125,6 @@ export default function AdjustMonthlyPaymentModal(props) {
           // dispatch the action
           dispatch(adjustMonthlyPayment(monthlyPaymentSubmission));
 
-          // ipcRenderer.invoke('desiredMonthlyPaymentSubmission', (monthlyPaymentSubmission));
           // hide the modal
           setShowModal(false);
      }
@@ -191,6 +193,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                                         placeholder="or, enter a value"
                                         decimalScale={2}
                                         decimalsLimit={2}
+                                        className="form-control"
                                         maxLength={8}
                                         value={rangeValueState}
                                         onValueChange={(value) => setRangeValueState(Number(value))}
@@ -209,7 +212,7 @@ export default function AdjustMonthlyPaymentModal(props) {
                                    <span>Total Payments</span>
                               </div>
 
-                              <Table>
+                              <Table striped bordered variant={settingsState.settings[0]?.UserSelectedTheme == 'dark' ? 'dark' : 'light'}>
                                    <thead>
                                         <tr>
                                              <th></th>

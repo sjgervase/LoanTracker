@@ -9,10 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 // import components
-import AddMonthlyBillModal from "../components/Modals/AddMonthlyBillModal";
-import AddMonthlyExpenseModal from "../components/Modals/AddMonthlyExpenseModal";
-import AddMonthlyPayModal from "../components/Modals/AddMonthlyIncomeModal";
-import AddMonthlySavingsModal from "../components/Modals/AddMonthlySavingsModal";
+import AddBudgetItemModal from "../components/Modals/AddBudgetItemModal";
 import EditOrDeleteBudgetItem from "../components/Modals/EditOrDeleteBudgetItemModal";
 
 import BudgetPieChart from "../components/Charts/BudgetPieChart";
@@ -205,7 +202,7 @@ export default function SimpleBudget() {
                <h1 className="componentTitle">Simple Budgeting Tool</h1>
                <h5>Use this simply budgeting tool to help prepare your finances on a month by month basis</h5>
                
-               <div className="dashboardModulesContainer">
+               <div className="dashboardModulesContainer" style={{backgroundColor:"red"}}>
 
                     <div className="budgetTools dashboardModule">
                          <div className="moduleHeader">
@@ -213,14 +210,12 @@ export default function SimpleBudget() {
                          </div>
 
                          <div className="moduleContent">
-                              <AddMonthlyPayModal/>
+                              <AddBudgetItemModal type="income"/>
+                              <AddBudgetItemModal type="savings"/>
+                              <AddBudgetItemModal type="bill"/>
+                              <AddBudgetItemModal type="expense"/>
 
-                              <AddMonthlySavingsModal/>
-
-                              <AddMonthlyBillModal/>
-
-                              <AddMonthlyExpenseModal/>
-
+                              {/* add a loan is unique as this button directs you to the form */}
                               <OverlayTrigger trigger={["hover", "focus"]} placement="right" overlay={addALoanPopover}>
                                    <Button onClick={() => addALoanButton()} size="lg"  variant="danger" className="btn-AddALoan shadow-none">
                                         Add A loan

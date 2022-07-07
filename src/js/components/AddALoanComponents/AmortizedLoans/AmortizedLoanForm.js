@@ -1,28 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 // import from react-redux
-import { useDispatch, useSelector } from "react-redux";
-
-// import store actions
-import { addLoan } from "../../../Redux/features/LoansSlice";
-
-// import from react-bootstrap
-import { Form, Button, Alert, ButtonGroup, ToggleButton, OverlayTrigger, Popover } from "react-bootstrap";
-
-// import from currency field
-import CurrencyInput from "react-currency-input-field";
-
-import BigNumber from "bignumber.js";
-
-// import from react-icons
-import { AiFillCar, AiFillHome } from "react-icons/ai"; 
-import { FaGraduationCap, FaUser, FaCreditCard, FaInfoCircle, FaCalculator, FaCar } from "react-icons/fa";
-
-// import from react-router-dom
-import { useNavigate } from "react-router-dom";
-
-// import tranistion
-import { CSSTransition } from "react-transition-group";
+import {  useSelector } from "react-redux";
 
 
 // import form components
@@ -41,7 +20,7 @@ export default function AmortizedLoanForm() {
      // more for organizational preferences really
      
      return(
-          <div className="loanForm">
+          <div className="loanForm" id="scrollToTop">
 
                <GeneralLoanInfo/>
 

@@ -119,7 +119,7 @@ export default function RecordAPaymentModal(props) {
                                         decimalsLimit={2}
                                         defaultValue={thisDesiredMonthlyPayment == 0 ? thisMonthlyPayment : thisDesiredMonthlyPayment}
                                         onValueChange={(value, name) => recordPaymentStateFunc(value, name)}
-                                        className="addALoanInput"
+                                        className="form-control"
                                         autoFocus
                                    />
                               </Form.Group>
@@ -128,7 +128,6 @@ export default function RecordAPaymentModal(props) {
                               <Form.Group controlId="Date">
                                    <Form.Label>Date Paid</Form.Label>
                                    <Form.Control type="date" name="Date"
-                                   className="addALoanInput"
                                    defaultValue={dateDefaultToday()}
                                    onChange={e => recordPaymentStateFunc(e.target.value, e.target.name)} />
                               </Form.Group>

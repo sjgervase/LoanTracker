@@ -128,8 +128,8 @@ export default function LoansPieChart() {
                     dataKey="value"
                     nameKey="name"
                     color="color"
-                    outerRadius={130}
-                    innerRadius={85}
+                    outerRadius="90%"
+                    innerRadius="60%"
                     >
 
                          <Label

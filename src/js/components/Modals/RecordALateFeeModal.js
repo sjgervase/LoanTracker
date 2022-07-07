@@ -74,7 +74,7 @@ export default function RecordALateFeeModal(props) {
           <>
           
                <Button
-                    variant="danger"
+                    variant="warning"
                     onClick={showLateFeeModalFunc}
                     size="lg">
                     
@@ -101,6 +101,7 @@ export default function RecordALateFeeModal(props) {
                                         prefix="$"
                                         name="Amount"
                                         placeholder="ex $100"
+                                        className="form-control"
                                         decimalScale={2}
                                         decimalsLimit={2}
                                         onValueChange={(value, name) => recordLateFeeStateFunc(value, name)}

@@ -192,7 +192,7 @@ export default function BudgetPieChart() {
      }
 
      return(
-          <ResponsiveContainer width="99%" height={500}>
+          <ResponsiveContainer width="99%" height="90%">
 
                <PieChart>
                <Tooltip content={customTooltip} />
@@ -202,7 +202,8 @@ export default function BudgetPieChart() {
                     dataKey="value"
                     nameKey="name"
                     color="color"
-                    innerRadius={110}
+                    outerRadius="90%"
+                    innerRadius="60%"
                     label={(entry) => entry.name  + " " + moneyFormatter(parseFloat(entry.value))}
                     >
 

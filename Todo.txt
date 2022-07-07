@@ -1,34 +1,16 @@
 TODO:
 
-organize all files in components/AddALoanComponents/AmortizedLoans
-structure:
-     money formatter
-     states
-     functions
-     overlays
-     data validation
-     return
 
-
-ensure loan category is one word
-
-see what navbar dropdown does with a lot of items
-
-*** ensure forms do not try to submit on enter button
-
-simple budget:
-- budget tool: goal calculator? "I want to save up $500" calculate how long itll take?
-
-More overlays everywhere
 
 Settings
 - all of settings
+- export data?
+- clear data?
 
 Splash Screen
 - create splash Screen
 
 
-Add a loan: Credit Card?
 
 Tidy up all imports
 
@@ -38,19 +20,15 @@ Standard spacing:
 
 Organize scss
 
-recharts animationDuration
-
 encrypted data?
 4 digit pin?
 
 collect all text for abby 
 
-combine modals into one, with specific info as props?
-
 organize into views with all related compononets in each folder, seperate shared folder
 
-add a loan:
--react bootstrap progress bar?
+
+
 
 ensure buttons across app are consistent
 
@@ -58,6 +36,3 @@ comment code everywhere
 
 ensure everything looks as expected in fullscreen
      - loan item view : components dont resize veritcally
-
-
-nightmode transition

@@ -7,8 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ipcRenderer } from "electron";
 
 // import from react-router-dom
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 
 // import from react-bootstrap
 import { Button, Popover, OverlayTrigger, Accordion, Table } from "react-bootstrap";
@@ -24,6 +23,7 @@ import RecordALateFeeModal from "../components/Modals/RecordALateFeeModal";
 import AdjustMonthlyPaymentModal from "../components/Modals/AdjustMonthlyPaymentModal";
 import RecentlyRecordedPayments from "../components/ListMaps/RecentRecordedPayments";
 import DeleteLoanModal from "../components/Modals/DeleteLoanModal";
+import EditLoanModal from "../components/Modals/EditLoanModal";
 
 
 
@@ -76,32 +76,32 @@ export default function LoanItemView() {
           switch (loanCategory) {
                case 'Student Loan':
                     // populate object based on type
-                    useThisLoanInfo.type = 'AMORTIZED LOAN';
+                    useThisLoanInfo.type = 'Amortized Loan';
                     useThisLoanInfo.Info = amortizingLoanInfo;
                break;
                
                case 'Mortgage':
                     // populate object based on type
-                    useThisLoanInfo.type = 'AMORTIZED LOAN';
+                    useThisLoanInfo.type = 'Amortized Loan';
                     useThisLoanInfo.Info = amortizingLoanInfo;
                break;
 
-               case 'Vehicle Loan':
+               case 'VehicleLoan':
                     // populate object based on type
-                    useThisLoanInfo.type = 'AMORTIZED LOAN';
+                    useThisLoanInfo.type = 'Amortized Loan';
                     useThisLoanInfo.Info = amortizingLoanInfo;
                break;
                
 
-               case 'Personal Loan':
+               case 'PersonalLoan':
                     // populate object based on type
-                    useThisLoanInfo.type = 'AMORTIZED LOAN';
+                    useThisLoanInfo.type = 'Amortized Loan';
                     useThisLoanInfo.Info = amortizingLoanInfo;
                break;
 
-               case 'Credit Card':
+               case 'CreditCard':
                     // populate object based on type
-                    useThisLoanInfo.type = 'REVOLVING LOAN';
+                    useThisLoanInfo.type = 'Revolving Debt';
                     useThisLoanInfo.Info = revolvingLoanInfo;
                break;
           }
@@ -224,6 +224,30 @@ export default function LoanItemView() {
 
           return ordinal
      }
+
+     const loanCategoryFormat = (category) => {
+          switch (category) {
+               case 'CreditCard':
+                    return "Credit Card"
+               break;
+
+               case 'StudentLoan':
+                    return "Student Loan"
+               break;
+
+               case 'Mortgage':
+                    return "Mortgage"
+               break;
+
+               case 'VehicleLoan':
+                    return "Vehicle Loan"
+               break;
+
+               case 'PersonalLoan':
+                    return "Personal Loan"
+               break;
+          }
+     }
      
      // tell main process to open the link in the default browser
      function openLinkInBrowser(url) {
@@ -233,6 +257,21 @@ export default function LoanItemView() {
                ipcRenderer.invoke('openLinkToPaymentURL', (url));
           }
      }
+
+
+
+     // navigate functionality
+     let navigate = useNavigate();
+
+
+     // function to edit the loan
+     function editLoan(GUID) {
+          navigate('/addaloan', {
+               editLoan: true,
+               state:GUID
+          });    
+     }
+
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -253,8 +292,8 @@ export default function LoanItemView() {
                               <RecordAPaymentModal loan={currentLoan} parent={LoanItemView}/>
                               <RecordALateFeeModal loan={currentLoan} parent={LoanItemView}/>
                               <AdjustMonthlyPaymentModal loan={currentLoan}/>
+                              <EditLoanModal currentLoan={currentLoan}/>
                               <DeleteLoanModal loanName={currentLoan?.loan.LoanName} loanGUID={currentLoan?.loan.GUID}/>
-                              <span>Edit Loan</span>
                          </div>
                     </div>
 
@@ -298,7 +337,8 @@ export default function LoanItemView() {
 
                          <div className="moduleContent">
                               <div className="loanDataTable">
-                                   <Table striped bordered size="sm">
+                                   {/* just manually adding this as i dont want to display all data right now */}
+                                   <Table striped bordered size="sm" variant={settingsState.settings[0]?.UserSelectedTheme == 'dark' ? 'dark' : 'light'}>
                                         <thead>
                                              <tr>
                                                   <th>Field</th>
@@ -314,7 +354,7 @@ export default function LoanItemView() {
 
                                              <tr>
                                                   <td>Loan Type</td>
-                                                  <td>{currentLoan?.loan.LoanCategory}</td>
+                                                  <td>{loanCategoryFormat(currentLoan?.loan.LoanCategory)}</td>
                                              </tr>
 
                                              <tr>
@@ -330,7 +370,7 @@ export default function LoanItemView() {
                                              <tr>
                                                   <td>Interest Rate</td>
                                                   <td>{currentLoan?.loan.InterestRate}%</td>
-                                             </tr>
+                                             </tr>                                             
 
                                              <tr>
                                                   <td>Monthly Payment</td>
@@ -360,15 +400,22 @@ export default function LoanItemView() {
                                                   <td>{currentLoan?.loan.DisbursementDate}</td>
                                              </tr>
 
+                                             {/* Only show Total Term Length if it is not a credit card */}
+                                             {currentLoan?.loan.LoanCategory !== 'CreditCard' ?
                                              <tr>
                                                   <td>Total Term Length</td>
                                                   <td>{currentLoan?.loan.TotalTermLength}</td>
                                              </tr>
+                                             : ""}
 
+                                             {/* Only show Estimated Remaing Payments if it is not a credit card */}
+                                             {currentLoan?.loan.LoanCategory !== 'CreditCard' ?
                                              <tr>
                                                   <td>Estimated Remaing Payments</td>
                                                   <td>{(parseInt(currentLoan?.loan.TotalTermLength) - currentLoan?.loan.PaymentHistory.length).toString()}</td>
                                              </tr>
+                                             : ""}
+                                             
                                         </tbody>
                                    </Table>
 

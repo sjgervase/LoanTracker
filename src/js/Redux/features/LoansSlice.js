@@ -58,8 +58,11 @@ export const LoansSlice = createSlice({
 
           // reducer to edit a loan
           editLoan: (state, action) => {
-               // TBD
-               // state.loans = action.payload;
+               // find the loan that the payment needs to be added to by the payload's GUID
+               let thisLoan = state.loans.find(loan => loan.loan.GUID === action.payload.GUID);
+
+               // combine the two objects
+               Object.assign(thisLoan.loan, action.payload);
           },
 
           // reducer to add an adjusted monthly payment
@@ -77,7 +80,7 @@ export const LoansSlice = createSlice({
 
           // reducer to add a payment or late fee
           addPaymentOrLateFeeToLoan: (state, action) => {
-               // find the index of the loan that the payment needs to be added to by the payload's GUID
+               // find the loan that the payment needs to be added to by the payload's GUID
                let thisLoan = state.loans.find(loan => loan.loan.GUID === action.payload.GUID);
 
                // create an object to be added to the payment or late fee array
@@ -240,14 +243,19 @@ const loanAdditionalFields = (loans) => {
 }
 
 
-// function for new loans to add additional properties that are not recorded by end user
+// function for new loans to clean recieved data add additional properties that are not recorded by end user
 function newLoanFunction(newLoanData) {
-     // calculate total amount
+     // Credit card:
+          // Name
+          // color
+          // Dispersment date?????
+          // Payment Due Date
+          // Next payment amount
+          // total balance
+          // link
+          // additional notes
 
-     console.log(newLoanData);
-
-
-
+     
      // if Amortized Loan (not a creditcard)
      if (newLoanData.LoanCategory !== "CreditCard") {
 
@@ -288,14 +296,26 @@ function newLoanFunction(newLoanData) {
                     }
                }
 
-               return newLoanObject;               
+               return newLoanObject;
           }
-          
+
+
+     // Credit Card
+     } else {
+          // create object with payload data and new fields
+          let newLoanObject = {
+               loan: {
+                    ...newLoanData,
+                    PaymentHistory: [],
+                    LateFees: [],
+                    DesiredMonthlyPayment: 0,
+                    TotalLoanAmount: newLoanData.TotalBalance,
+                    PaidOff: false,
+                    CalculatedRemainingAmount: newLoanData.TotalBalance,
+                    MonthlyPayment: newLoanData.NextPaymentAmount
+               }
+          }
+
+          return newLoanObject;
      }
-
-     
-
-     
-     
-     
 }

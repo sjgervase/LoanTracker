@@ -22,17 +22,43 @@ export const AddALoanFormDataSlice = createSlice({
           addFieldToFormData: (state, action) => {
                // add field to the current formdata object
                Object.assign(state.formData, action.payload)
+          },
 
-               // console.log(current(state));
+          // reducer to add an deductions
+          clearFormData: (state, action) => {
+               // delete all formdata
+               Object.keys(state.formData).forEach(key => delete state.formData[key]);
+               state.errors = null;
+               state.validate = false;
+          },
+
+          // reducer to enter/exit validation mode
+          validationMode: (state, action) => {
+               // switch validate to true
+               state.validate = action.payload;
           },
 
           // reducer to enter validation mode
-          enterValidationMode: (state, action) => {
-               // switch validate to true
-               state.validate = true;
-               
+          errorsExist: (state, action) => {
+               // switch errors to payload
+               state.errors = action.payload;
+          },
 
-               console.log(current(state));
+          // reducer to clear data based on the repayment option selected
+          repaymentOptionData: (state, action) => {
+               // remove unneeded properties
+               // if payback from total
+               if (action.payload.RepaymentOption === "paybackFromTotal") {
+                    delete state.formData.MonthlyPayment
+                    delete state.formData.PresentValue
+               } else {
+                    delete state.formData.MonthlyPayment
+                    delete state.formData.TotalTermLength
+                    delete state.formData.TotalLoanAmount
+               }
+
+               // add the radio button selection to the formdata
+               Object.assign(state.formData, action.payload)
           },
      },
 })
@@ -40,7 +66,10 @@ export const AddALoanFormDataSlice = createSlice({
 // export all actions
 export const { 
      addFieldToFormData,
-     enterValidationMode,
+     clearFormData,
+     validationMode,
+     errorsExist,
+     repaymentOptionData,
 } = AddALoanFormDataSlice.actions;
 
 // export slice

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // import from react-redux
 import { useSelector } from "react-redux";
@@ -31,6 +31,10 @@ export default function ActiveLoanList(props) {
      const loansState = useSelector((state) => state.loans);
 
 
+
+     // create a state to hold the active loans
+     const [activeLoans, setActiveLoans] = useState([]);
+     
      // function to generate an array of loans that have not been designated as "paid off" and sorted by interest rate
      function activeLoansFunction() {
           // create an empty array
@@ -41,25 +45,35 @@ export default function ActiveLoanList(props) {
                // for each loan
                for (let i = 0; i < loansState.loans.length; i++) {
                     // if the loan has not been marked as paid off
-                    if (!(loansState.loans[i].loan.PaidOff)) {
+                    if (!(loansState.loans[i].loan.PaidOff)) {    
+
+                         // create a mutible object of the loan item
+                         let loanItemCopy = {...loansState.loans[i].loan}
+
+                         // get the remaining time function
+                         loanItemCopy.PaymentDueInDays = dateCalculator(loansState.loans[i].loan.PaymentDate);
                          // push to array
-                         activeLoans.push(loansState.loans[i].loan);
+                         activeLoans.push(loanItemCopy);
                     }
                }
           }
 
-          // sort by interestRate
+          // sort by which has to be paid soonest
           activeLoans.sort((first, second) => {
-               return first.InterestRate < second.InterestRate ? -1 : 1;
+               return first.PaymentDueInDays < second.PaymentDueInDays ? -1 : 1;
           });
 
-          return activeLoans;
+          setActiveLoans(activeLoans);
      }
-     // generate array of active loans
-     const activeLoans = activeLoansFunction();
+
+     // populate active loans state when data is fetched
+     useEffect(() => {
+          if (loansState.loans.length > 0) {
+               activeLoansFunction()
+          }
+     }, [loansState.loans])
 
 
-     // All functions for the individual item 
 
      // money formatter function
      let moneyFormatter = amount => new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(amount);
@@ -143,8 +157,7 @@ export default function ActiveLoanList(props) {
      // pass the guid of the selected loan
      function loanItemView(GUID) {
           // console.log(seeThisLoan);
-          navigate('/loanitemview', {state:GUID});
-          
+          navigate('/loanitemview', {state:GUID});    
      }
 
      // function to show the "delete" button on the loan item only if the end user is in the "All Loans" view

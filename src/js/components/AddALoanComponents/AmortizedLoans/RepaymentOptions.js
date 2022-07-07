@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // import from react-bootstrap
-import { Form, Button, Alert, ButtonGroup, ToggleButton, OverlayTrigger, Popover } from "react-bootstrap";
+import { Form, ButtonGroup, ToggleButton, OverlayTrigger, Popover } from "react-bootstrap";
 
 // import react icons
-import { FaInfoCircle, FaCalculator, FaCheckCircle, FaRegCircle } from "react-icons/fa";
+import { FaInfoCircle, FaCheckCircle, FaRegCircle } from "react-icons/fa";
 
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
 
 // import store actions
-import { addFieldToFormData } from "../../../Redux/features/AddALoanSlice";
+import { addFieldToFormData, errorsExist, validationMode, repaymentOptionData } from "../../../Redux/features/AddALoanSlice";
 
 import BigNumber from "bignumber.js";
 
@@ -21,7 +21,7 @@ import CurrencyInput from "react-currency-input-field";
 import { CSSTransition } from "react-transition-group";
 
 
-export default function RepaymentOptions(props) {
+export default function RepaymentOptions() {
 
      const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ export default function RepaymentOptions(props) {
           setRadioState(value);
 
           // dispatch the action to the store
-          dispatch(addFieldToFormData({RepaymentOption:value}));
+          dispatch(repaymentOptionData({RepaymentOption:value}));
      }
 
      // loanTypeRadios is an array of objects to quickly map loan types
@@ -95,6 +95,8 @@ export default function RepaymentOptions(props) {
 
      // function to calculate remaining periods
      const calculateRemainingPeriods = () => {
+
+          
           // ensure fields are filled 
           if (isNaN(formState.formData.MonthlyPayment) || isNaN(formState.formData.PresentValue) || isNaN(formState.formData.InterestRate)) {
                return '---';
@@ -153,75 +155,60 @@ export default function RepaymentOptions(props) {
 
      }, [formState])
 
-     
-
-
-     
-    
-
 
 
      // error handling
      const [errorFields, setErrorFields] = useState([])
-
      // useEffect to watch the formstate.validate property. when true, all form components should validate their own fields
      useEffect(() => {
-
           if (formState.validate) {
                console.log("validate now");
-
                // empty arrays to be populated if the fields are erroneous
                let errorFieldsArray = [];
-
                // if interest rate is blank (field forces positive numbers)
                if(formState.formData.InterestRate == undefined || formState.formData.InterestRate == "") {
                     // push the erroneous field name to array
                     errorFieldsArray.push("InterestRate");
                }
 
-
                // the only data that is captured (and validate) are the fields attached to the radio selection
-               if (radioState == "paybackFromTotal") {
-                    
+               if (radioState == "paybackFromTotal") {                    
                     // if monthly payment is undefined
                     if (formState.formData.MonthlyPayment == undefined || formState.formData.MonthlyPayment == "") {
                          // push the erroneous field name to array
                          errorFieldsArray.push("MonthlyPayment");
                     }
-
                     // if total term length is empty
                     if (formState.formData.TotalTermLength == undefined || formState.formData.TotalTermLength == "") {
                          // push the erroneous field name to array
                          errorFieldsArray.push("TotalTermLength");
                     }
-               
                // payback from current selected
                } else {
-                    
                     // if monthly payment is undefined
                     if (formState.formData.MonthlyPayment == undefined || formState.formData.MonthlyPayment == "") {
                          // push the erroneous field name to array
                          errorFieldsArray.push("MonthlyPayment");
                     }
-
                     // if present value is undefined
-                    if (props.formState.PresentValue == undefined || props.formState.PresentValue == "") {
+                    if (formState.formData.PresentValue == undefined || formState.formData.PresentValue == "") {
                          // push the erroneous field name to array
                          errorFieldsArray.push("PresentValue");
                     }
                }
-               
+
                // set the error fields state to the array
                setErrorFields(errorFieldsArray);
-
-          // if false
-          } else {
-               console.log("dont validate now");
+               // if there are errors, dispatch action
+               if (errorFieldsArray.length > 0) {
+                    dispatch(errorsExist(true))
+               } else {
+                    dispatch(errorsExist(false))
+               }
+               // exit validation mode
+               dispatch(validationMode(false))
           }
-
      }, [formState.validate])
-
-
 
 
 
@@ -318,39 +305,16 @@ export default function RepaymentOptions(props) {
      );
 
 
-
-
-
-
      return (
           <div className="addALoanRepaymentInfo dashboardModule">
                <div className="moduleHeader">
                     <h2>Repayment Options</h2>
                </div>
 
-
-
-
-
-
-
-               <Form.Group controlId="InterestRate" className="interestRateDiv">
-               
-
-               </Form.Group>
-
-
-
-
-               
-
-
                {/* Payback Choice Radio buttons */}
                <div className="formGroupRow paybackChoiceDiv">
-                    
                     <div className="moduleContent repaymentOptionContent">
                          {repaymentTypeRadios.map((radio, idx) => (
-
                               <OverlayTrigger key={`repaymentOptionButtonGroupWithOverlay-${idx}`}
                               placement="top"
                               overlay={
@@ -361,8 +325,7 @@ export default function RepaymentOptions(props) {
                                         </Popover.Body>
                                    </Popover>
                               }>
-                                   <div className="addALoanHelpOverlay">
-                                        
+                                   <div className="addALoanHelpOverlay">              
                                         <ButtonGroup className="mb-2 repaymentOptionButtonGroup">  
                                              <ToggleButton
                                              id={`repaymentRadio-${idx}`}
@@ -374,16 +337,13 @@ export default function RepaymentOptions(props) {
                                              onChange={e => handleRadioChange(e.target.value)}>
 
                                              <div className="radioButtonContainer">
-
                                                   <div className="radioButtonIcons">
                                                        <CSSTransition
                                                        in={radioState !== radio.value ? true : false}
                                                        timeout={150}
                                                        unmountOnExit
                                                        classNames="radioButtonUncheckAnimation">
-
                                                             <FaRegCircle className="radioButtonUnchecked"/>
-                                                       
                                                        </CSSTransition>
      
                                                        <CSSTransition
@@ -391,164 +351,159 @@ export default function RepaymentOptions(props) {
                                                        timeout={150}
                                                        unmountOnExit
                                                        classNames="radioButtonCheckAnimation">
-     
                                                             <FaCheckCircle className="radioButtonChecked"/>
-                                                            
                                                        </CSSTransition>
-     
-
                                                   </div>
-
                                                   <h5 className="radioButtonTitle">{radio.name}</h5>
                                              </div>
-
                                              </ToggleButton>
                                         </ButtonGroup>
                                    </div>
-
                               </OverlayTrigger>
-
                          ))}
                     </div>
-
                </div>
 
-               <div className="paybackFieldsAnimationParent">
+
+               <div className="formGroupRow">
+                    {/* Interest Rate */}
+                    <Form.Group controlId="InterestRate" className="interestRateDiv">
+                         <Form.Label>Interest Rate</Form.Label>
+                         <CurrencyInput
+                              suffix="%"
+                              name="InterestRate"
+                              placeholder="ex 4%"
+                              decimalScale={2}
+                              decimalsLimit={2}
+                              allowNegativeValue={false}
+                              className={`form-control ${formState.errors && errorFields.includes("InterestRate") ? "is-invalid" : ""}`}
+                              onValueChange={(value, name) => handleChange(name, value)}
+                         />
+                         <div className="invalid-feedback">Ensure Interest Rate is not blank</div>
+                    </Form.Group>
+               </div>
                
 
-               {/* Payback from Total Fields */}
-               <CSSTransition
-               in={radioState === "paybackFromTotal" ? true : false}
-               timeout={300}
-               unmountOnExit
-               classNames="paybackFromTotalFields">
+               <div className="paybackFieldsAnimationParent">
+                    {/* Payback from Total Fields */}
+                    <CSSTransition
+                    in={radioState === "paybackFromTotal" ? true : false}
+                    timeout={300}
+                    unmountOnExit
+                    classNames="paybackFromTotalFields">
+                         <div className="formGroupRow paybackFieldsTotal">
+                              <div className="repaymentOptions">
 
-                    <div className="formGroupRow paybackFieldsTotal">
-                         <div className="repaymentOptions">
-                         
-                              {/* Monthly Payment */}
-                              <Form.Group controlId="MonthlyPayment" className="monthlyPaymentDiv">
-                                   <Form.Label>Minimum Monthly Payment Amount</Form.Label>
-                                   <CurrencyInput
-                                        prefix="$"
-                                        name="MonthlyPayment"
-                                        placeholder="$100"
-                                        decimalScale={2}
-                                        decimalsLimit={2}
-                                        allowNegativeValue={false}
-                                        className={`form-control ${formState.validate && errorFields.includes("MonthlyPayment") ? "is-invalid" : ""}`}
-                                        onValueChange={(value, name) => handleChange(name, value)}
-                                   />
+                                   {/* Monthly Payment */}
+                                   <Form.Group controlId="MonthlyPayment" className="monthlyPaymentDiv">
+                                        <Form.Label>Minimum Monthly Payment Amount</Form.Label>
+                                        <CurrencyInput
+                                             prefix="$"
+                                             name="MonthlyPayment"
+                                             placeholder="ex $100"
+                                             decimalScale={2}
+                                             decimalsLimit={2}
+                                             allowNegativeValue={false}
+                                             className={`form-control ${formState.errors && errorFields.includes("MonthlyPayment") ? "is-invalid" : ""}`}
+                                             onValueChange={(value, name) => handleChange(name, value)}
+                                        />
+                                        <div className="invalid-feedback">Ensure Minimum Monthly Payment is not blank</div>
+                                   </Form.Group>
 
-                                   <div className="invalid-feedback">you fucked up</div>
-                              </Form.Group>
+                                   <div className="mathSymbol mathSymbolMultiply">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                             <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+                                        </svg>
+                                   </div>
 
-                              <div className="mathSymbol mathSymbolMultiply">
-                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                        <path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+                                   {/* Total Term Length */}
+                                   <Form.Group controlId="TotalTermLength" className="termLengthDiv">
+                                        <Form.Label>Total Number of Payments</Form.Label>
+                                        <CurrencyInput
+                                             name="TotalTermLength"
+                                             placeholder="ex 60"
+                                             allowDecimals={false}
+                                             allowNegativeValue={false}
+                                             className={`form-control ${formState.errors && errorFields.includes("TotalTermLength") ? "is-invalid" : ""}`}
+                                             onValueChange={(value, name) => handleChange(name, value)}
+                                        />
+                                        <div className="invalid-feedback">Ensure Total Term Length is not blank</div>
+                                   </Form.Group>
+                              </div>
+
+                              <div className="mathSymbol mathSymbolEquals">
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path fill="currentColor" d="M48 192h352c17.69 0 32-14.32 32-32s-14.31-31.1-32-31.1h-352c-17.69 0-32 14.31-32 31.1S30.31 192 48 192zM400 320h-352c-17.69 0-32 14.31-32 31.1s14.31 32 32 32h352c17.69 0 32-14.32 32-32S417.7 320 400 320z"/>
                                    </svg>
                               </div>
 
-                              {/* Total Term Length */}
-                              <Form.Group controlId="TotalTermLength" className="termLengthDiv">
-                                   <Form.Label>Total Number of Payments</Form.Label>
-
-                                   <CurrencyInput
-                                        name="TotalTermLength"
-                                        placeholder="60"
-                                        allowDecimals={false}
-                                        allowNegativeValue={false}
-                                        className={`form-control ${formState.validate && errorFields.includes("TotalTermLength") ? "is-invalid" : ""}`}
-                                        onValueChange={(value, name) => handleChange(name, value)}
-                                   />
-
-                                   <div className="invalid-feedback">you fucked up</div>
-                              </Form.Group>
+                              {/* Principal Amount */}
+                              <div className="totalLoanAmountDiv">
+                                   <h4 className="totalLoanAmountTitle">Total Loan Amount {totalLoanAmountOverlay}</h4>
+                                   <h3>{isNaN(calculateTotalLoanAmount()) ? "---" : moneyFormatter(calculateTotalLoanAmount())}</h3>
+                              </div>
                          </div>
+                    </CSSTransition>
 
-                         <div className="mathSymbol mathSymbolEquals">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                   <path fill="currentColor" d="M48 192h352c17.69 0 32-14.32 32-32s-14.31-31.1-32-31.1h-352c-17.69 0-32 14.31-32 31.1S30.31 192 48 192zM400 320h-352c-17.69 0-32 14.31-32 31.1s14.31 32 32 32h352c17.69 0 32-14.32 32-32S417.7 320 400 320z"/>
-                              </svg>
+
+                    {/* Payback from Current Fields */}
+                    <CSSTransition
+                    in={radioState === "paybackFromCurrent" ? true : false}
+                    timeout={300}
+                    unmountOnExit
+                    classNames="paybackFromCurrentFields">
+                         <div className="formGroupRow paybackFieldsCurrent">
+                              <div className="repaymentOptions">
+                              
+                                   {/* Monthly Payment */}
+                                   <Form.Group controlId="MonthlyPayment" className="monthlyPaymentDiv">
+                                        <Form.Label>Minimum Monthly Payment Amount</Form.Label>
+                                        <CurrencyInput
+                                             prefix="$"
+                                             name="MonthlyPayment"
+                                             placeholder="ex $100"
+                                             decimalScale={2}
+                                             decimalsLimit={2}
+                                             allowNegativeValue={false}
+                                             className={`form-control ${formState.errors && errorFields.includes("MonthlyPayment") ? "is-invalid" : ""}`}
+                                             onValueChange={(value, name) => handleChange(name, value)}
+                                        />
+                                        <div className="invalid-feedback">Ensure Minimum Monthly Payment is not blank</div>
+                                   </Form.Group>
+
+                                   {calculateRemainingPeriodsOverlay}
+
+                                   {/* Total Term Length */}
+                                   <Form.Group controlId="PresentValue" className="presentValueDiv">
+                                        <div className="addALoanFormLabel">
+                                             <Form.Label>Present Value</Form.Label>
+                                             {presentValueOverlay}
+                                        </div>
+                                        <CurrencyInput
+                                             name="PresentValue"
+                                             prefix="$"
+                                             placeholder="ex $10,000"
+                                             allowNegativeValue={false}
+                                             className={`form-control ${formState.errors && errorFields.includes("PresentValue") ? "is-invalid" : ""}`}
+                                             onValueChange={(value, name) => handleChange(name, value)}
+                                        />
+                                        <div className="invalid-feedback">Ensure Present Value is not blank</div>
+                                   </Form.Group>
+                              </div>
+
+                              <div className="mathSymbol mathSymbolEquals">
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path fill="currentColor" d="M48 192h352c17.69 0 32-14.32 32-32s-14.31-31.1-32-31.1h-352c-17.69 0-32 14.31-32 31.1S30.31 192 48 192zM400 320h-352c-17.69 0-32 14.31-32 31.1s14.31 32 32 32h352c17.69 0 32-14.32 32-32S417.7 320 400 320z"/>
+                                   </svg>
+                              </div>
+
+                              {/* Principal Amount */}
+                              <div className="totalLoanAmountDiv">
+                                   <h4 className="totalLoanAmountTitle">Remaining Periods</h4>
+                                   <h3>{calculateRemainingPeriods()}</h3>
+                              </div>
                          </div>
-
-                         {/* Principal Amount */}
-                         <div className="totalLoanAmountDiv">
-                              <h4 className="totalLoanAmountTitle">Total Loan Amount {totalLoanAmountOverlay}</h4>
-
-                              <h3>{isNaN(calculateTotalLoanAmount()) ? "---" : moneyFormatter(calculateTotalLoanAmount())}</h3>
-                         </div>
-                    </div>
-
-               </CSSTransition>
-
-
-               
-
-               {/* Payback from Current Fields */}
-               <CSSTransition
-               in={radioState === "paybackFromCurrent" ? true : false}
-               timeout={300}
-               unmountOnExit
-               classNames="paybackFromCurrentFields">
-
-                    <div className="formGroupRow paybackFieldsCurrent">
-                         <div className="repaymentOptions">
-                         
-                              {/* Monthly Payment */}
-                              <Form.Group controlId="MonthlyPayment" className="monthlyPaymentDiv">
-                                   <Form.Label>Minimum Monthly Payment Amount</Form.Label>
-                                   <CurrencyInput
-                                        prefix="$"
-                                        name="MonthlyPayment"
-                                        placeholder="$100"
-                                        decimalScale={2}
-                                        decimalsLimit={2}
-                                        allowNegativeValue={false}
-                                        className={`form-control ${formState.validate && errorFields.includes("MonthlyPayment") ? "is-invalid" : ""}`}
-                                        onValueChange={(value, name) => handleChange(name, value)}
-                                   />
-
-                                   <div className="invalid-feedback">you fucked up</div>
-                              </Form.Group>
-
-                              {calculateRemainingPeriodsOverlay}
-
-                              {/* Total Term Length */}
-                              <Form.Group controlId="TotalLoanAmount" className="presentValueDiv">
-                                   <div className="addALoanFormLabel">
-                                        <Form.Label>Present Value</Form.Label>
-                                        {presentValueOverlay}
-                                   </div>
-
-                                   <CurrencyInput
-                                        name="TotalLoanAmount"
-                                        prefix="$"
-                                        placeholder="$10,000"
-                                        allowNegativeValue={false}
-                                        className={`form-control ${formState.validate && errorFields.includes("TotalLoanAmount") ? "is-invalid" : ""}`}
-                                        onValueChange={(value, name) => handleChange(name, value)}
-                                   />
-
-                                   <div className="invalid-feedback">you fucked up</div>
-                              </Form.Group>
-                         </div>
-
-                         <div className="mathSymbol mathSymbolEquals">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                   <path fill="currentColor" d="M48 192h352c17.69 0 32-14.32 32-32s-14.31-31.1-32-31.1h-352c-17.69 0-32 14.31-32 31.1S30.31 192 48 192zM400 320h-352c-17.69 0-32 14.31-32 31.1s14.31 32 32 32h352c17.69 0 32-14.32 32-32S417.7 320 400 320z"/>
-                              </svg>
-                         </div>
-
-                         {/* Principal Amount */}
-                         <div className="totalLoanAmountDiv">
-                              <h4 className="totalLoanAmountTitle">Remaining Periods</h4>
-
-                              <h3>{calculateRemainingPeriods()}</h3>
-                         </div>
-                    </div>
-
-               </CSSTransition>
+                    </CSSTransition>
                </div>
           </div>
      )

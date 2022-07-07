@@ -306,6 +306,7 @@ export default function EditOrDeleteBudgetItemList(props) {
                                                        placeholder="ex $200"
                                                        decimalScale={2}
                                                        decimalsLimit={2}
+                                                       className="form-control"
                                                        defaultValue={item.Amount}
                                                        allowNegativeValue={false}
                                                        onValueChange={(value, name) => handleChange(value, name)}
@@ -321,7 +322,7 @@ export default function EditOrDeleteBudgetItemList(props) {
                                         </Modal.Body>
 
                                         <Modal.Footer>
-                                             <Button variant="secondary" onClick={()=> hideEditModalFunc()}>
+                                             <Button variant="outline-danger" onClick={()=> hideEditModalFunc()}>
                                                   Cancel
                                              </Button>
 
@@ -350,7 +351,7 @@ export default function EditOrDeleteBudgetItemList(props) {
                                         <Modal.Body>
                                              <span>Are you sure you want to <b>delete</b> "{item.Name}"? This cannot be undone.</span>
 
-                                             <Table bordered striped>
+                                             <Table bordered striped variant={settingsState.settings[0]?.UserSelectedTheme == "dark" ? "dark" : "light"}>
                                                   <tbody>
                                                        <tr>
                                                             <td>{item.Name}</td>

@@ -25,20 +25,6 @@ export default function NavigationBar() {
      // only loans are needed
      const loansState = useSelector((state) => state.loans);
 
-     // send to ipcMain to close app
-     function closeApp() {
-          ipcRenderer.send('closeApp');
-     }
-
-     // send to ipcMain to maximize or restore app
-     function maximizeOrRestoreApp() {
-          ipcRenderer.send('maximizeRestoreApp');
-     }
-
-     // send to ipcMain to minimize or restore app
-     function minimizeApp() {
-          ipcRenderer.send('minimizeApp');
-     }
 
 
      const overviewIcon = (
@@ -118,7 +104,7 @@ export default function NavigationBar() {
 
                <Nav.Item className="navItemLogo">
                     <img src={Icon} className="navLogo"/>
-                    Loan Tracker
+                    <h6>Loan Tracker</h6>
                </Nav.Item>
 
                <Nav.Item className={`navItem ${location.pathname === "/" ? "activeNavItem" : ""}`}>
@@ -146,9 +132,14 @@ export default function NavigationBar() {
                          <div className="navIcon allLoansNavIcon allLoansChevron">{allLoansChevron}</div>
                     </div>
 
+
+
+
+
+
                     <div className="allLoansDropDownList">
 
-                    <Nav.Item className={`navItem ${location.pathname === "/allloans" ? "activeNavItem" : ""}`}>
+                         <Nav.Item className={`navItem ${location.pathname === "/allloans" ? "activeNavItem" : ""}`}>
                               <Nav.Link href="#/allloans" className="navLink">
                                    <div className="navIcon allLoansNavIcon"><FaClipboardList/></div>
                                    <h6 className="allLoansDropDownTitle">All Loans</h6>
@@ -167,6 +158,11 @@ export default function NavigationBar() {
                          </Nav.Item>
                          )}
                     </div>
+
+
+
+
+                    
                </div>
 
                

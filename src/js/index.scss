@@ -1,10 +1,13 @@
 $red:#c40d0d;
 $cream:#fffffd;
+$themeGreen: #36733F;
 
 
 html {
      width: 100%;
      height: 100%;
+     
+     border: 1px solid $themeGreen;
 }
 
 body {
@@ -95,22 +98,15 @@ body.dark-green {
 
 
 // ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar ----- Navigation Bar -----
-.appContainer {
-     display: flex;
-     width: 100%;
-     height: 100%;
-     align-items: stretch;
-     background-color: var(--nav-bg);
-}
-
 .navigationBar {
-     width: 210px;
+     flex-basis: 210px;
      flex-grow: 0;
      flex-shrink: 0;
      align-items: flex-start;
      background-color: var(--nav-bg);
      overflow: hidden;
 }
+
 
 .navItemLogo {
      padding-top: 20px;
@@ -121,17 +117,28 @@ body.dark-green {
      align-items: center;
      height: 90px;
      margin-bottom: 20px;
+     -webkit-app-region: drag;
+}
+
+.navItemLogo > h6 {
+     padding-top: 5px;
 }
 
 
 .navLogo {
      height: 60px;
-     image-rendering: crisp-edges;
+     user-select: none;
+     -webkit-user-drag: none;
 }
 
 .navItem {
      width: 100%;
      height: 60px;
+}
+
+.navItem > a {
+     user-select: none;
+     -webkit-user-drag: none;
 }
 
 .navItem:hover {
@@ -197,6 +204,8 @@ body.dark-green {
 
 .allLoansDropDown:hover {
      max-height: 500px;
+
+     overflow-y: auto;
 }
 
 .allLoansDropDown:hover .allLoansChevron > svg {
@@ -233,6 +242,7 @@ body.dark-green {
 
 .allLoansDropDownList {
      width: 210px;
+     height: 100%;
 }
 
 .allLoansDropDownItem {
@@ -300,18 +310,81 @@ body.dark-green {
 
 
 
+
+
+
+
+
+
+
+
+
+// -- Windows 
+
+.windowButtonsContainer {
+     background-color: var(--nav-bg);
+     -webkit-app-region:drag;
+     width: 100%;
+     height: 30px;
+     padding-right: 6px;
+     display: flex;
+     flex-direction: row;
+     flex-wrap: nowrap;
+     justify-content: flex-end;
+     align-items: center;
+}
+
+.windowButtonIcon {
+     height: 23px;
+     width: 23px;
+     margin-left: 2px;
+     color: var(--theme-color);
+     -webkit-app-region: no-drag;
+     cursor: pointer;
+}
+
+.minimizeButton:hover  {
+     color: #d39819;
+}
+
+.minimizeMaximizeButton:hover {
+     color: #0b7e0b;
+}
+
+.closeButton:hover {
+     color: $red;
+}
+
+
+
+
+
+
+
+
 // ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes ----- Shared Classes -----
+.appContainer {
+     display: flex;
+     height: 100%;
+     align-items: stretch;
+     background-color: var(--nav-bg);
+}
+
+.appAndwindowBar{
+     flex-basis: calc(100% - 210px);
+}
+
 .viewsContainerParent {
      background-color: var(--bg-color-general);
      z-index: 2;
      flex-basis: calc(100% - 210px);
-     border-radius: 20px 0 0 20px;
+     border-radius: 20px 0 0 0;
      overflow-x: hidden;
      overflow-y: hidden;
      border: 1px solid var(--theme-color);
-
      min-width: 940px;
-
+     width: 100%;
+     height: calc(100% - 31px)
 }
 
 .viewsContainer {
@@ -342,13 +415,15 @@ body.dark-green {
 
 .dashboardModulesContainer {
      width: 100%;
-     height: calc(100% - 70px);
+     height: calc(100% - 105px);
      display: flex;
      flex-direction: row;
      flex-wrap: wrap;
+
      justify-content: space-between;
      align-content: space-between;
      overflow-y: auto;
+
      padding-right: 4px;
 }
 
@@ -404,6 +479,10 @@ body.dark-green {
 .loanTypeIMG > svg {
      height: 100px;
      width: 100px;
+}
+
+.loanForm {
+     width: 100%;
 }
 
 .loanForm > .dashboardModule {
@@ -466,8 +545,20 @@ body.dark-green {
 }
 
 
+.colorControlAndButton {
+     width: 100%;
+}
 
+.colorControlAndButton > button {
+     margin-left: 10px;
+     position: relative;
+     float: left;
+}
 
+.colorControlAndButton > input {
+     position: relative;
+     float: left;
+}
 
 
 
@@ -532,12 +623,6 @@ body.dark-green {
      padding-top: 5px;
 }
 
-.paybackChoiceHeader {
-     flex-basis: 100%;
-     margin-top: 10px;
-     margin-bottom: 10px;
-     text-align: center;
-}
 
 .paybackRadioDiv {
      flex-basis: 45%;
@@ -558,7 +643,7 @@ body.dark-green {
      display: flex;
      flex-direction: row;
      flex-wrap: nowrap;
-     height: 290px;
+     height: 240px;
 }
 
 .repaymentOptions {
@@ -607,7 +692,7 @@ body.dark-green {
 
 .mathSymbolMultiply {
      width: 100%;
-     margin-top: 10px;
+     margin-top: 5px;
      margin-bottom: 10px;
 }
 
@@ -743,12 +828,12 @@ body.dark-green {
 
 .activeLoans {
      flex-basis: 60%;
-     height: 59%;
+     height: 58%;
 }
 
 .activeLoansGraphs {
      flex-basis: 39%;
-     height: 59%;
+     height: 58%;
 }
 
 .recentTrackedPayments {
@@ -1005,7 +1090,7 @@ body.dark-green {
 
 .recharts-responsive-container {
      position: relative;
-     height: 100%
+     height: 100%;
 }
 
 
@@ -1341,8 +1426,9 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .totalsBreakdown {
-     margin-top: 1%;
-     margin-bottom: 3.5%;
+     margin-top: 10px;
+     height: 100%;
+     margin-bottom: 30px;
 }
 
 
@@ -1483,8 +1569,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 
-
-
 // React Transition Group Animations
 
 
@@ -1536,31 +1620,49 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 // AddALoan View
-// amortized loan
-.amortizedLoanForm-enter {
+// show loan form
+.revealLoanForm-enter {
      opacity: 0;
-     transform: translate(0, 200%);
-     
+     transform: scale(0.9);
 }
 
-.amortizedLoanForm-enter-active {
+.revealLoanForm-enter-active {
+     opacity: 1;
+     transform: scale(1);
+     transition: opacity 300ms, transform 300ms;
+}
+
+.revealLoanForm-exit {
+     opacity: 1;
+}
+
+.revealLoanForm-exit-active {
+     opacity: 0;
+     transform: scale(0.9);
+     transition: opacity 300ms, transform 300ms;
+}
+
+
+// amortized loan
+.switchLoanForm-enter {
+     opacity: 0;
+     transform: translate(0, 200%);
+}
+
+.switchLoanForm-enter-active {
      opacity: 1;
      transform: translate(0, 0);
-     
      transition: opacity 300ms ease-out, transform 300ms ease-out;
 }
 
-.amortizedLoanForm-exit {
+.switchLoanForm-exit {
      opacity: 1;
      transform: translate(0, 0);
-     
 }
 
-.amortizedLoanForm-exit-active {
+.switchLoanForm-exit-active {
      opacity: 0;
-     transform: translate(0, 200%);
-     
-     transition: opacity 300ms ease-in, transform 300ms ease-in;
+     transition: opacity 200ms ease-in;
 }
 
 
@@ -1691,3 +1793,94 @@ input[type=range]:focus::-ms-fill-upper {
      left: 0;
      transition: left 300ms ease-out;
 }
+
+
+
+
+
+// Loading Animation: https://projects.lukehaas.me/css-loaders/
+.loadingDiv {
+     width: 100%;
+}
+
+.loaderSpinner {
+     color: var(--theme-color);
+     font-size: 60px;
+     text-indent: -9999em;
+     overflow: hidden;
+     width: 1em;
+     height: 1em;
+     border-radius: 50%;
+     margin: 30px auto;
+     position: relative;
+     -webkit-transform: translateZ(0);
+     -ms-transform: translateZ(0);
+     transform: translateZ(0);
+     -webkit-animation: load6 1.7s infinite ease, round 1.7s infinite ease;
+     animation: load6 1.7s infinite ease, round 1.7s infinite ease;
+   }
+   @-webkit-keyframes load6 {
+     0% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+     5%,
+     95% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+     10%,
+     59% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+     }
+     20% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+     }
+     38% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+     }
+     100% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+   }
+   @keyframes load6 {
+     0% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+     5%,
+     95% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+     10%,
+     59% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+     }
+     20% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+     }
+     38% {
+       box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+     }
+     100% {
+       box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+     }
+   }
+   @-webkit-keyframes round {
+     0% {
+       -webkit-transform: rotate(0deg);
+       transform: rotate(0deg);
+     }
+     100% {
+       -webkit-transform: rotate(360deg);
+       transform: rotate(360deg);
+     }
+   }
+   @keyframes round {
+     0% {
+       -webkit-transform: rotate(0deg);
+       transform: rotate(0deg);
+     }
+     100% {
+       -webkit-transform: rotate(360deg);
+       transform: rotate(360deg);
+     }
+   }
+   

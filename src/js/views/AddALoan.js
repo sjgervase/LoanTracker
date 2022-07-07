@@ -3,10 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import from react-redux
 import { useDispatch, useSelector } from "react-redux";
 
-// import store actions
-import { addLoan } from "../Redux/features/LoansSlice";
-
-import { addFieldToFormData } from "../Redux/features/AddALoanSlice";
+import { addFieldToFormData, clearFormData } from "../Redux/features/AddALoanSlice";
 
 // import from react-bootstrap
 import { Form, Button, Alert, ButtonGroup, ToggleButton, OverlayTrigger, Popover } from "react-bootstrap";
@@ -16,19 +13,20 @@ import CurrencyInput from "react-currency-input-field";
 
 import BigNumber from "bignumber.js";
 
+// import from react-router-dom
+import { useLocation, useNavigate } from "react-router-dom";
+
 // import from react-icons
 import { AiFillCar, AiFillHome } from "react-icons/ai"; 
 import { FaGraduationCap, FaUser, FaCreditCard, FaInfoCircle, FaCalculator, FaCar } from "react-icons/fa";
 
-// import from react-router-dom
-import { useNavigate } from "react-router-dom";
-
 // import tranistion
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group";
 
 
 // import forms
 import AmortizedLoanForm from "../components/AddALoanComponents/AmortizedLoans/AmortizedLoanForm";
+import CreditCardForm from "../components/AddALoanComponents/CreditCards/CreditCardForm";
 
 
 
@@ -119,61 +117,62 @@ export default function AddALoan() {
 
 
 
-     // set the default state to "Amortized Loan" bc the first option is student loan
-     // initially hide the AmortizedLoanForm
-     const [showAmortizedLoanForm, setShowAmortizedLoanForm] = useState(false);
+     
+     // initially hide the form types
+     const [formTypeState, setFormTypeState] = useState(false);
 
      function loanTypeSelection(value) {
           switch (value) {
                case 'StudentLoan':
                     // set the form type to true to reveal with react transition group
-                    setShowAmortizedLoanForm(true);
-
-                    // dispatch action to add to state
+                    setFormTypeState('amortized');
+                    // clear the form data then dispatch action to add to state
                     dispatch(addFieldToFormData({LoanCategory:"StudentLoan"}))
-
                break;
 
                case 'Mortgage':
                     // set the form type to true to reveal with react transition group
-                    setShowAmortizedLoanForm(true);
-
-                    // dispatch action to add to state
+                    setFormTypeState('amortized');
+                    // clear the form data then dispatch action to add to state
                     dispatch(addFieldToFormData({LoanCategory:"Mortgage"}))
                break;
 
                case 'VehicleLoan':
                     // set the form type to true to reveal with react transition group
-                    setShowAmortizedLoanForm(true);
-
-                    // dispatch action to add to state
+                    setFormTypeState('amortized');
+                    // clear the form data then dispatch action to add to state
                     dispatch(addFieldToFormData({LoanCategory:"VehicleLoan"}))
                break;
 
                case 'PersonalLoan':
                     // set the form type to true to reveal with react transition group
-                    setShowAmortizedLoanForm(true);
-
-                    // dispatch action to add to state
+                    setFormTypeState('amortized');
+                    // clear the form data then dispatch action to add to state
                     dispatch(addFieldToFormData({LoanCategory:"PersonalLoan"}))
                break;
 
                case 'CreditCard':
                     // set the form type to true to reveal with react transition group
-                    setShowAmortizedLoanForm(false);
-
-                    // clear the formstate besides loan category
-
-                    // dispatch action to add to state
+                    setFormTypeState('credit');
+                    // clear the form data then dispatch action to add to state
                     dispatch(addFieldToFormData({LoanCategory:"CreditCard"}))
                break;
 
                default:
                     // set the form type to true to reveal with react transition group
+                    // clear the form data then dispatch action to add to state
+                    dispatch(clearFormData());
                     setShowAmortizedLoanForm(false);
+                    setShowCreditCardForm(false);
                break;
           }
      }
+
+
+     // useEffect(() => {
+     //      console.log(formState.formData);
+     // }, [formState.formData])
+
 
 
      
@@ -212,17 +211,32 @@ export default function AddALoan() {
                     </div>
 
 
+
+
                     <CSSTransition
-                    in={showAmortizedLoanForm}
-                    timeout={500}
+                    in={formTypeState !== false}
                     unmountOnExit
-                    classNames="amortizedLoanForm">
-                    
-                         <AmortizedLoanForm/>
+                    timeout={500}
+                    classNames="revealLoanForm">
+
+
+                         <SwitchTransition>
+
+                         <CSSTransition
+                         key={formTypeState === 'amortized' ? true : false}
+                         timeout={500}
+                         classNames="switchLoanForm">
+
+                              {formTypeState === 'amortized' ?
+                                   <AmortizedLoanForm/>
+                              :
+                                   <CreditCardForm/>
+                              }
+
+                         </CSSTransition>
+                         </SwitchTransition>
 
                     </CSSTransition>
-                    
-
                </div>
 
           </div>
